@@ -9,14 +9,9 @@ import {
   UserOutlined,
   WeiboCircleOutlined,
 } from '@ant-design/icons';
-import {
-  LoginForm,
-  ProFormCaptcha,
-  ProFormCheckbox,
-  ProFormText,
-} from '@ant-design/pro-components';
-import { Helmet, history, useModel } from '@umijs/max';
-import { Alert, Tabs, message } from 'antd';
+import { LoginForm, ProFormCaptcha, ProFormText } from '@ant-design/pro-components';
+import { Helmet, Link, history, useModel } from '@umijs/max';
+import { Alert, Divider, Space, Tabs, message } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
@@ -84,6 +79,7 @@ const LoginMessage: React.FC<{
     />
   );
 };
+
 const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
@@ -132,7 +128,6 @@ const Login: React.FC = () => {
           {'登录'}- {Settings.title}
         </title>
       </Helmet>
-      <Lang />
       <div
         style={{
           flex: '1',
@@ -145,8 +140,8 @@ const Login: React.FC = () => {
             maxWidth: '75vw',
           }}
           logo={<img alt="logo" src="/logo.svg" />}
-          title="Ant Design"
-          subTitle={'Ant Design 是西湖区最具影响力的 Web 设计规范'}
+          title="野果-api开放平台"
+          subTitle={'野果-api 接口开放平台致力于提供稳定、安全、高效的接口调用服务'}
           initialValues={{
             autoLogin: true,
           }}
@@ -174,6 +169,7 @@ const Login: React.FC = () => {
           {status === 'error' && loginType === 'account' && (
             <LoginMessage content={'错误的用户名和密码(admin/ant.design)'} />
           )}
+
           {type === 'account' && (
             <>
               <ProFormText
@@ -262,21 +258,16 @@ const Login: React.FC = () => {
               />
             </>
           )}
-          <div
+        
+        <div
             style={{
               marginBottom: 24,
             }}
           >
-            <ProFormCheckbox noStyle name="autoLogin">
-              自动登录
-            </ProFormCheckbox>
-            <a
-              style={{
-                float: 'right',
-              }}
-            >
-              忘记密码 ?
-            </a>
+            <Space split={<Divider type="vertical" />} size={105}>
+              <Link to="/user/register">注册</Link>
+              <a onClick={()=>{alert("请联系管理员:aidjajd@163.com")}}>忘记密码？</a>
+            </Space>
           </div>
         </LoginForm>
       </div>
