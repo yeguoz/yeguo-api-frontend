@@ -1,5 +1,5 @@
 import { AvatarDropdown, AvatarName, Footer, Question } from '@/components';
-import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
+import { userCurrent as queryCurrentUser } from '@/services/yeguo-api/userController';
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
@@ -17,24 +17,24 @@ const pathList = [loginPath,registerPath];
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: API.CurrentUser;
+  currentUser?: API.UserVO;
   loading?: boolean;
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  fetchUserInfo?: () => Promise<API.UserVO | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
-      const msg = await queryCurrentUser({
+      const result = await queryCurrentUser({
         skipErrorHandler: true,
       });
-      return msg.data;
+      return result.data;
     } catch (error) {
-      // history.push(loginPath);
-      message.error("没有登录")
+      history.push(loginPath);
+      message.error("网络繁忙,稍后重试");
     }
     return undefined;
   };
   
-  // 如果不是登录页面和注册页面，执行
+  // 当前不是登录页面和注册页面，执行
   const { location } = history;
   if (!pathList.includes(location.pathname)) {
     const currentUser = await fetchUserInfo();
@@ -44,6 +44,7 @@ export async function getInitialState(): Promise<{
       settings: defaultSettings as Partial<LayoutSettings>,
     };
   }
+
   return {
     fetchUserInfo,
     settings: defaultSettings as Partial<LayoutSettings>,
@@ -56,20 +57,21 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   return {
     actionsRender: () => [<Question key="doc" />],
     avatarProps: {
-      src: initialState?.currentUser?.avatar,
+      src: initialState?.currentUser?.avatarUrl,
       title: <AvatarName />,
       render: (_, avatarChildren) => {
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },
     },
     waterMarkProps: {
-      content: initialState?.currentUser?.name,
+      content: initialState?.currentUser?.username,
     },
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
-      // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
+      // 如果没有登录,并且不在登录页面和注册页面,则重定向到 login 
+      if (!initialState?.currentUser && !pathList.includes(location.pathname)) {
+        message.error("未登录")
         history.push(loginPath);
       }
     },

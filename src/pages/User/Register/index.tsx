@@ -6,6 +6,7 @@ import { Divider, Space, Tabs, message } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import Settings from '../../../../config/defaultSettings';
+import { userRegister } from '@/services/yeguo-api/userController';
 
 // 样式
 const useStyles = createStyles(({ token }) => {
@@ -48,7 +49,7 @@ const Register: React.FC = () => {
   const [type, setType] = useState<string>('platform_register');
   const { styles } = useStyles();
 
-  const handleSubmit = async (values: API.RegisterParams) => {
+  const handleSubmit = async (values: API.UserRegisterParams) => {
     const { userPassword, checkPassword } = values;
     if (userPassword !== checkPassword) {
       message.error('两次密码输入不一致');
@@ -56,9 +57,9 @@ const Register: React.FC = () => {
     }
 
     try {
-      // 注册
-      const result = await register({ ...values });
-      // 注册成功返回id 失败返回-1
+      // 注册  API.ResponseData
+      const result = await userRegister({ ...values });
+      // 注册成功返回id 
       if (result.data > 0) {
         const defaultLoginSuccessMessage = '注册成功！';
         message.success(defaultLoginSuccessMessage);
@@ -66,6 +67,7 @@ const Register: React.FC = () => {
         return;
       }
       // 失败直接抛出异常
+      // @ts-ignore
       throw new Error(result.description);
     } catch (error: any) {
       const defaultLoginFailureMessage = '注册失败，请重试！';
@@ -105,7 +107,7 @@ const Register: React.FC = () => {
             autoLogin: true,
           }}
           onFinish={async (values) => {
-            await handleSubmit(values as API.RegisterParams);
+            await handleSubmit(values as API.UserRegisterParams);
           }}
         >
           <Tabs
@@ -127,7 +129,7 @@ const Register: React.FC = () => {
           {type === 'platform_register' && (
             <>
                <ProFormText
-                name="userAccount"
+                name="username"
                 fieldProps={{
                   size: 'large',
                   prefix: <UserOutlined />,

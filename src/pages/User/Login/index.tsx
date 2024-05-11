@@ -1,6 +1,7 @@
 import { Footer } from '@/components';
-import { login } from '@/services/ant-design-pro/api';
+
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
+import { userLogin } from '@/services/yeguo-api/userController';
 import {
   AlipayCircleOutlined,
   LockOutlined,
@@ -11,7 +12,7 @@ import {
 } from '@ant-design/icons';
 import { LoginForm, ProFormCaptcha, ProFormText } from '@ant-design/pro-components';
 import { Helmet, Link, history, useModel } from '@umijs/max';
-import { Alert, Divider, Space, Tabs, message } from 'antd';
+import { Divider, Space, Tabs, message } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
@@ -61,27 +62,9 @@ const ActionIcons = () => {
     </>
   );
 };
-const Lang = () => {
-  const { styles } = useStyles();
-  return;
-};
-const LoginMessage: React.FC<{
-  content: string;
-}> = ({ content }) => {
-  return (
-    <Alert
-      style={{
-        marginBottom: 24,
-      }}
-      message={content}
-      type="error"
-      showIcon
-    />
-  );
-};
 
 const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
+  // const [userLoginState, setUserLoginState] = useState<API.UserLoginParams>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
@@ -96,14 +79,16 @@ const Login: React.FC = () => {
       });
     }
   };
-  const handleSubmit = async (values: API.LoginParams) => {
+
+  const handleSubmit = async (values: API.UserLoginParams) => {
     try {
       // 登录
-      const msg = await login({
+      const result = await userLogin({
         ...values,
-        type,
       });
-      if (msg.status === 'ok') {
+      console.log(result);
+      
+      if (result.data !== null) {
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
@@ -111,16 +96,15 @@ const Login: React.FC = () => {
         history.push(urlParams.get('redirect') || '/');
         return;
       }
-      console.log(msg);
-      // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
+      message.error(result.description);
     } catch (error) {
-      const defaultLoginFailureMessage = '登录失败，请重试！';
+      const defaultLoginFailureMessage = '网络繁忙,请稍后重试！';
       console.log(error);
       message.error(defaultLoginFailureMessage);
     }
   };
-  const { status, type: loginType } = userLoginState;
+  // const { status, type: loginType } = userLoginState;
+
   return (
     <div className={styles.container}>
       <Helmet>
@@ -147,7 +131,7 @@ const Login: React.FC = () => {
           }}
           actions={['其他登录方式 :', <ActionIcons key="icons" />]}
           onFinish={async (values) => {
-            await handleSubmit(values as API.LoginParams);
+            await handleSubmit(values as API.UserLoginParams);
           }}
         >
           <Tabs
@@ -166,14 +150,14 @@ const Login: React.FC = () => {
             ]}
           />
 
-          {status === 'error' && loginType === 'account' && (
+          {/* {status === 'error' && loginType === 'account' && (
             <LoginMessage content={'错误的用户名和密码(admin/ant.design)'} />
-          )}
+          )} */}
 
           {type === 'account' && (
             <>
               <ProFormText
-                name="username"
+                name="userAccount"
                 fieldProps={{
                   size: 'large',
                   prefix: <UserOutlined />,
@@ -182,12 +166,12 @@ const Login: React.FC = () => {
                 rules={[
                   {
                     required: true,
-                    message: '用户名是必填项！',
+                    message: '账号是必填项！',
                   },
                 ]}
               />
               <ProFormText.Password
-                name="password"
+                name="userPassword"
                 fieldProps={{
                   size: 'large',
                   prefix: <LockOutlined />,
@@ -203,7 +187,8 @@ const Login: React.FC = () => {
             </>
           )}
 
-          {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
+          {/* {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />} */}
+
           {type === 'mobile' && (
             <>
               <ProFormText
@@ -258,15 +243,21 @@ const Login: React.FC = () => {
               />
             </>
           )}
-        
-        <div
+
+          <div
             style={{
               marginBottom: 24,
             }}
           >
             <Space split={<Divider type="vertical" />} size={105}>
               <Link to="/user/register">注册</Link>
-              <a onClick={()=>{alert("请联系管理员:aidjajd@163.com")}}>忘记密码？</a>
+              <a
+                onClick={() => {
+                  alert('请联系管理员:aidjajd@163.com');
+                }}
+              >
+                忘记密码？
+              </a>
             </Space>
           </div>
         </LoginForm>

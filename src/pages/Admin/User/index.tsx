@@ -2,6 +2,8 @@ import { useRef } from 'react';
 
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import { Image, message } from 'antd';
+import { userUpdate, userDelete, userSelectAll } from '@/services/yeguo-api/userController';
+import { rearg } from 'lodash';
 
 const columns: ProColumns<API.CurrentUser>[] = [
   {
@@ -28,6 +30,7 @@ const columns: ProColumns<API.CurrentUser>[] = [
         <Image src={record.avatarUrl} height={50} />
       </div>
     ),
+    hideInSearch:true,
   },
   {
     title: '性别',
@@ -56,6 +59,27 @@ const columns: ProColumns<API.CurrentUser>[] = [
     copyable: true,
   },
   {
+    title: '金币',
+    dataIndex: 'goldCoin',
+    copyable: true,
+  },
+  {
+    title: '访问key',
+    dataIndex: 'accessKey',
+    copyable: false,
+    width: 20,
+    editable:false,
+    hideInSearch:true,
+  },
+  {
+    title: '密钥key',
+    dataIndex: 'secretKey',
+    copyable: false,
+    width: 20,
+    editable:false,
+    hideInSearch:true,
+  },
+  {
     title: '状态',
     dataIndex: 'userStatus',
     valueType: 'select',
@@ -63,6 +87,10 @@ const columns: ProColumns<API.CurrentUser>[] = [
       0: {
         text: '正常',
         status: 'Processing',
+      },
+      1: {
+        text: '封禁',
+        status: 'Warning',
       },
     },
   },
@@ -85,7 +113,9 @@ const columns: ProColumns<API.CurrentUser>[] = [
     title: '创建时间',
     dataIndex: 'createTime',
     valueType: 'date',
+    hideInSearch:true,
   },
+
   {
     title: '操作',
     valueType: 'option',
@@ -99,23 +129,25 @@ const columns: ProColumns<API.CurrentUser>[] = [
       >
         编辑
       </a>,
+
       <a href={record.avatarUrl} target="_blank" rel="noopener noreferrer" key="view">
         查看
       </a>,
+
       <a
         key="delete"
         onClick={async () => {
           // @ts-ignore
-          const result = await removeUser(record.id);
+          const result = await userDelete(record.id);
           // 1成功 -1失败
           const data = result.data;
-          console.log(data);
-          if (data === 1) {
-            message.success('删除成功');
-            action?.reload();
+          console.log("返回值是："+data);
+          if (data < 1) {
+            message.error('删除失败');
             return;
           }
-          message.error('删除失败');
+          message.success('删除成功');
+          action?.reload();
         }}
       >
         删除
@@ -127,14 +159,14 @@ const columns: ProColumns<API.CurrentUser>[] = [
 export default () => {
   const actionRef = useRef<ActionType>();
   return (
-    <ProTable<API.CurrentUser>
+    <ProTable<API.UserVO>
       columns={columns}
       actionRef={actionRef}
       cardBordered
       // request 类型 (params?: {pageSize,current},sort,filter) => {data,success,total}
       request={async (params = {}, sort, filter) => {
         console.log(params,sort,filter);
-        const result = await selectAll();
+        const result = await userSelectAll();
         const userList = result.data;
         return {
           data: userList,
@@ -142,6 +174,26 @@ export default () => {
       }}
       editable={{
         type: 'multiple',
+        onDelete:async (rows)=>{ 
+          // @ts-ignore
+            const result =  await userDelete(rows);
+            if(result.data === null) {
+              message.error(result.description);
+              return;
+            }
+            message.success("删除成功");
+          },
+          onSave: async (_,row)=>{ 
+            // @ts-ignore
+              const result =  await userUpdate(row);
+              if(result.data === null) {
+                message.error(result.description);
+                return;
+              }
+              console.log(result.data);
+              
+              message.success("修改成功");
+            }
       }}
       columnsState={{
         persistenceKey: 'pro-table-singe-demos',
@@ -167,7 +219,7 @@ export default () => {
         pageSize: 5,
       }}
       dateFormatter="string"
-      headerTitle="高级表格"
+      headerTitle="用户列表"
     />
   );
 };
