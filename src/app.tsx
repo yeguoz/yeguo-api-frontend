@@ -54,6 +54,8 @@ export async function getInitialState(): Promise<{
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+  const username =  initialState?.currentUser?.username;
+  const userAccount =  initialState?.currentUser?.userAccount;
   return {
     actionsRender: () => [<Question key="doc" />],
     avatarProps: {
@@ -64,7 +66,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       },
     },
     waterMarkProps: {
-      content: initialState?.currentUser?.username,
+      content: username ? username : userAccount,
     },
     footerRender: () => <Footer />,
     onPageChange: () => {

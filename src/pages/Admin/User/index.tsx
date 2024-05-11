@@ -1,9 +1,9 @@
 import { useRef } from 'react';
-
+import { Search, WaterMark } from '@ant-design/pro-components';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import { Image, message } from 'antd';
 import { userUpdate, userDelete, userSelectAll } from '@/services/yeguo-api/userController';
-import { rearg } from 'lodash';
+import { useModel } from '@umijs/max';
 
 const columns: ProColumns<API.CurrentUser>[] = [
   {
@@ -46,7 +46,7 @@ const columns: ProColumns<API.CurrentUser>[] = [
         status: 'Processing',
       },
     },
-    hideInSearch:true
+
   },
   {
     title: '电话',
@@ -70,6 +70,7 @@ const columns: ProColumns<API.CurrentUser>[] = [
     width: 20,
     editable:false,
     hideInSearch:true,
+    hideInTable: true
   },
   {
     title: '密钥key',
@@ -78,6 +79,7 @@ const columns: ProColumns<API.CurrentUser>[] = [
     width: 20,
     editable:false,
     hideInSearch:true,
+    hideInTable: true
   },
   {
     title: '状态',
@@ -157,9 +159,11 @@ const columns: ProColumns<API.CurrentUser>[] = [
 ];
 
 export default () => {
+  const { initialState } = useModel('@@initialState');
   const actionRef = useRef<ActionType>();
   return (
-    <ProTable<API.UserVO>
+    <WaterMark content={initialState?.currentUser?.username?initialState?.currentUser?.username:initialState?.currentUser?.userAccount}>
+      <ProTable<API.UserVO>
       columns={columns}
       actionRef={actionRef}
       cardBordered
@@ -172,6 +176,38 @@ export default () => {
           data: userList,
         };
       }}
+      // 请求失败时触发
+      onRequestError={
+        (error)=>{
+          message.error(error.message);
+        }
+      }
+      // 重置时触发
+      onReset={
+        ()=>{
+          
+          message.info("onRest");
+        }
+      }
+      // 提交时触发
+      onSubmit={
+        ()=>{
+          console.log(actionRef.current);
+          
+        }
+      }
+      toolbar={
+        {
+          title:"用户列表",
+          tooltip:'提供用户信息'
+        }
+      }
+      cardProps={
+        {
+
+        }
+      }
+      // 编辑配置
       editable={{
         type: 'multiple',
         onDelete:async (rows)=>{ 
@@ -200,8 +236,10 @@ export default () => {
         persistenceType: 'localStorage',
       }}
       rowKey="id"
+      // search配置
       search={{
         labelWidth: 'auto',
+        showHiddenNum:true
       }}
       form={{
         // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
@@ -221,5 +259,6 @@ export default () => {
       dateFormatter="string"
       headerTitle="用户列表"
     />
+    </WaterMark>
   );
 };
