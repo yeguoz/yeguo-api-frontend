@@ -7,8 +7,8 @@ declare namespace API {
     data?: T;
     message?: string;
     description?: string;
-  }
-
+  };
+  // 用户信息 ======================================
   type UserVO = {
     id?: number;
     username?: string;
@@ -23,18 +23,95 @@ declare namespace API {
     userStatus?: number;
     userRole?: number;
     createTime?: Date;
-  }
+  };
 
   type UserLoginParams = {
-     userAccount?: string;
-     userPassword?: string;
-  }
+    userAccount?: string;
+    userPassword?: string;
+  };
 
   type UserRegisterParams = {
-     username?: string;
-     userAccount?: string;
-     userPassword?: string;
-     checkPassword?: string;
+    username?: string;
+    userAccount?: string;
+    userPassword?: string;
+    checkPassword?: string;
+  };
+
+  type UserQueryParams = {
+    id?: number;
+    username?: string;
+    userAccount?: string;
+    gender?: number;
+    phone?: string;
+    email?: string;
+    goldCoin?: number;
+    userStatus?: number;
+    userRole?: number;
+  }
+  // 接口信息 ======================================== 
+
+  type InterfaceInfoVO = {
+    id?: number;
+    userId?: number;
+    name?: string;
+    description?: string;
+    method?: string;
+    url?: string;
+    requestParams?: string;
+    requestHeader?: string;
+    responseHeader?: string;
+    responseFormat?: string;
+    requestExample?: string;
+    interfaceStatus?: number;
+    invokingCount?: number;
+    avatarUrl?: string;
+    requiredGoldCoins?: number;
+    createTime?: Date;
+  };
+
+  type InterfaceRegisterParams = {
+    name: string;
+    description: string;
+    method: string;
+    url: string;
+    requestParams: string;
+    requestHeader: string;
+    responseHeader: string;
+    responseFormat: string;
+    requestExample: string;
+    interfaceStatus: number;
+    invokingCount: number;
+    avatarUrl: string;
+    requiredGoldCoins: number;
+  };
+
+  type InterfaceUpdateParams = {
+    id: number;
+    name: string;
+    description: string;
+    method: string;
+    url: string;
+    requestParams: string;
+    requestHeader: string;
+    responseHeader: string;
+    responseFormat: string;
+    requestExample: string;
+    interfaceStatus: number;
+    invokingCount: number;
+    avatarUrl: string;
+    requiredGoldCoins: number;
+  };
+
+  type InterfaceInfoQueryParams = {
+    id?: number;
+    userId?: number;
+    name?: string;
+    description?: string;
+    method?: string;
+    url?: string;
+    responseFormat?: string;
+    invokingCount?: number;
+    requiredGoldCoins?: number;
   }
 
 }

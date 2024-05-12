@@ -1,91 +1,154 @@
+import {
+  interfaceInfoDelete,
+  interfaceInfoRegister,
+  interfaceInfoSelectAll,
+  interfaceInfoUpdate,
+} from '@/services/yeguo-api/interfaceInfoController';
+import { PlusOutlined } from '@ant-design/icons';
+import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import { ProTable, WaterMark } from '@ant-design/pro-components';
+import { useModel } from '@umijs/max';
+import { Button, message } from 'antd';
 import { useRef } from 'react';
+export const waitTimePromise = async (time: number = 100) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, time);
+  });
+};
 
-import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Image, message } from 'antd';
+export const waitTime = async (time: number = 100) => {
+  await waitTimePromise(time);
+};
 
-const columns: ProColumns<API.CurrentUser>[] = [
+const columns: ProColumns<API.InterfaceInfoVO>[] = [
   {
     title: 'id',
     dataIndex: 'id',
     valueType: 'text',
-    width: 50,
+    editable: false,
+    ellipsis: true,
   },
   {
-    title: '用户名',
-    dataIndex: 'username',
-    copyable: true,
+    title: '发布人id',
+    dataIndex: 'userId',
+    valueType: 'text',
+    editable: false,
+    ellipsis: true,
   },
   {
-    title: '用户账号',
-    dataIndex: 'userAccount',
-    copyable: true,
+    title: '接口名',
+    dataIndex: 'name',
+    valueType: 'text',
+    ellipsis: true,
   },
   {
-    title: '头像',
+    title: '接口头像',
     dataIndex: 'avatarUrl',
-    render: (_, record) => (
-      <div>
-        <Image src={record.avatarUrl} height={50} />
-      </div>
-    ),
+    valueType: 'image',
+    copyable: true,
+    hideInSearch: true,
+    ellipsis: true,
   },
   {
-    title: '性别',
-    dataIndex: 'gender',
+    title: '接口详细',
+    dataIndex: 'description',
+    valueType: 'text',
+    ellipsis: true,
+  },
+  {
+    title: '请求方法',
+    dataIndex: 'method',
+    valueType: 'text',
+    copyable: false,
+    ellipsis: true,
+  },
+  {
+    title: '请求地址',
+    dataIndex: 'url',
+    valueType: 'text',
+    copyable: false,
+    ellipsis: true,
+  },
+  {
+    title: '请求参数',
+    dataIndex: 'requestParams',
+    valueType: 'text',
+    copyable: false,
+    hideInSearch: true,
+    ellipsis: true,
+  },
+  {
+    title: '请求头',
+    dataIndex: 'requestHeader',
+    valueType: 'jsonCode',
+    copyable: false,
+    hideInSearch: true,
+    ellipsis: true,
+  },
+  {
+    title: '响应头',
+    dataIndex: 'responseHeader',
+    valueType: 'jsonCode',
+    copyable: false,
+    hideInSearch: true,
+    ellipsis: true,
+  },
+  {
+    title: '响应格式',
+    dataIndex: 'responseFormat',
+    valueType: 'text',
+    ellipsis: true,
+  },
+  {
+    title: '响应示例',
+    dataIndex: 'requestExample',
+    valueType: 'text',
+    copyable: false,
+    hideInSearch: true,
+    ellipsis: true,
+  },
+  {
+    title: '接口状态',
+    dataIndex: 'interfaceStatus',
     valueType: 'select',
     valueEnum: {
       0: {
-        text: '女',
-        status: 'Processing',
+        text: '关闭',
+        status: 'Error',
       },
       1: {
-        text: '男',
-        status: 'Processing',
-      },
-    },
-    hideInSearch:true
-  },
-  {
-    title: '电话',
-    dataIndex: 'phone',
-    copyable: true,
-  },
-  {
-    title: '邮件',
-    dataIndex: 'email',
-    copyable: true,
-  },
-  {
-    title: '状态',
-    dataIndex: 'userStatus',
-    valueType: 'select',
-    valueEnum: {
-      0: {
-        text: '正常',
-        status: 'Processing',
-      },
-    },
-  },
-  {
-    title: '角色',
-    dataIndex: 'userRole',
-    valueType: 'select',
-    valueEnum: {
-      0: {
-        text: '普通用户',
-        status: 'Processing',
-      },
-      1: {
-        text: '管理员',
+        text: '开启',
         status: 'Success',
       },
     },
+    ellipsis: true,
+    editable: false,
+    hideInTable: true,
+    hideInSearch: true,
+  },
+  {
+    title: '总调用次数',
+    dataIndex: 'invokingCount',
+    valueType: 'text',
+    ellipsis: true,
+  },
+  {
+    title: '果币/次',
+    dataIndex: 'requiredGoldCoins',
+    valueType: 'text',
+    ellipsis: true,
   },
   {
     title: '创建时间',
     dataIndex: 'createTime',
     valueType: 'date',
+    hideInSearch: true,
+    editable: false,
+    ellipsis: true,
   },
+
   {
     title: '操作',
     valueType: 'option',
@@ -99,23 +162,21 @@ const columns: ProColumns<API.CurrentUser>[] = [
       >
         编辑
       </a>,
-      <a href={record.avatarUrl} target="_blank" rel="noopener noreferrer" key="view">
-        查看
-      </a>,
+
       <a
         key="delete"
         onClick={async () => {
           // @ts-ignore
-          const result = await removeUser(record.id);
+          const result = await interfaceInfoDelete(record.id);
           // 1成功 -1失败
           const data = result.data;
-          console.log(data);
-          if (data === 1) {
-            message.success('删除成功');
-            action?.reload();
+
+          if (data < 1) {
+            message.error('删除失败');
             return;
           }
-          message.error('删除失败');
+          message.success('删除成功');
+          action?.reload();
         }}
       >
         删除
@@ -125,49 +186,111 @@ const columns: ProColumns<API.CurrentUser>[] = [
 ];
 
 export default () => {
+  const { initialState } = useModel('@@initialState');
   const actionRef = useRef<ActionType>();
   return (
-    <ProTable<API.CurrentUser>
-      columns={columns}
-      actionRef={actionRef}
-      cardBordered
-      // request 类型 (params?: {pageSize,current},sort,filter) => {data,success,total}
-      request={async (params = {}, sort, filter) => {
-        console.log(params,sort,filter);
-        const result = await selectAll();
-        const userList = result.data;
-        return {
-          data: userList,
-        };
-      }}
-      editable={{
-        type: 'multiple',
-      }}
-      columnsState={{
-        persistenceKey: 'pro-table-singe-demos',
-        persistenceType: 'localStorage',
-      }}
-      rowKey="id"
-      search={{
-        labelWidth: 'auto',
-      }}
-      form={{
-        // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
-        syncToUrl: (values: any, type: any) => {
-          if (type === 'get') {
-            return {
-              ...values,
-              created_at: [values.startTime, values.endTime],
-            };
-          }
-          return values;
-        },
-      }}
-      pagination={{
-        pageSize: 5,
-      }}
-      dateFormatter="string"
-      headerTitle="高级表格"
-    />
+    <WaterMark
+      content={
+        initialState?.currentUser?.username
+          ? initialState?.currentUser?.username
+          : initialState?.currentUser?.userAccount
+      }
+    >
+      <ProTable<API.InterfaceInfoVO>
+        columns={columns}
+        actionRef={actionRef}
+        cardBordered
+        request={async (params = {}, sort, filter) => {
+          console.log(params, sort, filter);
+          const result = await interfaceInfoSelectAll();
+          const interfaceInfoList = result.data;
+          return {
+            data: interfaceInfoList,
+          };
+        }}
+        editable={{
+          type: 'multiple',
+          onSave: async (_, row) => {
+            // @ts-ignore
+            const result = await interfaceInfoUpdate(row);
+            if (result.data === null) {
+              message.error(result.description);
+              return;
+            }
+            console.log(result.data);
+            message.success('修改成功');
+          },
+          actionRender: (row, config, defaultDom) => [defaultDom.save, defaultDom.cancel],
+        }}
+        columnsState={{
+          persistenceKey: 'pro-table-singe-demos',
+          persistenceType: 'localStorage',
+          defaultValue: {
+            option: { fixed: 'right', disable: true },
+          },
+          onChange(value) {
+            console.log('value: ', value);
+          },
+        }}
+        rowKey="id"
+        search={{
+          labelWidth: 'auto',
+          showHiddenNum: true,
+        }}
+        options={{
+          setting: {
+            listsHeight: 400,
+          },
+        }}
+        form={{
+          // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
+          syncToUrl: (values, type) => {
+            if (type === 'get') {
+              return {
+                ...values,
+                created_at: [values.startTime, values.endTime],
+              };
+            }
+            return values;
+          },
+        }}
+        pagination={{
+          pageSize: 5,
+          onChange: (page) => console.log(page),
+        }}
+        dateFormatter="string"
+        headerTitle="接口信息列表"
+        toolBarRender={() => [
+          <Button
+            key="button"
+            icon={<PlusOutlined />}
+            onClick={async () => {
+              const obj = {
+                name: '',
+                description: '',
+                method: '',
+                url: '',
+                requestParams: '',
+                requestHeader: '',
+                responseHeader: '',
+                responseFormat: '',
+                requestExample: '',
+                interfaceStatus: 0,
+                invokingCount: 0,
+                avatarUrl: '',
+                requiredGoldCoins: 0,
+              };
+              const result = await interfaceInfoRegister(obj);
+              actionRef.current?.addEditRecord?.({
+                id: result.data,
+              });
+            }}
+            type="primary"
+          >
+            新建
+          </Button>,
+        ]}
+      />
+    </WaterMark>
   );
 };

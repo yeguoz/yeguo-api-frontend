@@ -33,7 +33,7 @@ export const errorConfig: RequestConfig = {
   responseInterceptors: [
     (response) => {
       // 拦截响应数据，进行个性化处理
-      console.log(response);
+      // console.log(response);
       
       const { data } = response as unknown as ResponseStructure;
 

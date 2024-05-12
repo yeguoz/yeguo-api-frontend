@@ -59,6 +59,8 @@ const Register: React.FC = () => {
     try {
       // 注册  API.ResponseData
       const result = await userRegister({ ...values });
+      console.log("id:"+result.data);
+      
       // 注册成功返回id 
       if (result.data > 0) {
         const defaultLoginSuccessMessage = '注册成功！';
