@@ -150,7 +150,7 @@ const columns: ProColumns<API.UserVO>[] = [
             message.error('删除失败');
             return;
           }
-          message.success('删除成功');
+          message.success('删除成功,请手动刷新数据');
         }}
       >
         删除

@@ -175,8 +175,7 @@ const columns: ProColumns<API.InterfaceInfoVO>[] = [
             message.error('删除失败');
             return;
           }
-          message.success('删除成功');
-          action?.reload();
+          message.success('删除成功,请手动刷新数据');
         }}
       >
         删除
