@@ -1,4 +1,4 @@
-import { userDelete, userSelectAll, userUpdate } from '@/services/yeguo-api/userController';
+import { userDelete, userQuery, userUpdate } from '@/services/yeguo-api/userController';
 import { ActionType, ProColumns, ProTable, WaterMark } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { message } from 'antd';
@@ -127,6 +127,7 @@ const columns: ProColumns<API.UserVO>[] = [
   {
     title: '操作',
     valueType: 'option',
+    // action 根据request才能触发
     render: (text, record, _, action) => [
       <a
         key="editable"
@@ -137,20 +138,19 @@ const columns: ProColumns<API.UserVO>[] = [
       >
         编辑
       </a>,
+      // todo 删除后刷新展示数据
       <a
         key="delete"
         onClick={async () => {
           // @ts-ignore
           const result = await userDelete(record.id);
-          // 1成功 -1失败
+          // 1成功
           const data = result.data;
-          console.log('返回值是：' + data);
           if (data < 1) {
             message.error('删除失败');
             return;
           }
           message.success('删除成功');
-          action?.reload();
         }}
       >
         删除
@@ -163,9 +163,12 @@ export default () => {
   const { initialState } = useModel('@@initialState');
   const actionRef = useRef<ActionType>();
   const [tableData, setTableData] = useState([]);
+  const [paramsState, setParamsState] = useState({});
 
-  const UserList = async (params: API.UserQueryParams) => {
-    const result = await userSelectAll(params);
+
+  const userQueryList = async (params: API.UserQueryParams) => {
+    setParamsState(params);
+    const result = await userQuery(params);
     if (!result.data) {
       message.warning('查询数据为空');
       return;
@@ -174,8 +177,9 @@ export default () => {
     message.success('查询数据成功');
   };
 
+  // 在组件挂载后调用一次数据查询
   useEffect(() => {
-    UserList({}); // 在组件挂载后调用一次数据查询
+    userQueryList({}); 
   }, []);
 
   return (
@@ -190,7 +194,6 @@ export default () => {
         columns={columns}
         actionRef={actionRef}
         cardBordered
-        // request 类型 (params?: {pageSize,current},sort,filter) => {data,success,total}
         dataSource={tableData}
         // 请求失败时触发
         onRequestError={(error) => {
@@ -199,7 +202,7 @@ export default () => {
         // 重置时触发
         onReset={async () => {
           // @ts-ignore
-          const result = await userSelectAll({});
+          const result = await userQuery({});
           if (!result.data) {
             message.warning('查询数据为空');
             return;
@@ -207,16 +210,16 @@ export default () => {
           setTableData(result.data);
           message.success('查询所有用户成功');
         }}
-        // 提交时触发
-        onSubmit={(params) => UserList(params)}
+        // // 提交时触发
+        onSubmit={(params) => userQueryList(params)}
         toolbar={{
           title: '用户列表',
           tooltip: '提供用户信息',
         }}
-        cardProps={{}}
         // 编辑配置
         editable={{
           type: 'multiple',
+          //  修改后刷新展示数据
           onSave: async (_, row) => {
             // @ts-ignore
             const result = await userUpdate(row);
@@ -224,7 +227,7 @@ export default () => {
               message.error(result.description);
               return;
             }
-            console.log(result.data);
+            userQueryList(paramsState);
             message.success('修改成功');
           },
           // 保留保存和取消

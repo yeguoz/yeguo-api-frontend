@@ -29,10 +29,11 @@ export async function interfaceInfoUpdate(body:API.InterfaceUpdateParams,options
   });
 }
 
-/** 查询所有用户 GET /api/interfaceInfo/selectAll */
-export async function interfaceInfoSelectAll(options?: { [key: string]: any }) {
+/** 查询所有用户 GET /api/interfaceInfo/dynamicQuery */
+export async function interfaceInfoQuery(params:API.InterfaceInfoQueryParams,options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/interfaceInfo/dynamicQuery`, {
     method: 'GET',
+    params,
     ...(options || {}),
   });
 }

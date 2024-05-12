@@ -1,7 +1,7 @@
 import {
   interfaceInfoDelete,
+  interfaceInfoQuery,
   interfaceInfoRegister,
-  interfaceInfoSelectAll,
   interfaceInfoUpdate,
 } from '@/services/yeguo-api/interfaceInfoController';
 import { PlusOutlined } from '@ant-design/icons';
@@ -9,7 +9,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable, WaterMark } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Button, message } from 'antd';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 export const waitTimePromise = async (time: number = 100) => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -162,7 +162,7 @@ const columns: ProColumns<API.InterfaceInfoVO>[] = [
       >
         编辑
       </a>,
-
+        // todo 删除后刷新展示数据
       <a
         key="delete"
         onClick={async () => {
@@ -188,6 +188,24 @@ const columns: ProColumns<API.InterfaceInfoVO>[] = [
 export default () => {
   const { initialState } = useModel('@@initialState');
   const actionRef = useRef<ActionType>();
+  const [tableData, setTableData] = useState([]);
+  const [paramsState, setParamsState] = useState({});
+  
+  const interfaceInfoQueryList = async (params: API.UserQueryParams) => {
+    setParamsState(params);
+    const result = await interfaceInfoQuery(params);
+    if (!result.data) {
+      message.warning('查询数据为空');
+      return;
+    }
+    setTableData(result.data);
+    message.success('查询数据成功');
+  };
+
+  useEffect(() => {
+    interfaceInfoQueryList({}); // 在组件挂载后调用一次数据查询
+  }, []);
+
   return (
     <WaterMark
       content={
@@ -200,16 +218,31 @@ export default () => {
         columns={columns}
         actionRef={actionRef}
         cardBordered
-        request={async (params = {}, sort, filter) => {
-          console.log(params, sort, filter);
-          const result = await interfaceInfoSelectAll();
-          const interfaceInfoList = result.data;
-          return {
-            data: interfaceInfoList,
-          };
+        dataSource={tableData}
+        // 请求失败时触发
+        onRequestError={(error) => {
+          message.error(error.message);
+        }}
+        // 重置时触发
+        onReset={async () => {
+          // @ts-ignore
+          const result = await interfaceInfoQuery({});
+          if (!result.data) {
+            message.warning('查询数据为空');
+            return;
+          }
+          setTableData(result.data);
+          message.success('查询所有用户成功');
+        }}
+        // 提交时触发
+        onSubmit={(params) => interfaceInfoQueryList(params)}
+        toolbar={{
+          title: '接口列表',
+          tooltip: '提供接口信息',
         }}
         editable={{
           type: 'multiple',
+          // todo 修改后刷新展示数据
           onSave: async (_, row) => {
             // @ts-ignore
             const result = await interfaceInfoUpdate(row);
@@ -217,9 +250,10 @@ export default () => {
               message.error(result.description);
               return;
             }
-            console.log(result.data);
+            interfaceInfoQueryList(paramsState);
             message.success('修改成功');
           },
+          // 保留保存和取消
           actionRender: (row, config, defaultDom) => [defaultDom.save, defaultDom.cancel],
         }}
         columnsState={{

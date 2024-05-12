@@ -45,8 +45,8 @@ export async function userlogout(options?: { [key: string]: any }) {
   });
 }
 
-/** 查询所有用户 GET /api/user/selectAll */
-export async function userSelectAll(params:API.UserQueryParams,options?: { [key: string]: any }) {
+/** 查询所有用户 GET /api/user/dynamicQuery */
+export async function userQuery(params:API.UserQueryParams,options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/user/dynamicQuery`, {
     method: 'GET',
     params,
