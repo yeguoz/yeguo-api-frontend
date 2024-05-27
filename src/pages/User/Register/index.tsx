@@ -1,6 +1,6 @@
 import { Footer } from '@/components';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { LoginForm, ProFormText } from '@ant-design/pro-components';
+import { LockOutlined, MailTwoTone, UserOutlined } from '@ant-design/icons';
+import { LoginForm, ProFormCaptcha, ProFormText } from '@ant-design/pro-components';
 import { Helmet, Link, history } from '@umijs/max';
 import { Divider, Space, Tabs, message } from 'antd';
 import { createStyles } from 'antd-style';
@@ -44,6 +44,14 @@ const useStyles = createStyles(({ token }) => {
     },
   };
 });
+
+const waitTime = (time: number = 100) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, time);
+  });
+};
 
 const Register: React.FC = () => {
   const [type, setType] = useState<string>('platform_register');
@@ -210,45 +218,42 @@ const Register: React.FC = () => {
                     required: true,
                     message: '邮箱是必填项！',
                   },
-                ]}
-              />
-              <ProFormText.Password
-                name="userPassword"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined />,
-                }}
-                placeholder={'请输入密码'}
-                rules={[
                   {
-                    required: true,
-                    message: '密码是必填项！',
-                  },
-                  {
-                    min: 8,
-                    message: '长度不小于8！',
+                    pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+                    message: '邮箱格式错误！',
                   },
                 ]}
               />
 
-              <ProFormText.Password
-                name="checkPassword"
+              <ProFormCaptcha
                 fieldProps={{
                   size: 'large',
-                  prefix: <LockOutlined />,
+                  prefix: <MailTwoTone />,
                 }}
-                placeholder={'请确认密码'}
+                captchaProps={{
+                  size: 'large',
+                }}
+                // 手机号的 name，onGetCaptcha 会注入这个值
+                phoneName="email"
+                name="captcha"
                 rules={[
                   {
                     required: true,
-                    message: '确认密码是必填项！',
-                  },
-                  {
-                    min: 8,
-                    message: '长度不小于8！',
+                    message: '请输入验证码',
                   },
                 ]}
+                placeholder="请输入验证码"
+                // 如果需要失败可以 throw 一个错误出来，onGetCaptcha 会自动停止
+                // throw new Error("获取验证码错误")
+                onGetCaptcha={async (email) => {
+                  await waitTime(500);
+                  // 调用后端发送验证码接口，发送邮件
+                  
+                  // 成功
+                  message.success(`邮箱 ${email} 验证码发送成功!`);
+                }}
               />
+              
             </>
           )}
 

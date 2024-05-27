@@ -3,7 +3,7 @@
 import { request } from '@umijs/max';
 
 /** 用户注册 POST /api/user/register */
-export async function userRegister(body:API.UserRegisterParams,options?: { [key: string]: any }) {
+export async function userRegister(body: API.UserRegisterParams, options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/user/register`, {
     method: 'POST',
     headers: {
@@ -15,7 +15,7 @@ export async function userRegister(body:API.UserRegisterParams,options?: { [key:
 }
 
 /** 用户登录 POST /api/user/login */
-export async function userLogin(body:API.UserLoginParams,options?: { [key: string]: any }) {
+export async function userLogin(body: API.UserLoginParams, options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/user/login`, {
     method: 'POST',
     headers: {
@@ -46,7 +46,7 @@ export async function userlogout(options?: { [key: string]: any }) {
 }
 
 /** 查询所有用户 GET /api/user/dynamicQuery */
-export async function userQuery(params:API.UserQueryParams,options?: { [key: string]: any }) {
+export async function userQuery(params: API.UserQueryParams, options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/user/dynamicQuery`, {
     method: 'GET',
     params,
@@ -55,7 +55,7 @@ export async function userQuery(params:API.UserQueryParams,options?: { [key: str
 }
 
 /** 按照id删除用户 DELETE /api/user/selectAll */
-export async function userDelete(id:number,options?: { [key: string]: any }) {
+export async function userDelete(id: number, options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/user/${id}`, {
     method: 'DELETE',
     ...(options || {}),
@@ -63,9 +63,20 @@ export async function userDelete(id:number,options?: { [key: string]: any }) {
 }
 
 /** 按照id修改用户 PUT /api/user */
-export async function userUpdate(body:API.UserVO,options?: { [key: string]: any }) {
+export async function userUpdate(body: API.UserVO, options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/user/update`, {
     method: 'PUT',
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 请求后端向邮箱发送验证码 */
+
+/** 注册，邮箱验证码 */
+export async function userEmailRegister(body: API.UserEmailRegisterParams, options?: { [key: string]: any }) {
+  return request<API.ResponseData>(`/api/user/emailRegister`, {
+    method: 'POST',
     data: body,
     ...(options || {}),
   });

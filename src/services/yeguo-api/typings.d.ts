@@ -37,6 +37,11 @@ declare namespace API {
     checkPassword?: string;
   };
 
+  type UserEmailRegisterParams = {
+    email?:string;
+    verifyCode?:string;
+  };
+
   type UserQueryParams = {
     id?: number;
     username?: string;
@@ -48,6 +53,8 @@ declare namespace API {
     userStatus?: number;
     userRole?: number;
   }
+
+
   // 接口信息 ======================================== 
 
   type InterfaceInfoVO = {

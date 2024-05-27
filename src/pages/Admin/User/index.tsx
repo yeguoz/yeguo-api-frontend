@@ -1,5 +1,5 @@
 import { userDelete, userQuery, userUpdate } from '@/services/yeguo-api/userController';
-import { ActionType, ProColumns, ProTable, WaterMark } from '@ant-design/pro-components';
+import { ActionType, PageContainer, ProColumns, ProTable, WaterMark } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
@@ -183,7 +183,8 @@ export default () => {
   }, []);
 
   return (
-    <WaterMark
+    <PageContainer>
+         <WaterMark
       content={
         initialState?.currentUser?.username
           ? initialState?.currentUser?.username
@@ -262,5 +263,6 @@ export default () => {
         headerTitle="用户列表"
       />
     </WaterMark>
+    </PageContainer>
   );
 };

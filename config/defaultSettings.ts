@@ -10,7 +10,7 @@ const Settings: ProLayoutProps & {
   "title": 'yeguo-api开放平台',
   "iconfontUrl": '',
   "navTheme": "light",
-  "colorPrimary": "#c3d94e",
+  "colorPrimary": "#a6559d",
   "layout": "top",
   "contentWidth": "Fixed",
   "fixedHeader": false,

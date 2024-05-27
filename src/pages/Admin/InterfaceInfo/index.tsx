@@ -6,7 +6,7 @@ import {
 } from '@/services/yeguo-api/interfaceInfoController';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { ProTable, WaterMark } from '@ant-design/pro-components';
+import { PageContainer, ProTable, WaterMark } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Button, message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
@@ -206,7 +206,8 @@ export default () => {
   }, []);
 
   return (
-    <WaterMark
+    <PageContainer>
+          <WaterMark
       content={
         initialState?.currentUser?.username
           ? initialState?.currentUser?.username
@@ -325,5 +326,6 @@ export default () => {
         ]}
       />
     </WaterMark>
+    </PageContainer>    
   );
 };

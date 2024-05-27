@@ -1,3 +1,5 @@
+import { Menu } from "antd";
+
 export default [
   {
     path: '/user',
@@ -14,12 +16,16 @@ export default [
     icon: 'crown',
     access: 'canAdmin',
     routes: [
-      { path: '/admin/interfaceInfo', name: '接口管理页', component: './Admin/InterfaceInfo' },
+      { path: '/admin/interfaceInfo', name: '接口管理页', component: './Admin/InterfaceInfo'},
       { path: '/admin/user', name: '用户管理页', component: './Admin/User' },
     ],
   },
-  { name: '接口市集', icon: 'table', path: '/interfaceInfo', component: './InterfaceInfo' },
-  { name: '查询表格', icon: 'table', path: '/list', component: './TableList' },
+  { name: '接口市集', icon: 'table', path: '/interfaceInfo',
+    routes: [
+      { path: '/interfaceInfo', component: './InterfaceInfo'},
+      { path: '/interfaceInfo/detail', name: '接口详情', component: './InterfaceInfo/Detail',hideInMenu: true,},
+    ],
+  },
   { name: '个人主页', icon: 'table', path: '/person', component: './Person' },
   { path: '/', redirect: '/welcome' },
   { path: '*', layout: false, component: './404' },

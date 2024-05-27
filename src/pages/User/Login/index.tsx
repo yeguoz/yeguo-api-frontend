@@ -150,10 +150,6 @@ const Login: React.FC = () => {
             ]}
           />
 
-          {/* {status === 'error' && loginType === 'account' && (
-            <LoginMessage content={'错误的用户名和密码(admin/ant.design)'} />
-          )} */}
-
           {type === 'account' && (
             <>
               <ProFormText
@@ -162,7 +158,7 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined />,
                 }}
-                placeholder={'用户名: admin or user'}
+                placeholder={'请输入账号'}
                 rules={[
                   {
                     required: true,
@@ -176,7 +172,7 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <LockOutlined />,
                 }}
-                placeholder={'密码: ant.design'}
+                placeholder={'请输入密码'}
                 rules={[
                   {
                     required: true,
@@ -186,8 +182,6 @@ const Login: React.FC = () => {
               />
             </>
           )}
-
-          {/* {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />} */}
 
           {type === 'mobile' && (
             <>
