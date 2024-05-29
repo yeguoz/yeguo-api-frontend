@@ -1,12 +1,17 @@
 import { Footer } from '@/components';
-import { LockOutlined, MailTwoTone, UserOutlined } from '@ant-design/icons';
+import {
+  userEmailRegister,
+  userEmailVerifyCode,
+  userRegister,
+} from '@/services/yeguo-api/userController';
+import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormCaptcha, ProFormText } from '@ant-design/pro-components';
 import { Helmet, Link, history } from '@umijs/max';
 import { Divider, Space, Tabs, message } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import Settings from '../../../../config/defaultSettings';
-import { userRegister } from '@/services/yeguo-api/userController';
+import isEmailVerifyData from '../common/isEmailverifyData';
 
 // 样式
 const useStyles = createStyles(({ token }) => {
@@ -57,19 +62,39 @@ const Register: React.FC = () => {
   const [type, setType] = useState<string>('platform_register');
   const { styles } = useStyles();
 
+  const EmailHandleSubmit = async (values: API.UserEmailRegisterLoginParams) => {
+    try {
+      // 邮箱注册  API.ResponseData
+      const result = await userEmailRegister({ ...values });
+
+      // 注册成功返回id
+      if (result.data > 0) {
+        const defaultLoginSuccessMessage = '注册成功！';
+        message.success(defaultLoginSuccessMessage);
+        history.push('/user/login');
+        return;
+      }
+      // 失败直接抛出异常
+      // @ts-ignore
+      throw new Error(result.description);
+    } catch (error: any) {
+      const defaultLoginFailureMessage = '注册失败，请重试！';
+      // ?? 如果 error.message  的值为 null 或 undefined，则返回 dLFM，否则返回 error.message的值。
+      message.error(error.message ?? defaultLoginFailureMessage);
+    }
+  };
+
   const handleSubmit = async (values: API.UserRegisterParams) => {
     const { userPassword, checkPassword } = values;
     if (userPassword !== checkPassword) {
       message.error('两次密码输入不一致');
       return;
     }
-
     try {
       // 注册  API.ResponseData
       const result = await userRegister({ ...values });
-      console.log("id:"+result.data);
-      
-      // 注册成功返回id 
+
+      // 注册成功返回id
       if (result.data > 0) {
         const defaultLoginSuccessMessage = '注册成功！';
         message.success(defaultLoginSuccessMessage);
@@ -117,6 +142,12 @@ const Register: React.FC = () => {
             autoLogin: true,
           }}
           onFinish={async (values) => {
+            // 若是邮箱注册
+            if (isEmailVerifyData(values)) {
+              await EmailHandleSubmit(values);
+              return;
+            }
+            // 平台注册
             await handleSubmit(values as API.UserRegisterParams);
           }}
         >
@@ -138,13 +169,13 @@ const Register: React.FC = () => {
 
           {type === 'platform_register' && (
             <>
-               <ProFormText
+              <ProFormText
                 name="username"
                 fieldProps={{
                   size: 'large',
                   prefix: <UserOutlined />,
                 }}
-                placeholder={'请输入昵称'}
+                placeholder={'请输入昵称!'}
               />
               <ProFormText
                 name="userAccount"
@@ -152,7 +183,7 @@ const Register: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined />,
                 }}
-                placeholder={'请输入账号'}
+                placeholder={'请输入账号!'}
                 rules={[
                   {
                     required: true,
@@ -210,9 +241,9 @@ const Register: React.FC = () => {
                 name="email"
                 fieldProps={{
                   size: 'large',
-                  prefix: <UserOutlined />,
+                  prefix: <MailOutlined />,
                 }}
-                placeholder={'请输入邮箱'}
+                placeholder={'请输入邮箱！'}
                 rules={[
                   {
                     required: true,
@@ -228,32 +259,35 @@ const Register: React.FC = () => {
               <ProFormCaptcha
                 fieldProps={{
                   size: 'large',
-                  prefix: <MailTwoTone />,
+                  prefix: <LockOutlined />,
                 }}
                 captchaProps={{
                   size: 'large',
                 }}
                 // 手机号的 name，onGetCaptcha 会注入这个值
                 phoneName="email"
-                name="captcha"
+                name="verifyCode"
                 rules={[
                   {
                     required: true,
-                    message: '请输入验证码',
+                    message: '请输入验证码!',
                   },
                 ]}
-                placeholder="请输入验证码"
+                placeholder="请输入验证码!"
                 // 如果需要失败可以 throw 一个错误出来，onGetCaptcha 会自动停止
                 // throw new Error("获取验证码错误")
                 onGetCaptcha={async (email) => {
-                  await waitTime(500);
+                  await waitTime(0);
                   // 调用后端发送验证码接口，发送邮件
-                  
+                  const result = await userEmailVerifyCode(email);
+                  if (!result.data) {
+                    message.error(`${result.description}`);
+                    return;
+                  }
                   // 成功
                   message.success(`邮箱 ${email} 验证码发送成功!`);
                 }}
               />
-              
             </>
           )}
 
@@ -264,7 +298,13 @@ const Register: React.FC = () => {
           >
             <Space split={<Divider type="vertical" />} size={105}>
               <Link to="/user/login">登录</Link>
-              <a onClick={()=>{alert("请联系管理员:aidjajd@163.com")}}>忘记密码？</a>
+              <a
+                onClick={() => {
+                  alert('请联系管理员:aidjajd@163.com');
+                }}
+              >
+                忘记密码？
+              </a>
             </Space>
           </div>
         </LoginForm>

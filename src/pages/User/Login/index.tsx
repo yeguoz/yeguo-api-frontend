@@ -1,11 +1,14 @@
 import { Footer } from '@/components';
 
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
-import { userLogin } from '@/services/yeguo-api/userController';
+import {
+  userEmailLogin,
+  userEmailVerifyCode,
+  userLogin,
+} from '@/services/yeguo-api/userController';
 import {
   AlipayCircleOutlined,
   LockOutlined,
-  MobileOutlined,
+  MailOutlined,
   TaobaoCircleOutlined,
   UserOutlined,
   WeiboCircleOutlined,
@@ -17,6 +20,7 @@ import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
+import isEmailVerifyData from '../common/isEmailverifyData';
 const useStyles = createStyles(({ token }) => {
   return {
     action: {
@@ -63,6 +67,14 @@ const ActionIcons = () => {
   );
 };
 
+const waitTime = (time: number = 100) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, time);
+  });
+};
+
 const Login: React.FC = () => {
   // const [userLoginState, setUserLoginState] = useState<API.UserLoginParams>({});
   const [type, setType] = useState<string>('account');
@@ -80,15 +92,13 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (values: API.UserLoginParams) => {
+  const EmailHandleSubmit = async (values: API.UserEmailRegisterLoginParams) => {
     try {
-      // 登录
-      const result = await userLogin({
-        ...values,
-      });
-      console.log(result);
-      
-      if (result.data !== null) {
+      // 邮箱登录 API.ResponseData
+      const result = await userEmailLogin({ ...values });
+
+      // 登录成功返回userVO
+      if (result.data) {
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
@@ -97,7 +107,30 @@ const Login: React.FC = () => {
         return;
       }
       message.error(result.description);
-    } catch (error) {
+    } catch (error: any) {
+      const defaultLoginFailureMessage = '网络繁忙,请稍后重试！';
+      console.log(error);
+      message.error(defaultLoginFailureMessage);
+    }
+  };
+
+  const handleSubmit = async (values: API.UserLoginParams) => {
+    try {
+      // 登录
+      const result = await userLogin({
+        ...values,
+      });
+
+      if (result.data) {
+        const defaultLoginSuccessMessage = '登录成功！';
+        message.success(defaultLoginSuccessMessage);
+        await fetchUserInfo();
+        const urlParams = new URL(window.location.href).searchParams;
+        history.push(urlParams.get('redirect') || '/');
+        return;
+      }
+      message.error(result.description);
+    } catch (error: any) {
       const defaultLoginFailureMessage = '网络繁忙,请稍后重试！';
       console.log(error);
       message.error(defaultLoginFailureMessage);
@@ -131,6 +164,13 @@ const Login: React.FC = () => {
           }}
           actions={['其他登录方式 :', <ActionIcons key="icons" />]}
           onFinish={async (values) => {
+            // 若是邮箱登录
+            console.log(values);
+
+            if (isEmailVerifyData(values)) {
+              await EmailHandleSubmit(values);
+              return;
+            }
             await handleSubmit(values as API.UserLoginParams);
           }}
         >
@@ -144,8 +184,8 @@ const Login: React.FC = () => {
                 label: '账户密码登录',
               },
               {
-                key: 'mobile',
-                label: '手机号登录',
+                key: 'email',
+                label: '邮箱登录',
               },
             ]}
           />
@@ -158,7 +198,7 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined />,
                 }}
-                placeholder={'请输入账号'}
+                placeholder={'请输入账号!'}
                 rules={[
                   {
                     required: true,
@@ -172,7 +212,7 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <LockOutlined />,
                 }}
-                placeholder={'请输入密码'}
+                placeholder={'请输入密码!'}
                 rules={[
                   {
                     required: true,
@@ -183,26 +223,27 @@ const Login: React.FC = () => {
             </>
           )}
 
-          {type === 'mobile' && (
+          {type === 'email' && (
             <>
               <ProFormText
                 fieldProps={{
                   size: 'large',
-                  prefix: <MobileOutlined />,
+                  prefix: <MailOutlined />,
                 }}
-                name="mobile"
-                placeholder={'请输入手机号！'}
+                name="email"
+                placeholder={'请输入邮箱！'}
                 rules={[
                   {
                     required: true,
-                    message: '手机号是必填项！',
+                    message: '邮箱是必填项！',
                   },
                   {
-                    pattern: /^1\d{10}$/,
-                    message: '不合法的手机号！',
+                    pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+                    message: '邮箱格式错误！',
                   },
                 ]}
               />
+
               <ProFormCaptcha
                 fieldProps={{
                   size: 'large',
@@ -211,28 +252,28 @@ const Login: React.FC = () => {
                 captchaProps={{
                   size: 'large',
                 }}
-                placeholder={'请输入验证码！'}
-                captchaTextRender={(timing, count) => {
-                  if (timing) {
-                    return `${count} ${'秒后重新获取'}`;
-                  }
-                  return '获取验证码';
-                }}
-                name="captcha"
+                // 手机号的 name，onGetCaptcha 会注入这个值
+                phoneName="email"
+                name="verifyCode"
                 rules={[
                   {
                     required: true,
-                    message: '验证码是必填项！',
+                    message: '请输入验证码!',
                   },
                 ]}
-                onGetCaptcha={async (phone) => {
-                  const result = await getFakeCaptcha({
-                    phone,
-                  });
-                  if (!result) {
+                placeholder="请输入验证码!"
+                // 如果需要失败可以 throw 一个错误出来，onGetCaptcha 会自动停止
+                // throw new Error("获取验证码错误")
+                onGetCaptcha={async (email) => {
+                  await waitTime(0);
+                  // 调用后端发送验证码接口，发送邮件
+                  const result = await userEmailVerifyCode(email);
+                  if (!result.data) {
+                    message.error(`${result.description}`);
                     return;
                   }
-                  message.success('获取验证码成功！验证码为：1234');
+                  // 成功
+                  message.success(`邮箱 ${email} 验证码发送成功!`);
                 }}
               />
             </>

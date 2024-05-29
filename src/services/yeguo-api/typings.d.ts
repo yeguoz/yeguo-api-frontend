@@ -37,7 +37,7 @@ declare namespace API {
     checkPassword?: string;
   };
 
-  type UserEmailRegisterParams = {
+  type UserEmailRegisterLoginParams = {
     email?:string;
     verifyCode?:string;
   };
