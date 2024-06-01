@@ -37,3 +37,21 @@ export async function interfaceInfoQuery(params:API.InterfaceInfoQueryParams,opt
     ...(options || {}),
   });
 }
+
+/** 在线接口调用 POST /api/interfaceInfo/dynamicQuery */
+export async function onlineInvokingGet(body:any,options?: { [key: string]: any }) {
+  return request<API.ResponseData>(`/api/interfaceInfo/onlineInvokingGet`, {
+    method: 'POST',
+    data:body,
+    ...(options || {}),
+  });
+}
+
+/** 在线接口调用 POST /api/interfaceInfo/dynamicQuery */
+export async function onlineInvokingPost(body:any,options?: { [key: string]: any }) {
+  return request<API.ResponseData>(`/api/interfaceInfo/onlineInvokingPost`, {
+    method: 'POST',
+    data:body,
+    ...(options || {}),
+  });
+}
