@@ -1,4 +1,3 @@
-import { onlineInvoking, onlineInvokingGet } from '@/services/yeguo-api/interfaceInfoController';
 import { PageContainer, ProCard } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Col, Row, TableProps } from 'antd';
@@ -91,8 +90,8 @@ export default () => {
 
   const Invoking = async () => {
     console.log(JSON.stringify(data));
-    console.log({...data});
-    
+    console.log({ ...data });
+
     // const result = await onlineInvokingGet({...data});
     // alert(result.data)
     // setInvokingResult(result.data);
