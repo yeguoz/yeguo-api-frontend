@@ -153,7 +153,7 @@ export default () => {
         style={{ marginTop: '20px' }}
       >
         <ProCard.TabPane key="tab1" tab="API文档" icon={<img src={doc} height={20}></img>}>
-          <TipUtil text="请求参数说明" />
+          <TipUtil text="请求参数说明"/>
           {/* @ts-ignore */}
           <ParamList columns={paramsDoc} data={objArray} />
           <TipUtil text="响应参数对照" />
