@@ -1,4 +1,6 @@
-import { PageContainer, ProCard } from '@ant-design/pro-components';
+import Container from '@/components/Container';
+import { onlineInvoking } from '@/services/yeguo-api/interfaceInfoController';
+import { ProCard } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Col, Row, TableProps } from 'antd';
 import { useState } from 'react';
@@ -15,7 +17,7 @@ import code from '/public/assets/code.svg';
 import doc from '/public/assets/document.svg';
 import errorcode from '/public/assets/errorcode.svg';
 
-const style: React.CSSProperties = { padding: '8px 2px' };
+const style: React.CSSProperties = { padding: '8px 4px' };
 
 export default () => {
   const [invokingResult, setInvokingResult] = useState(null);
@@ -39,17 +41,11 @@ export default () => {
       createTime,
     },
   } = useLocation();
-  const { data, setData } = useModel('dataModel');
+  const { data } = useModel('dataModel');
 
   const codeCol: TableProps<Code>['columns'] = [
     {
-      title: '参数名称',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: '类型',
+      title: '状态码',
       dataIndex: 'code',
       key: 'code',
     },
@@ -89,41 +85,63 @@ export default () => {
   }
 
   const Invoking = async () => {
-    console.log(JSON.stringify(data));
-    console.log({ ...data });
+    // 防止出现 map_row_parentKey: undefined,
+    const transformedData = JSON.parse(JSON.stringify(data));
+    console.log(transformedData);
+    console.log({ irp: transformedData, method, url });
+    const result = await onlineInvoking({ irp: transformedData, method, url });
 
-    // const result = await onlineInvokingGet({...data});
-    // alert(result.data)
-    // setInvokingResult(result.data);
+    // console.log({ ...data });
+    /* 
+  {
+    [{"id":1718608585533,"index":0,"name":"qq","value":"123213"},
+     {"id":1718608591521,"index":1,"name":"bb","value":"3esafdsaf"}
+    ]
+     ,
+     method: 'POST',
+  }
+   */
+    console.log(result);
+    if (result.code !== 20000) {
+      setInvokingResult(result.data);
+      return;
+    }
+    setInvokingResult(result.data);
   };
   return (
-    <PageContainer
-      header={{
-        title: '',
-        breadcrumb: {},
-      }}
-    >
-      <ProCard title={name} bordered headerBordered gutter={16}>
+    <Container>
+      <ProCard title={<strong>{name}</strong>} bordered headerBordered gutter={16}>
         <Row gutter={[16, 24]}>
-          <Col className="gutter-row" span={6}>
-            <div style={style}>接口地址：{url}</div>
-          </Col>
-          <Col className="gutter-row" span={6}>
-            <div style={style}>返回格式：{responseFormat}</div>
-          </Col>
-          <Col className="gutter-row" span={6}>
-            <div style={style}>消费果币：{requiredGoldCoins}</div>
-          </Col>
-          <Col className="gutter-row" span={6}>
+          <Col className="gutter-row" span={10}>
             <div style={style}>
-              请求方式：
+              <strong>接口地址：</strong>
+              {url}
+            </div>
+          </Col>
+          <Col className="gutter-row" span={10}>
+            <div style={style}>
+              <strong>返回格式：</strong>
+              {responseFormat}
+            </div>
+          </Col>
+          <Col className="gutter-row" span={10}>
+            <div style={style}>
+              <strong>消费果币：</strong>
+              {requiredGoldCoins}
+            </div>
+          </Col>
+          <Col className="gutter-row" span={10}>
+            <div style={style}>
+              <strong>请求方式</strong>：
               {
                 <span
                   style={{
                     display: 'inline-block',
-                    width: 25,
-                    backgroundColor: '#b7d332',
-                    borderRadius: 5,
+                    width: '2.2rem',
+                    textAlign: 'center',
+                    backgroundColor: 'rgba(201, 211, 46, 0.3)',
+                    border: '0.03125rem solid skyblue',
+                    borderRadius: '0.5rem',
                   }}
                 >
                   {method}
@@ -131,17 +149,54 @@ export default () => {
               }
             </div>
           </Col>
-          <Col className="gutter-row" span={6}>
-            <div style={style}>调用总次数：{invokingCount}</div>
+          <Col className="gutter-row" span={10}>
+            <div style={style}>
+              <strong>调用总次数：</strong>
+              {invokingCount}
+            </div>
           </Col>
-          <Col className="gutter-row" span={6}>
-            <div style={style}>接口状态：{interfaceStatus === 0 ? '正常' : '关闭'}</div>
+          <Col className="gutter-row" span={10}>
+            <div style={style}>
+              <strong>接口状态：</strong>
+              {interfaceStatus === 0 ? (
+                <span
+                  style={{
+                    display: 'inline-block',
+                    width: '2.2rem',
+                    textAlign: 'center',
+                    backgroundColor: 'rgba(201, 211, 46, 0.3)',
+                    border: '0.03125rem solid skyblue',
+                    borderRadius: '0.5rem',
+                  }}
+                >
+                  正常
+                </span>
+              ) : (
+                <span
+                  style={{
+                    display: 'inline-block',
+                    width: '2.2rem',
+                    textAlign: 'center',
+                    backgroundColor: '#d83b01',
+                    borderRadius: '0.5rem',
+                  }}
+                >
+                  关闭
+                </span>
+              )}
+            </div>
           </Col>
-          <Col className="gutter-row" span={6}>
-            <div style={style}>接口描述：{description}</div>
+          <Col className="gutter-row" span={10}>
+            <div style={style}>
+              <strong>接口描述：</strong>
+              {description}
+            </div>
           </Col>
-          <Col className="gutter-row" span={6}>
-            <div style={style}>请求示例：{requestExample}</div>
+          <Col className="gutter-row" span={10}>
+            <div style={style}>
+              <strong>请求示例：</strong>
+              {requestExample}
+            </div>
           </Col>
         </Row>
       </ProCard>
@@ -153,7 +208,7 @@ export default () => {
         style={{ marginTop: '20px' }}
       >
         <ProCard.TabPane key="tab1" tab="API文档" icon={<img src={doc} height={20}></img>}>
-          <TipUtil text="请求参数说明"/>
+          <TipUtil text="请求参数说明" />
           {/* @ts-ignore */}
           <ParamList columns={paramsDoc} data={objArray} />
           <TipUtil text="响应参数对照" />
@@ -162,7 +217,6 @@ export default () => {
         <ProCard.TabPane key="tab2" tab="在线调试" icon={<img src={bug} height={20}></img>}>
           <DebugRequest method={method} url={url} invoking={Invoking} />
           <TipUtil text="请求参数设置：" />
-          {/* todo 自己封装个请求参数列表比较好 */}
           <RequestParamsList />
           <TipUtil text="返回结果：" />
           <div>{invokingResult}</div>
@@ -176,6 +230,6 @@ export default () => {
           <MyTabs />
         </ProCard.TabPane>
       </ProCard>
-    </PageContainer>
+    </Container>
   );
 };

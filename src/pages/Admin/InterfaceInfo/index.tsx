@@ -1,3 +1,4 @@
+import Container from '@/components/Container';
 import {
   interfaceInfoDelete,
   interfaceInfoQuery,
@@ -6,7 +7,7 @@ import {
 } from '@/services/yeguo-api/interfaceInfoController';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { PageContainer, ProTable, WaterMark } from '@ant-design/pro-components';
+import { ProTable, WaterMark } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Button, message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
@@ -206,7 +207,7 @@ export default () => {
   }, []);
 
   return (
-    <PageContainer>
+    <Container>
       <WaterMark
         content={
           initialState?.currentUser?.username
@@ -326,6 +327,6 @@ export default () => {
           ]}
         />
       </WaterMark>
-    </PageContainer>
+    </Container>
   );
 };

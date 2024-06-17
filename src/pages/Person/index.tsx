@@ -1,10 +1,5 @@
-import { PageContainer } from '@ant-design/pro-components'
-import React from 'react'
+import Container from '@/components/Container';
 
 export default function () {
-  return (
-    <PageContainer>
-      person
-    </PageContainer>
-  )
+  return <Container>person</Container>;
 }

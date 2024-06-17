@@ -1,5 +1,5 @@
+import Container from '@/components/Container';
 import { interfaceInfoQuery } from '@/services/yeguo-api/interfaceInfoController';
-import { PageContainer } from '@ant-design/pro-components';
 import { useNavigate } from '@umijs/max';
 import { Col, Row, message } from 'antd';
 import React, { useEffect, useState } from 'react';
@@ -24,12 +24,7 @@ const InfoCard: React.FC = () => {
   }, []);
 
   return (
-    <PageContainer
-      header={{
-        title: '',
-        breadcrumb: {},
-      }}
-    >
+    <Container>
       <Row>
         {data.map((item: API.InterfaceInfoVO) => {
           return (
@@ -48,12 +43,11 @@ const InfoCard: React.FC = () => {
                 flex: '30%',
               }}
               xl={{
-                flex: '20%',
-              }}
-              xxl={{
                 flex: '10%',
               }}
-              span={20}
+              xxl={{
+                flex: '5%',
+              }}
             >
               <InterfaceInfoCard
                 name={item.name}
@@ -71,7 +65,7 @@ const InfoCard: React.FC = () => {
           );
         })}
       </Row>
-    </PageContainer>
+    </Container>
   );
 };
 

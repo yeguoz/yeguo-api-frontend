@@ -1,7 +1,10 @@
 import { request } from '@umijs/max';
 
 /** 接口注册 POST /api/interfaceInfo/register */
-export async function interfaceInfoRegister(body:API.InterfaceRegisterParams,options?: { [key: string]: any }) {
+export async function interfaceInfoRegister(
+  body: API.InterfaceRegisterParams,
+  options?: { [key: string]: any },
+) {
   return request<API.ResponseData>(`/api/interfaceInfo/register`, {
     method: 'POST',
     headers: {
@@ -13,7 +16,7 @@ export async function interfaceInfoRegister(body:API.InterfaceRegisterParams,opt
 }
 
 /** 按照id删除接口 DELETE /api/interfaceInfo/${id} */
-export async function interfaceInfoDelete(id:number,options?: { [key: string]: any }) {
+export async function interfaceInfoDelete(id: number, options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/interfaceInfo/${id}`, {
     method: 'DELETE',
     ...(options || {}),
@@ -21,7 +24,10 @@ export async function interfaceInfoDelete(id:number,options?: { [key: string]: a
 }
 
 /** 按照id修改接口 PUT /api/interfaceInfo/update */
-export async function interfaceInfoUpdate(body:API.InterfaceUpdateParams,options?: { [key: string]: any }) {
+export async function interfaceInfoUpdate(
+  body: API.InterfaceUpdateParams,
+  options?: { [key: string]: any },
+) {
   return request<API.ResponseData>(`/api/interfaceInfo/update`, {
     method: 'PUT',
     data: body,
@@ -30,7 +36,10 @@ export async function interfaceInfoUpdate(body:API.InterfaceUpdateParams,options
 }
 
 /** 查询所有用户 GET /api/interfaceInfo/dynamicQuery */
-export async function interfaceInfoQuery(params:API.InterfaceInfoQueryParams,options?: { [key: string]: any }) {
+export async function interfaceInfoQuery(
+  params: API.InterfaceInfoQueryParams,
+  options?: { [key: string]: any },
+) {
   return request<API.ResponseData>(`/api/interfaceInfo/dynamicQuery`, {
     method: 'GET',
     params,
@@ -39,19 +48,10 @@ export async function interfaceInfoQuery(params:API.InterfaceInfoQueryParams,opt
 }
 
 /** 在线接口调用 POST /api/interfaceInfo/dynamicQuery */
-export async function onlineInvokingGet(body:any,options?: { [key: string]: any }) {
-  return request<API.ResponseData>(`/api/interfaceInfo/onlineInvokingGet`, {
+export async function onlineInvoking(body: any, options?: { [key: string]: any }) {
+  return request<API.ResponseData>(`/api/interfaceInfo/onlineInvoking`, {
     method: 'POST',
-    data:body,
-    ...(options || {}),
-  });
-}
-
-/** 在线接口调用 POST /api/interfaceInfo/dynamicQuery */
-export async function onlineInvokingPost(body:any,options?: { [key: string]: any }) {
-  return request<API.ResponseData>(`/api/interfaceInfo/onlineInvokingPost`, {
-    method: 'POST',
-    data:body,
+    data: body,
     ...(options || {}),
   });
 }
