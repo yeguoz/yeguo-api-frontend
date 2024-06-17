@@ -1,0 +1,44 @@
+.card {
+  position: relative;
+  width: 15rem;
+  height: 15rem;
+  text-align: center;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+  padding: 1rem;
+  background-color: #FFF;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  box-shadow: 0 0.5px 2px rgba(0,0,0,0.5);
+  outline: 0.0625rem solid #deecf9;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.card:hover {
+  background-color: #f0f8ff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  transform: scale(1.05);
+}
+
+.icon {
+  height: 5.5rem;
+  border-radius: 50%;
+}
+
+.name,
+.description {
+  margin: 1rem;
+}
+
+.invokingCount {
+  position:absolute;
+  top: 1.25rem;
+  right: 3.125rem;
+  height: 1.25rem;
+  width: 3.125rem;
+  background-color: #c3d94e;
+  text-align: center;
+  border-radius: 0.625rem;
+  line-height: 1.25rem;
+}

@@ -1,8 +1,9 @@
 import { interfaceInfoQuery } from '@/services/yeguo-api/interfaceInfoController';
 import { PageContainer } from '@ant-design/pro-components';
 import { useNavigate } from '@umijs/max';
-import { Card, Col, Row, message } from 'antd';
+import { Col, Row, message } from 'antd';
 import React, { useEffect, useState } from 'react';
+import InterfaceInfoCard from './components/InterfaceInfoCard';
 
 const InfoCard: React.FC = () => {
   const [data, setData] = useState([]);
@@ -15,6 +16,7 @@ const InfoCard: React.FC = () => {
       return;
     }
     setData(result.data);
+    console.log(result.data);
   };
 
   useEffect(() => {
@@ -28,26 +30,43 @@ const InfoCard: React.FC = () => {
         breadcrumb: {},
       }}
     >
-      <Row gutter={16}>
+      <Row>
         {data.map((item: API.InterfaceInfoVO) => {
           return (
-            <Col span={8} key={item.id}>
-              <Card
-                title={item.name}
-         
-                bordered={false}
-                hoverable={true}
-                style={{ marginBottom: 10 }}
+            <Col
+              key={item.id}
+              xs={{
+                flex: '100%',
+              }}
+              sm={{
+                flex: '50%',
+              }}
+              md={{
+                flex: '40%',
+              }}
+              lg={{
+                flex: '30%',
+              }}
+              xl={{
+                flex: '20%',
+              }}
+              xxl={{
+                flex: '10%',
+              }}
+              span={20}
+            >
+              <InterfaceInfoCard
+                name={item.name}
+                description={item.description}
+                iconUrl={item.avatarUrl}
+                invokingCount={item.invokingCount}
                 onClick={() => {
                   navigate('detail', {
                     replace: false,
                     state: { ...item },
                   });
                 }}
-              >
-                <img src={item.avatarUrl} alt="" height={60} />
-                {item.description}
-              </Card>
+              />
             </Col>
           );
         })}
