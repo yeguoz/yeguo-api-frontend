@@ -35,7 +35,7 @@ export async function interfaceInfoUpdate(
   });
 }
 
-/** 查询所有用户 GET /api/interfaceInfo/dynamicQuery */
+/** 动态接口查询 GET /api/interfaceInfo/dynamicQuery */
 export async function interfaceInfoQuery(
   params: API.InterfaceInfoQueryParams,
   options?: { [key: string]: any },
