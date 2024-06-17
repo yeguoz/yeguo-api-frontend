@@ -23,21 +23,37 @@ export default () => {
   const [invokingResult, setInvokingResult] = useState(null);
   const {
     state: {
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       id,
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       userId,
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       name,
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       description,
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       method,
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       url,
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       requestParams,
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       requestHeader,
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       responseHeader,
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       responseFormat,
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       requestExample,
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       interfaceStatus,
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       invokingCount,
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       avatarUrl,
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       requiredGoldCoins,
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       createTime,
     },
   } = useLocation();
