@@ -38,8 +38,8 @@ declare namespace API {
   };
 
   type UserEmailRegisterLoginParams = {
-    email?:string;
-    verifyCode?:string;
+    email?: string;
+    verifyCode?: string;
   };
 
   type UserQueryParams = {
@@ -52,10 +52,9 @@ declare namespace API {
     goldCoin?: number;
     userStatus?: number;
     userRole?: number;
-  }
+  };
 
-
-  // 接口信息 ======================================== 
+  // 接口信息 ========================================
 
   type InterfaceInfoVO = {
     id?: number;
@@ -65,14 +64,16 @@ declare namespace API {
     method?: string;
     url?: string;
     requestParams?: string;
-    requestHeader?: string;
-    responseHeader?: string;
+    responseParams?: string;
     responseFormat?: string;
     requestExample?: string;
+    responseExample?: string;
     interfaceStatus?: number;
     invokingCount?: number;
     avatarUrl?: string;
     requiredGoldCoins?: number;
+    requestHeader?: string;
+    responseHeader?: string;
     createTime?: Date;
   };
 
@@ -119,6 +120,5 @@ declare namespace API {
     responseFormat?: string;
     invokingCount?: number;
     requiredGoldCoins?: number;
-  }
-
+  };
 }

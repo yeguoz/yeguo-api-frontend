@@ -2,7 +2,7 @@ import Container from '@/components/Container';
 import { onlineInvoking } from '@/services/yeguo-api/interfaceInfoController';
 import { ProCard } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { Col, Row, TableProps } from 'antd';
+import { Col, Row, message } from 'antd';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import DebugRequest from '../components/DebugRequest';
@@ -10,14 +10,23 @@ import MyTabs from '../components/MyTabs';
 import { default as ListInfo, default as ParamList } from '../components/ParamList';
 import RequestParamsList from '../components/RequestParamsList';
 import TipUtil from '../components/TipUtil';
-import codeList, { Code } from './codeList';
-import { Params } from './requestParam';
+import { codeCol, codeList, requestParamsCol, responseParamsCol } from './definition';
 import bug from '/public/assets/bug.svg';
 import code from '/public/assets/code.svg';
 import doc from '/public/assets/document.svg';
 import errorcode from '/public/assets/errorcode.svg';
 
 const style: React.CSSProperties = { padding: '8px 4px' };
+const JSONToObjArr = (paramsStr: string) => {
+  let ObjArray;
+  try {
+    ObjArray = JSON.parse(paramsStr);
+    return ObjArray;
+  } catch (e) {
+    console.error('Parsing error:', e);
+    message.error('解析错误:' + e);
+  }
+};
 
 export default () => {
   const [invokingResult, setInvokingResult] = useState(null);
@@ -30,59 +39,24 @@ export default () => {
       method,
       url,
       requestParams,
-      requestHeader,
-      responseHeader,
       responseFormat,
       requestExample,
+      responseExample,
       interfaceStatus,
       invokingCount,
       avatarUrl,
       requiredGoldCoins,
+      responseParams,
+      requestHeader,
+      responseHeader,
       createTime,
     },
   } = useLocation();
   const { data } = useModel('dataModel');
 
-  const codeCol: TableProps<Code>['columns'] = [
-    {
-      title: '状态码',
-      dataIndex: 'code',
-      key: 'code',
-    },
-    {
-      title: '描述',
-      dataIndex: 'message',
-      key: 'message',
-    },
-  ];
-
-  const paramsDoc: TableProps<Params>['columns'] = [
-    {
-      title: '参数名称',
-      dataIndex: 'param',
-      key: 'param',
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: '必选',
-      dataIndex: 'required',
-      key: 'required',
-    },
-    {
-      title: '描述',
-      dataIndex: 'message',
-      key: 'message',
-    },
-  ];
-
   // 请求参数，转换为obj[]
-  const rpStr = requestParams;
-  let objArray;
-  try {
-    objArray = JSON.parse(rpStr);
-  } catch (e) {
-    console.error('Parsing error:', e);
-  }
+  let reqObjArr = JSONToObjArr(requestParams);
+  let respObjArr = JSONToObjArr(responseParams);
 
   const Invoking = async () => {
     // 防止出现 map_row_parentKey: undefined,
@@ -210,9 +184,12 @@ export default () => {
         <ProCard.TabPane key="tab1" tab="API文档" icon={<img src={doc} height={20}></img>}>
           <TipUtil text="请求参数说明" />
           {/* @ts-ignore */}
-          <ParamList columns={paramsDoc} data={objArray} />
+          <ParamList columns={requestParamsCol} data={reqObjArr} />
           <TipUtil text="响应参数对照" />
+          {/* @ts-ignore */}
+          <ParamList columns={responseParamsCol} data={respObjArr} />
           <TipUtil text="返回示例" />
+          <div>{responseExample}</div>
         </ProCard.TabPane>
         <ProCard.TabPane key="tab2" tab="在线调试" icon={<img src={bug} height={20}></img>}>
           <DebugRequest method={method} url={url} invoking={Invoking} />

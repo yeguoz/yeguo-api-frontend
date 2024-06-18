@@ -40,12 +40,9 @@ const InfoCard: React.FC = () => {
                 flex: '40%',
               }}
               lg={{
-                flex: '30%',
+                flex: '20%',
               }}
               xl={{
-                flex: '10%',
-              }}
-              xxl={{
                 flex: '5%',
               }}
             >
