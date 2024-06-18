@@ -17,7 +17,7 @@ import doc from '/public/assets/document.svg';
 import errorcode from '/public/assets/errorcode.svg';
 
 const style: React.CSSProperties = { padding: '8px 4px' };
-const JSONToObjArr = (paramsStr: string) => {
+const JSONStrToObjArr = (paramsStr: string) => {
   let ObjArray;
   try {
     ObjArray = JSON.parse(paramsStr);
@@ -30,6 +30,7 @@ const JSONToObjArr = (paramsStr: string) => {
 
 export default () => {
   const [invokingResult, setInvokingResult] = useState(null);
+  const { data } = useModel('dataModel');
   const {
     state: {
       id,
@@ -52,12 +53,12 @@ export default () => {
       createTime,
     },
   } = useLocation();
-  const { data } = useModel('dataModel');
 
-  // 请求参数，转换为obj[]
-  let reqObjArr = JSONToObjArr(requestParams);
-  let respObjArr = JSONToObjArr(responseParams);
+  // 请求参数+响应参数，转换为obj[]
+  const reqObjArr = JSONStrToObjArr(requestParams);
+  const respObjArr = JSONStrToObjArr(responseParams);
 
+  // 在线调用处理函数
   const Invoking = async () => {
     // 防止出现 map_row_parentKey: undefined,
     const transformedData = JSON.parse(JSON.stringify(data));
@@ -82,6 +83,7 @@ export default () => {
     }
     setInvokingResult(result.data);
   };
+
   return (
     <Container>
       <ProCard title={<strong>{name}</strong>} bordered headerBordered gutter={16}>

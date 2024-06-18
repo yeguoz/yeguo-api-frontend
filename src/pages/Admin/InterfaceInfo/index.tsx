@@ -1,16 +1,17 @@
 import Container from '@/components/Container';
 import {
-  interfaceInfoDelete,
   interfaceInfoQuery,
   interfaceInfoRegister,
   interfaceInfoUpdate,
 } from '@/services/yeguo-api/interfaceInfoController';
 import { PlusOutlined } from '@ant-design/icons';
-import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import type { ActionType } from '@ant-design/pro-components';
 import { ProTable, WaterMark } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Button, message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
+import { interfaceInfoColumns } from '../definition';
+
 export const waitTimePromise = async (time: number = 100) => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -22,185 +23,6 @@ export const waitTimePromise = async (time: number = 100) => {
 export const waitTime = async (time: number = 100) => {
   await waitTimePromise(time);
 };
-
-const columns: ProColumns<API.InterfaceInfoVO>[] = [
-  {
-    title: 'id',
-    dataIndex: 'id',
-    valueType: 'text',
-    editable: false,
-    ellipsis: true,
-  },
-  {
-    title: '发布人id',
-    dataIndex: 'userId',
-    valueType: 'text',
-    editable: false,
-    ellipsis: true,
-  },
-  {
-    title: '接口名',
-    dataIndex: 'name',
-    valueType: 'text',
-    ellipsis: true,
-  },
-  {
-    title: '接口头像',
-    dataIndex: 'avatarUrl',
-    valueType: 'image',
-    copyable: true,
-    hideInSearch: true,
-    ellipsis: true,
-  },
-  {
-    title: '接口详细',
-    dataIndex: 'description',
-    valueType: 'text',
-    ellipsis: true,
-  },
-  {
-    title: '请求方法',
-    dataIndex: 'method',
-    valueType: 'text',
-    copyable: false,
-    ellipsis: true,
-  },
-  {
-    title: '请求地址',
-    dataIndex: 'url',
-    valueType: 'text',
-    copyable: false,
-    ellipsis: true,
-  },
-  {
-    title: '请求参数',
-    dataIndex: 'requestParams',
-    valueType: 'text',
-    copyable: false,
-    hideInSearch: true,
-    ellipsis: true,
-  },
-  {
-    title: '响应参数',
-    dataIndex: 'responseParams',
-    valueType: 'text',
-    copyable: false,
-    hideInSearch: true,
-    ellipsis: true,
-  },
-  {
-    title: '响应格式',
-    dataIndex: 'responseFormat',
-    valueType: 'text',
-    ellipsis: true,
-  },
-  {
-    title: '请求示例',
-    dataIndex: 'requestExample',
-    valueType: 'text',
-    copyable: false,
-    hideInSearch: true,
-    ellipsis: true,
-  },
-  {
-    title: '响应示例',
-    dataIndex: 'responseExample',
-    valueType: 'text',
-    copyable: false,
-    hideInSearch: true,
-    ellipsis: true,
-  },
-  {
-    title: '接口状态',
-    dataIndex: 'interfaceStatus',
-    valueType: 'select',
-    valueEnum: {
-      0: {
-        text: '关闭',
-        status: 'Error',
-      },
-      1: {
-        text: '开启',
-        status: 'Success',
-      },
-    },
-    ellipsis: true,
-    editable: false,
-    hideInTable: true,
-    hideInSearch: true,
-  },
-  {
-    title: '总调用次数',
-    dataIndex: 'invokingCount',
-    valueType: 'text',
-    ellipsis: true,
-  },
-  {
-    title: '果币/次',
-    dataIndex: 'requiredGoldCoins',
-    valueType: 'text',
-    ellipsis: true,
-  },
-  {
-    title: '请求头',
-    dataIndex: 'requestHeader',
-    valueType: 'jsonCode',
-    copyable: false,
-    hideInSearch: true,
-    ellipsis: true,
-    hideInForm: true,
-  },
-  {
-    title: '响应头',
-    dataIndex: 'responseHeader',
-    valueType: 'jsonCode',
-    copyable: false,
-    hideInSearch: true,
-    ellipsis: true,
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'createTime',
-    valueType: 'date',
-    hideInSearch: true,
-    editable: false,
-    ellipsis: true,
-  },
-
-  {
-    title: '操作',
-    valueType: 'option',
-    render: (text, record, _, action) => [
-      <a
-        key="editable"
-        onClick={() => {
-          // @ts-ignore
-          action?.startEditable?.(record.id);
-        }}
-      >
-        编辑
-      </a>,
-      // todo 删除后刷新展示数据
-      <a
-        key="delete"
-        onClick={async () => {
-          // @ts-ignore
-          const result = await interfaceInfoDelete(record.id);
-          // 1成功 -1失败
-          const data = result.data;
-
-          if (data < 1) {
-            message.error('删除失败');
-            return;
-          }
-          message.success('删除成功,请手动刷新数据');
-        }}
-      >
-        删除
-      </a>,
-    ],
-  },
-];
 
 export default () => {
   const { initialState } = useModel('@@initialState');
@@ -233,7 +55,7 @@ export default () => {
         }
       >
         <ProTable<API.InterfaceInfoVO>
-          columns={columns}
+          columns={interfaceInfoColumns}
           actionRef={actionRef}
           cardBordered
           dataSource={tableData}
