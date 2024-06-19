@@ -16,5 +16,9 @@ declare module '@antv/data-set';
 declare module 'mockjs';
 declare module 'react-fittext';
 declare module 'bizcharts-plugin-slider';
+declare module 'react-syntax-highlighter';
+declare module 'react-syntax-highlighter/dist/esm/styles/hljs';
+declare module 'prettier/parser-babel';
+declare module 'prettier/standalone';
 
 declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;

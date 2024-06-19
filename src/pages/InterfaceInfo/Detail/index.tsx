@@ -5,6 +5,7 @@ import { useModel } from '@umijs/max';
 import { Col, Row, message } from 'antd';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import CodeBlock from '../components/CodeBlock';
 import DebugRequest from '../components/DebugRequest';
 import MyTabs from '../components/MyTabs';
 import { default as ListInfo, default as ParamList } from '../components/ParamList';
@@ -191,14 +192,14 @@ export default () => {
           {/* @ts-ignore */}
           <ParamList columns={responseParamsCol} data={respObjArr} />
           <TipUtil text="返回示例" />
-          <div>{responseExample}</div>
+          <CodeBlock language="javascript" value={responseExample} />
         </ProCard.TabPane>
         <ProCard.TabPane key="tab2" tab="在线调试" icon={<img src={bug} height={20}></img>}>
           <DebugRequest method={method} url={url} invoking={Invoking} />
           <TipUtil text="请求参数设置：" />
           <RequestParamsList />
           <TipUtil text="返回结果：" />
-          <div>{invokingResult}</div>
+          <CodeBlock language="javascript" value={invokingResult} />
         </ProCard.TabPane>
         <ProCard.TabPane key="tab3" tab="错误码参照" icon={<img src={errorcode} height={20}></img>}>
           <TipUtil text="错误码参照" />

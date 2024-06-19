@@ -1,7 +1,7 @@
 import type { ProColumns } from '@ant-design/pro-components';
 import { EditableProTable } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 type DataSourceType = {
   id: React.Key;
@@ -12,6 +12,9 @@ type DataSourceType = {
 export default () => {
   const { data, setData } = useModel('dataModel');
 
+  useEffect(() => {
+    setData([]); // 设置 data 为 null
+  }, [window.location.href]); // 监听 window.location.href 的变化
   const columns: ProColumns<DataSourceType>[] = [
     {
       title: '参数名称',
