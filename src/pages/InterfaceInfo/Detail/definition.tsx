@@ -52,6 +52,11 @@ export const requestParamsCol: TableProps<Params>['columns'] = [
     key: 'required',
   },
   {
+    title: '类型',
+    dataIndex: 'type',
+    key: 'type',
+  },
+  {
     title: '描述',
     dataIndex: 'message',
     key: 'message',

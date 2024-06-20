@@ -67,21 +67,23 @@ export default () => {
     console.log({ irp: transformedData, method, url });
     const result = await onlineInvoking({ irp: transformedData, method, url });
 
-    // console.log({ ...data });
-    /* 
-  {
-    [{"id":1718608585533,"index":0,"name":"qq","value":"123213"},
-     {"id":1718608591521,"index":1,"name":"bb","value":"3esafdsaf"}
-    ]
-     ,
-     method: 'POST',
-  }
-   */
-    console.log(result);
-    if (result.code !== 20000) {
-      setInvokingResult(result.data);
+    if (result.data.indexOf('status=400') !== -1) {
+      setInvokingResult(null);
+      message.error('请正确设置请求参数！' + 'status=400');
       return;
     }
+
+    /* 
+    { irp: transformedData, method, url } ===
+    {
+      [
+        {"id":1718608585533,"index":0,"name":"qq","value":"123213"},
+        {"id":1718608591521,"index":1,"name":"bb","value":"3esafdsaf"}
+      ],
+      method: 'POST',
+    }
+   */
+    console.log(result);
     setInvokingResult(result.data);
   };
 

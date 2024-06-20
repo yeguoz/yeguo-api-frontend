@@ -1,12 +1,10 @@
-import { Menu } from "antd";
-
 export default [
   {
     path: '/user',
     layout: false,
     routes: [
       { name: '登录', path: '/user/login', component: './User/Login' },
-      { name: '注册', path: '/user/register', component: './User/Register' }
+      { name: '注册', path: '/user/register', component: './User/Register' },
     ],
   },
   { path: '/welcome', name: '欢迎', icon: 'smile', component: './Welcome' },
@@ -16,17 +14,25 @@ export default [
     icon: 'crown',
     access: 'canAdmin',
     routes: [
-      { path: '/admin/interfaceInfo', name: '接口管理页', component: './Admin/InterfaceInfo'},
+      { path: '/admin/interfaceInfo', name: '接口管理页', component: './Admin/InterfaceInfo' },
       { path: '/admin/user', name: '用户管理页', component: './Admin/User' },
     ],
   },
-  { name: '接口市集', icon: 'table', path: '/interfaceInfo',
+  {
+    name: '接口市集',
+    icon: 'Api',
+    path: '/interfaceInfo',
     routes: [
-      { path: '/interfaceInfo', component: './InterfaceInfo'},
-      { path: '/interfaceInfo/detail', name: '接口详情', component: './InterfaceInfo/Detail',hideInMenu: true,},
+      { path: '/interfaceInfo', component: './InterfaceInfo' },
+      {
+        path: '/interfaceInfo/detail',
+        name: '接口详情',
+        component: './InterfaceInfo/Detail',
+        hideInMenu: true,
+      },
     ],
   },
-  { name: '个人主页', icon: 'table', path: '/person', component: './Person' },
+  { name: '个人主页', icon: 'User', path: '/person', component: './Person' },
   { path: '/', redirect: '/welcome' },
   { path: '*', layout: false, component: './404' },
 ];
