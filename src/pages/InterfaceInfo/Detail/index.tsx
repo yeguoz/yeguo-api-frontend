@@ -3,6 +3,7 @@ import { onlineInvoking } from '@/services/yeguo-api/interfaceInfoController';
 import { ProCard } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Col, Row, message } from 'antd';
+import CryptoJS from 'crypto-js';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import CodeBlock from '../components/CodeBlock';
@@ -29,7 +30,18 @@ const JSONStrToObjArr = (paramsStr: string) => {
   }
 };
 
+const generateSignature = (accessKey: string | undefined, secretKey: string | undefined) => {
+  // 将所有参数按键名排序后拼接成字符串，然后加上 secretKey
+  const message = accessKey! + secretKey!;
+  // 计算 HMAC-MD5 签名
+  const hash = CryptoJS.HmacMD5(message, 'yeguoapi');
+  console.log('hash::' + hash);
+  // 将签名转换为字符串输出
+  return hash.toString(CryptoJS.enc.Hex);
+};
+
 export default () => {
+  const { initialState } = useModel('@@initialState');
   const [invokingResult, setInvokingResult] = useState(null);
   const { data } = useModel('dataModel');
   const {
@@ -54,7 +66,9 @@ export default () => {
       createTime,
     },
   } = useLocation();
-
+  // 生成签名
+  const currentUser = initialState?.currentUser;
+  const signature = generateSignature(currentUser?.accessKey, currentUser?.secretKey);
   // 请求参数+响应参数，转换为obj[]
   const reqObjArr = JSONStrToObjArr(requestParams);
   const respObjArr = JSONStrToObjArr(responseParams);
@@ -65,7 +79,7 @@ export default () => {
     const transformedData = JSON.parse(JSON.stringify(data));
     console.log(transformedData);
     console.log({ irp: transformedData, method, url });
-    const result = await onlineInvoking({ irp: transformedData, method, url });
+    const result = await onlineInvoking({ irp: transformedData, method, url }, signature);
 
     if (result.data.indexOf('status=400') !== -1) {
       setInvokingResult(null);

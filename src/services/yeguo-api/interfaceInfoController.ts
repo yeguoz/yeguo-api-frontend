@@ -48,9 +48,16 @@ export async function interfaceInfoQuery(
 }
 
 /** 在线接口调用 POST /api/interfaceInfo/dynamicQuery */
-export async function onlineInvoking(body: any, options?: { [key: string]: any }) {
+export async function onlineInvoking(
+  body: any,
+  signature: string,
+  options?: { [key: string]: any },
+) {
   return request<API.ResponseData>(`/api/interfaceInfo/onlineInvoking`, {
     method: 'POST',
+    headers: {
+      'X-Signature': signature,
+    },
     data: body,
     ...(options || {}),
   });
