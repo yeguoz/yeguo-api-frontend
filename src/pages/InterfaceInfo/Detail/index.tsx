@@ -69,6 +69,7 @@ export default () => {
   // 生成签名
   const currentUser = initialState?.currentUser;
   const signature = generateSignature(currentUser?.accessKey, currentUser?.secretKey);
+  const ak = currentUser?.accessKey;
   // 请求参数+响应参数，转换为obj[]
   const reqObjArr = JSONStrToObjArr(requestParams);
   const respObjArr = JSONStrToObjArr(responseParams);
@@ -79,7 +80,7 @@ export default () => {
     const transformedData = JSON.parse(JSON.stringify(data));
     console.log(transformedData);
     console.log({ irp: transformedData, method, url });
-    const result = await onlineInvoking({ irp: transformedData, method, url }, signature);
+    const result = await onlineInvoking({ irp: transformedData, method, url }, ak!, signature);
 
     if (result.data.indexOf('status=400') !== -1) {
       setInvokingResult(null);
@@ -229,3 +230,6 @@ export default () => {
     </Container>
   );
 };
+/* [
+  {"param":"无","required":"否","type":"无","message":"无"},
+] */
