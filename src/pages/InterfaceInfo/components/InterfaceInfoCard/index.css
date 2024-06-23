@@ -34,11 +34,12 @@
 .invokingCount {
   position:absolute;
   top: 1.5rem;
-  right: 0rem;
+  right: 2.1rem;
   height: 1.25rem;
   width: 3.125rem;
-  background-color: #c3d94e;
+  background-color: #b4009e; 
   text-align: center;
-  border-radius: 0.5rem 0 0 0.5rem;
+  border-radius: 0.5rem;
   line-height: 1.25rem;
+  color: #fff
 }

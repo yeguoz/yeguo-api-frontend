@@ -54,7 +54,13 @@ export default () => {
 
   return (
     <Container>
-      <ProCard title={<strong>个人信息</strong>} bordered headerBordered gutter={16}>
+      <ProCard
+        title={<strong>个人信息</strong>}
+        bordered
+        headerBordered
+        gutter={16}
+        headStyle={{ backgroundColor: '#f3f2f1', borderRadius: '0.5rem' }}
+      >
         <Upload
           name="avatar"
           listType="picture-circle"
@@ -97,6 +103,21 @@ export default () => {
             <strong>金币：</strong>
             {initialState?.currentUser?.goldCoin ? initialState?.currentUser?.goldCoin : '未设置'}
           </Col>
+
+          <Col className="gutter-row" span={20}>
+            <strong>用户类型：</strong>
+            {initialState?.currentUser?.userRole === 1 ? '管理员' : '普通用户'}
+          </Col>
+        </Row>
+      </ProCard>
+      <ProCard
+        title={<strong>开发者API密钥</strong>}
+        bordered
+        headerBordered
+        gutter={16}
+        headStyle={{ backgroundColor: '#f3f2f1', borderRadius: '0.5rem' }}
+      >
+        <Row gutter={[16, 24]}>
           <Col className="gutter-row" span={20}>
             <strong>accessKey：</strong>
             {initialState?.currentUser?.accessKey ? initialState?.currentUser?.accessKey : '未设置'}
@@ -104,10 +125,6 @@ export default () => {
           <Col className="gutter-row" span={20}>
             <strong>secretKey：</strong>
             {initialState?.currentUser?.secretKey ? initialState?.currentUser?.secretKey : '未设置'}
-          </Col>
-          <Col className="gutter-row" span={20}>
-            <strong>用户类型：</strong>
-            {initialState?.currentUser?.userRole === 1 ? '管理员' : '普通用户'}
           </Col>
         </Row>
       </ProCard>

@@ -80,14 +80,6 @@ export default () => {
     const transformedData = JSON.parse(JSON.stringify(data));
     console.log(transformedData);
     console.log({ irp: transformedData, method, url });
-    const result = await onlineInvoking({ irp: transformedData, method, url }, ak!, signature);
-
-    if (result.data.indexOf('status=400') !== -1) {
-      setInvokingResult(null);
-      message.error('请正确设置请求参数！' + 'status=400');
-      return;
-    }
-
     /* 
     { irp: transformedData, method, url } ===
     {
@@ -98,7 +90,13 @@ export default () => {
       method: 'POST',
     }
    */
-    console.log(result);
+    const result = await onlineInvoking({ irp: transformedData, method, url }, id, ak!, signature);
+    // result.data包含status=400
+    if (result.data.indexOf('status=400') !== -1) {
+      setInvokingResult(null);
+      message.error('请正确设置请求参数！' + 'status=400');
+      return;
+    }
     setInvokingResult(result.data);
   };
 
@@ -230,6 +228,3 @@ export default () => {
     </Container>
   );
 };
-/* [
-  {"param":"无","required":"否","type":"无","message":"无"},
-] */

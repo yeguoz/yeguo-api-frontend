@@ -1,4 +1,4 @@
-
+import { userlogout } from '@/services/yeguo-api/userController';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { history, useModel } from '@umijs/max';
 import { Spin } from 'antd';
@@ -8,7 +8,6 @@ import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
 import { flushSync } from 'react-dom';
 import HeaderDropdown from '../HeaderDropdown';
-import { userlogout } from '@/services/yeguo-api/userController';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -18,7 +17,7 @@ export type GlobalHeaderRightProps = {
 export const AvatarName = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
-  const avatarShowName = currentUser?.username?currentUser?.username:currentUser?.email
+  const avatarShowName = currentUser?.username ? currentUser?.username : currentUser?.email;
   return <span className="anticon">{avatarShowName}</span>;
 };
 
@@ -51,7 +50,11 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
     /** 此方法会跳转到 redirect 参数所在的位置 */
     const redirect = urlParams.get('redirect');
     // Note: There may be security issues, please note
-    if (window.location.pathname !== '/user/login' && window.location.pathname !== '/user/register' && !redirect) {
+    if (
+      window.location.pathname !== '/user/login' &&
+      window.location.pathname !== '/user/register' &&
+      !redirect
+    ) {
       history.replace({
         pathname: '/user/login',
         search: stringify({
@@ -60,7 +63,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
       });
     }
   };
-  
+
   const { styles } = useStyles();
 
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -122,8 +125,12 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
       : []),
     {
       key: 'logout',
-      icon: <LogoutOutlined />,
-      label: '退出登录',
+      icon: (
+        <span style={{ color: '#ff4d4f' }}>
+          <LogoutOutlined />
+        </span>
+      ),
+      label: <span style={{ color: '#ff4d4f' }}>退出登录</span>,
     },
   ];
 
