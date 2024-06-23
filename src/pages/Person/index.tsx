@@ -2,8 +2,9 @@ import Container from '@/components/Container';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { ProCard } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { Col, GetProp, Row, Upload, UploadProps, message } from 'antd';
+import { Button, Col, GetProp, Row, Upload, UploadProps, message } from 'antd';
 import { useState } from 'react';
+import InfoItem from './components/InfoItem';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -60,6 +61,11 @@ export default () => {
         headerBordered
         gutter={16}
         headStyle={{ backgroundColor: '#f3f2f1', borderRadius: '0.5rem' }}
+        extra={
+          <Button type="primary" onClick={() => {}}>
+            更新信息
+          </Button>
+        }
       >
         <Upload
           name="avatar"
@@ -73,40 +79,39 @@ export default () => {
           {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
         </Upload>
         <Row gutter={[16, 24]}>
-          <Col className="gutter-row" span={20}>
-            <strong>昵称：</strong>
-            {initialState?.currentUser?.username ? initialState?.currentUser?.username : '未设置'}
+          <Col className="gutter-row" span={15}>
+            <InfoItem name={'昵称'} value={initialState?.currentUser?.username} type="copy" />
           </Col>
-          <Col className="gutter-row" span={20}>
-            <strong>账号：</strong>
-            {initialState?.currentUser?.userAccount
-              ? initialState?.currentUser?.userAccount
-              : '未设置'}
+          <Col className="gutter-row" span={15}>
+            <InfoItem name={'账号'} value={initialState?.currentUser?.userAccount} />
           </Col>
-          <Col className="gutter-row" span={20}>
-            <strong>邮箱：</strong>
-            {initialState?.currentUser?.email ? initialState?.currentUser?.email : '未设置'}
+          <Col className="gutter-row" span={15}>
+            <InfoItem name={'邮箱'} value={initialState?.currentUser?.email} type={'editor'} />
           </Col>
-          <Col className="gutter-row" span={20}>
-            <strong>性别：</strong>
-            {initialState?.currentUser?.gender
-              ? initialState?.currentUser?.gender === 1
-                ? '男'
-                : '女'
-              : '未设置'}
+          <Col className="gutter-row" span={15}>
+            <InfoItem
+              name={'性别'}
+              value={
+                initialState?.currentUser?.gender
+                  ? initialState?.currentUser?.gender === 1
+                    ? '男'
+                    : '女'
+                  : '未设置'
+              }
+            />
           </Col>
-          <Col className="gutter-row" span={20}>
-            <strong>电话：</strong>
-            {initialState?.currentUser?.phone ? initialState?.currentUser?.phone : '未设置'}
+          <Col className="gutter-row" span={15}>
+            <InfoItem name={'手机'} value={initialState?.currentUser?.phone} type={'editor'} />
           </Col>
-          <Col className="gutter-row" span={20}>
-            <strong>金币：</strong>
-            {initialState?.currentUser?.goldCoin ? initialState?.currentUser?.goldCoin : '未设置'}
+          <Col className="gutter-row" span={15}>
+            <InfoItem name={'金币'} value={initialState?.currentUser?.phone} />
           </Col>
-
-          <Col className="gutter-row" span={20}>
-            <strong>用户类型：</strong>
-            {initialState?.currentUser?.userRole === 1 ? '管理员' : '普通用户'}
+          <Col className="gutter-row" span={15}>
+            <InfoItem
+              name={'用户类型'}
+              value={initialState?.currentUser?.userRole === 1 ? '管理员' : '普通用户'}
+              type={'editor'}
+            />
           </Col>
         </Row>
       </ProCard>
@@ -119,12 +124,18 @@ export default () => {
       >
         <Row gutter={[16, 24]}>
           <Col className="gutter-row" span={20}>
-            <strong>accessKey：</strong>
-            {initialState?.currentUser?.accessKey ? initialState?.currentUser?.accessKey : '未设置'}
+            <InfoItem
+              name={'accessKey'}
+              value={initialState?.currentUser?.accessKey}
+              type={'copy'}
+            />
           </Col>
           <Col className="gutter-row" span={20}>
-            <strong>secretKey：</strong>
-            {initialState?.currentUser?.secretKey ? initialState?.currentUser?.secretKey : '未设置'}
+            <InfoItem
+              name={'secretKey'}
+              value={initialState?.currentUser?.secretKey}
+              type={'copy'}
+            />
           </Col>
         </Row>
       </ProCard>
