@@ -27,7 +27,13 @@ const beforeUpload = (file: FileType) => {
 };
 
 export default () => {
-  const { initialState, setInitialState } = useModel('@@initialState');
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState || {};
+  const [values, setValues] = useState<{ [key: string]: any }>({
+    username: currentUser?.username,
+    email: currentUser?.email,
+    phone: currentUser?.phone,
+  });
 
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>();
@@ -53,6 +59,35 @@ export default () => {
     </button>
   );
 
+  const handleValueChange = (uniqueKey: string, newValue: string) => {
+    // 处理值变化
+    console.log({ ...values, [uniqueKey]: newValue });
+    setValues({ ...values, [uniqueKey]: newValue });
+  };
+
+  const updateInfo = async () => {
+    // 更新信息逻辑
+    console.log('updateInfo==========:');
+    console.log(values);
+    // const userVO: API.UserVO = {
+    //   id: 1,
+    //   username: 'John Doe',
+    //   userAccount: 'john.doe',
+    //   avatarUrl: 'https://example.com/avatar.jpg',
+    //   gender: 1,
+    //   phone: '123-456-7890',
+    //   email: 'john.doe@example.com',
+    //   goldCoin: 1000,
+    //   accessKey: 'your_access_key',
+    //   secretKey: 'your_secret_key',
+    //   userStatus: 1,
+    //   userRole: 1,
+    //   createTime: new Date(),
+    // };
+
+    // const result = await userUpdate();
+  };
+
   return (
     <Container>
       <ProCard
@@ -62,7 +97,7 @@ export default () => {
         gutter={16}
         headStyle={{ backgroundColor: '#f3f2f1', borderRadius: '0.5rem' }}
         extra={
-          <Button type="primary" onClick={() => {}}>
+          <Button type="primary" onClick={updateInfo}>
             更新信息
           </Button>
         }
@@ -80,37 +115,49 @@ export default () => {
         </Upload>
         <Row gutter={[16, 24]}>
           <Col className="gutter-row" span={15}>
-            <InfoItem name={'昵称'} value={initialState?.currentUser?.username} type="copy" />
+            <InfoItem
+              name={'昵称'}
+              value={values['username']}
+              type="editor"
+              uniqueKey={'username'}
+              onValueChange={handleValueChange}
+            />
           </Col>
           <Col className="gutter-row" span={15}>
-            <InfoItem name={'账号'} value={initialState?.currentUser?.userAccount} />
+            <InfoItem name={'账号'} value={currentUser?.userAccount} />
           </Col>
           <Col className="gutter-row" span={15}>
-            <InfoItem name={'邮箱'} value={initialState?.currentUser?.email} type={'editor'} />
+            <InfoItem
+              name={'邮箱'}
+              value={values['email']}
+              type={'editor'}
+              uniqueKey={'email'}
+              onValueChange={handleValueChange}
+            />
           </Col>
           <Col className="gutter-row" span={15}>
             <InfoItem
               name={'性别'}
-              value={
-                initialState?.currentUser?.gender
-                  ? initialState?.currentUser?.gender === 1
-                    ? '男'
-                    : '女'
-                  : '未设置'
-              }
+              value={currentUser?.gender ? (currentUser?.gender === 1 ? '男' : '女') : '未设置'}
             />
           </Col>
           <Col className="gutter-row" span={15}>
-            <InfoItem name={'手机'} value={initialState?.currentUser?.phone} type={'editor'} />
+            <InfoItem
+              name={'手机'}
+              value={values['phone']}
+              type={'editor'}
+              uniqueKey={'phone'}
+              onValueChange={handleValueChange}
+            />
           </Col>
           <Col className="gutter-row" span={15}>
-            <InfoItem name={'金币'} value={initialState?.currentUser?.phone} />
+            <InfoItem name={'金币'} value={currentUser?.goldCoin} />
           </Col>
           <Col className="gutter-row" span={15}>
             <InfoItem
               name={'用户类型'}
-              value={initialState?.currentUser?.userRole === 1 ? '管理员' : '普通用户'}
-              type={'editor'}
+              value={currentUser?.userRole === 1 ? '管理员' : '普通用户'}
+              type={'copy'}
             />
           </Col>
         </Row>
@@ -124,18 +171,10 @@ export default () => {
       >
         <Row gutter={[16, 24]}>
           <Col className="gutter-row" span={20}>
-            <InfoItem
-              name={'accessKey'}
-              value={initialState?.currentUser?.accessKey}
-              type={'copy'}
-            />
+            <InfoItem name={'accessKey'} value={currentUser?.accessKey} type={'copy'} />
           </Col>
           <Col className="gutter-row" span={20}>
-            <InfoItem
-              name={'secretKey'}
-              value={initialState?.currentUser?.secretKey}
-              type={'copy'}
-            />
+            <InfoItem name={'secretKey'} value={currentUser?.secretKey} type={'copy'} />
           </Col>
         </Row>
       </ProCard>

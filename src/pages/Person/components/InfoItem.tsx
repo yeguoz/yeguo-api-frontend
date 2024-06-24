@@ -3,10 +3,23 @@ import { useEffect, useRef, useState } from 'react';
 import copy from '/public/assets/copy.svg';
 import edit from '/public/assets/edit.svg';
 
-export default ({ name, value, type }: { name: any; value: any; type?: 'editor' | 'copy' }) => {
+export default ({
+  name,
+  value,
+  type,
+  uniqueKey,
+  onValueChange = () => {},
+}: {
+  name: any;
+  value: any;
+  type?: 'editor' | 'copy';
+  uniqueKey?: string;
+  onValueChange?: (uniqueKey: string, value: any) => void;
+}) => {
   const [flag, setFlag] = useState(0);
+  const [inputValue, setInputValue] = useState(value);
   const inputRef = useRef<HTMLInputElement>(null);
-  const spanRef = useRef<HTMLInputElement>(null);
+  const spanRef = useRef<HTMLSpanElement>(null);
 
   const handleEdit = () => {
     setFlag(1);
@@ -29,35 +42,41 @@ export default ({ name, value, type }: { name: any; value: any; type?: 'editor' 
     }
   }, [flag]);
 
+  const handleBlur = () => {
+    if (inputRef.current) {
+      const newValue = inputRef.current.value;
+      setInputValue(newValue);
+      if (uniqueKey) {
+        onValueChange(uniqueKey, newValue); // 通知父组件
+      }
+    }
+    setFlag(0);
+  };
+
   return (
     <div style={{ display: 'flex', alignItems: 'center', fontSize: '1.05rem' }}>
       <span style={{ fontWeight: 'bold', marginRight: '0.5rem' }}>{name}:</span>
       {flag === 0 ? (
-        <span>{value ? value : '未设置'}</span>
+        <span>{inputValue ? inputValue : '未设置'}</span>
       ) : (
-        <input
-          ref={inputRef}
-          type="text"
-          onFocus={() => {
-            if (inputRef.current) {
-              inputRef.current.value = value;
-              inputRef.current.readOnly = false;
-            }
-          }}
-          onBlur={() => setFlag(0)}
-        />
+        <input ref={inputRef} type="text" defaultValue={inputValue} onBlur={handleBlur} />
       )}
       {type === undefined ? null : (
         <span
           onClick={type === 'editor' ? handleEdit : handleCopy}
           onMouseOver={() => {
-            if (type === 'editor' && spanRef.current) {
-              // todo 有问题
+            if ((type === 'editor' || type === 'copy') && spanRef.current) {
               spanRef.current.style.display = 'inline-block';
+            }
+          }}
+          onMouseLeave={() => {
+            if (spanRef.current) {
+              spanRef.current.style.display = 'none';
             }
           }}
           style={{
             cursor: 'pointer',
+            position: 'relative',
           }}
         >
           <span
@@ -71,6 +90,10 @@ export default ({ name, value, type }: { name: any; value: any; type?: 'editor' 
               color: '#fff',
               padding: '0 0.4rem',
               borderRadius: '0.5rem',
+              width: '2.4rem',
+              height: '1.3rem',
+              textAlign: 'center',
+              lineHeight: '1.3rem',
             }}
           >
             {type === 'editor' ? '编辑' : '复制'}

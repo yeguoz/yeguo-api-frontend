@@ -5,13 +5,13 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { Link, history } from '@umijs/max';
+import { message } from 'antd';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
-import { message } from 'antd';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 const registerPath = '/user/register';
-const pathList = [loginPath,registerPath];
+const pathList = [loginPath, registerPath];
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
@@ -29,11 +29,11 @@ export async function getInitialState(): Promise<{
       return result.data;
     } catch (error) {
       history.push(loginPath);
-      message.error("网络繁忙,稍后重试");
+      message.error('网络繁忙,稍后重试');
     }
     return undefined;
   };
-  
+
   // 当前不是登录页面和注册页面，执行
   const { location } = history;
   if (!pathList.includes(location.pathname)) {
@@ -51,15 +51,15 @@ export async function getInitialState(): Promise<{
   };
 }
 
-
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
-  const username =  initialState?.currentUser?.username;
-  const userAccount =  initialState?.currentUser?.userAccount;
+  const username = initialState?.currentUser?.username;
+  const userAccount = initialState?.currentUser?.userAccount;
+  const avatarUrl = initialState?.currentUser?.avatarUrl;
   return {
     actionsRender: () => [<Question key="doc" />],
     avatarProps: {
-      src: initialState?.currentUser?.avatarUrl,
+      src: avatarUrl,
       title: <AvatarName />,
       render: (_, avatarChildren) => {
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
@@ -71,9 +71,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
-      // 如果没有登录,并且不在登录页面和注册页面,则重定向到 login 
+      // 如果没有登录,并且不在登录页面和注册页面,则重定向到 login
       if (!initialState?.currentUser && !pathList.includes(location.pathname)) {
-        message.error("未登录")
+        message.error('未登录');
         history.push(loginPath);
       }
     },

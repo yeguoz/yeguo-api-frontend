@@ -68,7 +68,6 @@ export default () => {
             type: 'multiple',
             //  修改后刷新展示数据
             onSave: async (_, row) => {
-              // @ts-ignore
               const result = await userUpdate(row);
               if (result.data === null) {
                 message.error(result.description);
