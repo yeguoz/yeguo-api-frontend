@@ -25,6 +25,13 @@ declare namespace API {
     createTime?: Date;
   };
 
+  type UserPersonUpdateParams = {
+    id?: number;
+    username?: string;
+    email?: string;
+    phone?: string;
+  };
+
   type UserLoginParams = {
     userAccount?: string;
     userPassword?: string;

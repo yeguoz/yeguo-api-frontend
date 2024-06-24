@@ -45,34 +45,33 @@ export default () => {
   const [invokingResult, setInvokingResult] = useState(null);
   const { data } = useModel('dataModel');
   const {
-    state: {
-      id,
-      userId,
-      name,
-      description,
-      method,
-      url,
-      requestParams,
-      responseFormat,
-      requestExample,
-      responseExample,
-      interfaceStatus,
-      invokingCount,
-      avatarUrl,
-      requiredGoldCoins,
-      responseParams,
-      requestHeader,
-      responseHeader,
-      createTime,
-    },
-  } = useLocation();
+    id,
+    userId,
+    name,
+    description,
+    method,
+    url,
+    requestParams,
+    responseFormat,
+    requestExample,
+    responseExample,
+    interfaceStatus,
+    invokingCount,
+    avatarUrl,
+    requiredGoldCoins,
+    responseParams,
+    requestHeader,
+    responseHeader,
+    createTime,
+  } = useLocation().state as API.InterfaceInfoVO;
+
   // 生成签名
   const currentUser = initialState?.currentUser;
   const signature = generateSignature(currentUser?.accessKey, currentUser?.secretKey);
   const ak = currentUser?.accessKey;
   // 请求参数+响应参数，转换为obj[]
-  const reqObjArr = JSONStrToObjArr(requestParams);
-  const respObjArr = JSONStrToObjArr(responseParams);
+  const reqObjArr = JSONStrToObjArr(requestParams || '');
+  const respObjArr = JSONStrToObjArr(responseParams || '');
 
   // 在线调用处理函数
   const Invoking = async () => {
@@ -90,7 +89,12 @@ export default () => {
       method: 'POST',
     }
    */
-    const result = await onlineInvoking({ irp: transformedData, method, url }, id, ak!, signature);
+    const result = await onlineInvoking(
+      { irp: transformedData, method, url },
+      id as number,
+      ak!,
+      signature,
+    );
     // result.data包含status=400
     if (result.data.indexOf('status=400') !== -1) {
       setInvokingResult(null);
@@ -210,7 +214,7 @@ export default () => {
           <CodeBlock language="javascript" value={responseExample} />
         </ProCard.TabPane>
         <ProCard.TabPane key="tab2" tab="在线调试" icon={<img src={bug} height={20}></img>}>
-          <DebugRequest method={method} url={url} invoking={Invoking} />
+          <DebugRequest method={method || ''} url={url || ''} invoking={Invoking} />
           <TipUtil text="请求参数设置：" />
           <RequestParamsList />
           <TipUtil text="返回结果：" />

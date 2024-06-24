@@ -71,21 +71,44 @@ export async function userUpdate(body: API.UserVO, options?: { [key: string]: an
   });
 }
 
+/** 修改用户信息 */
+export async function userPersonInfoUpdate(
+  body: API.UserPersonUpdateParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResponseData>(`/api/user/personInfoUpdate`, {
+    method: 'PUT',
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 修改用户密钥 */
+export async function userPersonKeysUpdate(id: number, options?: { [key: string]: any }) {
+  return request<API.ResponseData>(`/api/user/${id}`, {
+    method: 'PUT',
+    ...(options || {}),
+  });
+}
+
 /** 请求后端向邮箱发送验证码 */
-export async function userEmailVerifyCode(email:string, options?: { [key: string]: any }) {
+export async function userEmailVerifyCode(email: string, options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/user/verifyCode`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     data: {
-      email
+      email,
     },
     ...(options || {}),
   });
 }
 /** 邮箱注册 */
-export async function userEmailRegister(body: API.UserEmailRegisterLoginParams, options?: { [key: string]: any }) {
+export async function userEmailRegister(
+  body: API.UserEmailRegisterLoginParams,
+  options?: { [key: string]: any },
+) {
   return request<API.ResponseData>(`/api/user/emailRegister`, {
     method: 'POST',
     data: body,
@@ -94,7 +117,10 @@ export async function userEmailRegister(body: API.UserEmailRegisterLoginParams, 
 }
 
 /** 邮箱登录 */
-export async function userEmailLogin(body: API.UserEmailRegisterLoginParams, options?: { [key: string]: any }) {
+export async function userEmailLogin(
+  body: API.UserEmailRegisterLoginParams,
+  options?: { [key: string]: any },
+) {
   return request<API.ResponseData>(`/api/user/emailLogin`, {
     method: 'POST',
     data: body,
