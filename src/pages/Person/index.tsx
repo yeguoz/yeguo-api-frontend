@@ -19,17 +19,19 @@ export default () => {
     secretKey: currentUser?.secretKey,
   });
 
-  const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string>();
+  const [avatarUrl, setAvatarUrl] = useState<string>(currentUser?.avatarUrl as string);
   const [showImageSelector, setShowImageSelector] = useState(false);
-  const [imageList] = useState([
+  const [avatarList] = useState([
     'https://cdn.jsdelivr.net/gh/ye-guo/Images/images/2.jpg',
-    'https://example.com/image2.jpg',
-    'https://example.com/image3.jpg',
+    'https://cdn.jsdelivr.net/gh/ye-guo/Images/images/drem.jpg',
+    'https://cdn.jsdelivr.net/gh/ye-guo/Images/images/pkc1.jpg',
+    'https://cdn.jsdelivr.net/gh/ye-guo/Images/images/api1.jpg',
+    'https://cdn.jsdelivr.net/gh/ye-guo/Images/images/api2.jpg',
+    'https://cdn.jsdelivr.net/gh/ye-guo/Images/images/miku0.jpg',
   ]);
 
   const handleValueChange = (uniqueKey: string, newValue: string) => {
-    // 处理值变化
+    // 处理InfoItem值变化
     setModified(true);
     setValues((prevValues) => ({ ...prevValues, [uniqueKey]: newValue }));
   };
@@ -44,6 +46,7 @@ export default () => {
       username: values.username,
       email: values.email,
       phone: values.phone,
+      avatarUrl: avatarUrl,
     };
     const result = await userPersonInfoUpdate(userUpdateParams);
     if (!result.data) {
@@ -75,7 +78,8 @@ export default () => {
   };
 
   const handleImageClick = (url: string) => {
-    setImageUrl(url);
+    setAvatarUrl(url);
+    setModified(true);
     setShowImageSelector(false);
   };
 
@@ -93,35 +97,76 @@ export default () => {
           </Button>
         }
       >
-        {showImageSelector ? (
-          <div>
-            <h3>选择图片</h3>
-            <Row gutter={[16, 24]}>
-              {imageList.map((url) => (
-                <Col key={url} span={8}>
-                  <img
-                    src={url}
-                    alt="选择的图片"
-                    style={{ width: '2rem', cursor: 'pointer' }}
-                    onClick={() => handleImageClick(url)}
-                  />
-                </Col>
-              ))}
-            </Row>
-          </div>
-        ) : (
-          <div onClick={() => setShowImageSelector(true)} style={{ cursor: 'pointer' }}>
-            {imageUrl ? (
-              <img src={imageUrl} alt="avatar" style={{ width: '2rem' }} />
+        <Row gutter={[16, 24]}>
+          <Col className="gutter-row" span={15}>
+            {showImageSelector ? (
+              <div>
+                <h3 style={{ color: initialState?.settings?.colorPrimary }}>
+                  选择您的头像
+                  <span
+                    style={{ color: 'skyblue', marginLeft: '1rem', cursor: 'pointer' }}
+                    onClick={() => {
+                      setShowImageSelector(false);
+                    }}
+                  >
+                    返回
+                  </span>
+                </h3>
+                <Row gutter={[16, 24]}>
+                  {avatarList.map((url) => (
+                    <Col
+                      key={url}
+                      xs={{
+                        flex: '100%',
+                      }}
+                      sm={{
+                        flex: '50%',
+                      }}
+                      md={{
+                        flex: '40%',
+                      }}
+                      lg={{
+                        flex: '30%',
+                      }}
+                      xxl={{
+                        flex: '20%',
+                      }}
+                    >
+                      <img
+                        src={url}
+                        alt="选择的图片"
+                        style={{ width: '4rem', cursor: 'pointer' }}
+                        onClick={() => handleImageClick(url)}
+                      />
+                    </Col>
+                  ))}
+                </Row>
+              </div>
             ) : (
-              <div style={{ padding: '20px', border: '1px dashed #ccc', textAlign: 'center' }}>
-                <PlusOutlined />
-                <div style={{ marginTop: 8 }}>Upload</div>
+              <div
+                onClick={() => setShowImageSelector(true)}
+                style={{ cursor: 'pointer', width: '5rem' }}
+              >
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt="avatar" style={{ width: '5rem' }} />
+                ) : (
+                  <div
+                    style={{
+                      padding: '20px',
+                      border: '1px dashed #ccc',
+                      textAlign: 'center',
+                      width: '5rem',
+                      height: '5rem',
+                    }}
+                  >
+                    <PlusOutlined />
+                    <div style={{ marginTop: 8 }}>Upload</div>
+                  </div>
+                )}
               </div>
             )}
-          </div>
-        )}
-        <Row gutter={[16, 24]}>
+          </Col>
+
           <Col className="gutter-row" span={15}>
             <InfoItem
               name={'昵称'}

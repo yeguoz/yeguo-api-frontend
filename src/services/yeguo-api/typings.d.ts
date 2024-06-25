@@ -30,6 +30,7 @@ declare namespace API {
     username?: string;
     email?: string;
     phone?: string;
+    avatarUrl?: string;
   };
 
   type UserLoginParams = {
