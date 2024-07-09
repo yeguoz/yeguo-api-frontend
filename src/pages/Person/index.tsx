@@ -86,9 +86,7 @@ export default () => {
 
   const handleGenerateSignature = () => {
     const sign = generateSignature(values.accessKey, values.secretKey);
-    setTimeout(() => {
-      message.success('签名为：' + sign);
-    }, 3000);
+    message.success('签名为：' + sign);
   };
 
   return (
