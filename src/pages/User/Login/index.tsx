@@ -5,14 +5,7 @@ import {
   userEmailVerifyCode,
   userLogin,
 } from '@/services/yeguo-api/userController';
-import {
-  AlipayCircleOutlined,
-  LockOutlined,
-  MailOutlined,
-  TaobaoCircleOutlined,
-  UserOutlined,
-  WeiboCircleOutlined,
-} from '@ant-design/icons';
+import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormCaptcha, ProFormText } from '@ant-design/pro-components';
 import { Helmet, Link, history, useModel } from '@umijs/max';
 import { Divider, Space, Tabs, message } from 'antd';
@@ -50,22 +43,21 @@ const useStyles = createStyles(({ token }) => {
       flexDirection: 'column',
       height: '100vh',
       overflow: 'auto',
-      backgroundImage:
-        "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
+      backgroundImage: "url('/assets/74.jpg')", //63 80 56 74
       backgroundSize: '100% 100%',
     },
   };
 });
-const ActionIcons = () => {
-  const { styles } = useStyles();
-  return (
-    <>
-      <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.action} />
-      <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.action} />
-      <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.action} />
-    </>
-  );
-};
+// const ActionIcons = () => {
+//   const { styles } = useStyles();
+//   return (
+//     <>
+//       <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.action} />
+//       <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.action} />
+//       <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.action} />
+//     </>
+//   );
+// };
 
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
@@ -142,7 +134,7 @@ const Login: React.FC = () => {
     <div className={styles.container}>
       <Helmet>
         <title>
-          {'登录'}- {Settings.title}
+          {'登录'}-{Settings.title}
         </title>
       </Helmet>
       <div
@@ -156,13 +148,13 @@ const Login: React.FC = () => {
             minWidth: 280,
             maxWidth: '75vw',
           }}
-          logo={<img alt="logo" src="/logo.svg" />}
-          title="野果-api开放平台"
-          subTitle={'野果-api 接口开放平台致力于提供稳定、安全、高效的接口调用服务'}
+          logo={<img alt="logo" src="/logo.png" />}
+          title={'野果API开放平台'}
+          subTitle={'野果API 接口开放平台致力于提供稳定、安全、高效的接口调用服务'}
           initialValues={{
             autoLogin: true,
           }}
-          actions={['其他登录方式 :', <ActionIcons key="icons" />]}
+          // actions={['其他登录方式 :', <ActionIcons key="icons" />]}
           onFinish={async (values) => {
             // 若是邮箱登录
             console.log(values);

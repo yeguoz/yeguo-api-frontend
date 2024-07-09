@@ -5,6 +5,7 @@ import { ProCard } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Button, Col, Row, message } from 'antd';
 import { useState } from 'react';
+import generateSignature from '../utils/generateSignature';
 import InfoItem from './components/InfoItem';
 
 export default () => {
@@ -81,6 +82,13 @@ export default () => {
     setAvatarUrl(url);
     setModified(true);
     setShowImageSelector(false);
+  };
+
+  const handleGenerateSignature = () => {
+    const sign = generateSignature(values.accessKey, values.secretKey);
+    setTimeout(() => {
+      message.success('签名为：' + sign);
+    }, 3000);
   };
 
   return (
@@ -191,7 +199,7 @@ export default () => {
           <Col className="gutter-row" span={15}>
             <InfoItem
               name={'性别'}
-              value={currentUser?.gender ? (currentUser?.gender === 1 ? '男' : '女') : '未设置'}
+              value={currentUser?.gender ? (currentUser?.gender === 1 ? '男' : '女') : '未知'}
             />
           </Col>
           <Col className="gutter-row" span={15}>
@@ -222,9 +230,14 @@ export default () => {
         gutter={16}
         headStyle={{ backgroundColor: '#f3f2f1', borderRadius: '0.5rem' }}
         extra={
-          <Button type="primary" onClick={updateKeys}>
-            更新密钥
-          </Button>
+          <>
+            <Button type="primary" onClick={updateKeys}>
+              更新密钥
+            </Button>
+            <Button type="primary" onClick={handleGenerateSignature} style={{ marginLeft: '1rem' }}>
+              生成签名
+            </Button>
+          </>
         }
       >
         <Row gutter={[16, 24]}>

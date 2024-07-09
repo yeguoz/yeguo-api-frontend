@@ -55,14 +55,12 @@ export async function onlineInvoking(
   signature: string,
   options?: { [key: string]: any },
 ) {
-  return request<API.ResponseData>(`/api/interfaceInfo/onlineInvoking`, {
-    method: 'POST',
-    headers: {
-      'X-InterfaceInfoId': interfaceInfoId,
-      'X-Accesskey': accessKey,
-      'X-Signature': signature,
+  return request<API.ResponseData>(
+    `/api/interfaceInfo/onlineInvoking?interfaceInfoId=${interfaceInfoId}&accessKey=${accessKey}&signature=${signature}`,
+    {
+      method: 'POST',
+      data: body,
+      ...(options || {}),
     },
-    data: body,
-    ...(options || {}),
-  });
+  );
 }

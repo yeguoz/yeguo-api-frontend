@@ -1,9 +1,9 @@
 import Container from '@/components/Container';
+import generateSignature from '@/pages/utils/generateSignature';
 import { onlineInvoking } from '@/services/yeguo-api/interfaceInfoController';
 import { ProCard } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Col, Row, message } from 'antd';
-import CryptoJS from 'crypto-js';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import CodeBlock from '../components/CodeBlock';
@@ -26,18 +26,8 @@ const JSONStrToObjArr = (paramsStr: string) => {
     return ObjArray;
   } catch (e) {
     console.error('Parsing error:', e);
-    message.error('解析错误:' + e);
+    // message.error('解析错误:' + e);
   }
-};
-
-const generateSignature = (accessKey: string | undefined, secretKey: string | undefined) => {
-  // 将所有参数按键名排序后拼接成字符串，然后加上 secretKey
-  const message = accessKey! + secretKey!;
-  // 计算 HMAC-MD5 签名
-  const hash = CryptoJS.HmacMD5(message, 'yeguoapi');
-  console.log('hash::' + hash);
-  // 将签名转换为字符串输出
-  return hash.toString(CryptoJS.enc.Hex);
 };
 
 export default () => {
@@ -108,6 +98,12 @@ export default () => {
     <Container>
       <ProCard title={<strong>{name}</strong>} bordered headerBordered gutter={16}>
         <Row gutter={[16, 24]}>
+          <Col className="gutter-row" span={10}>
+            <div style={style}>
+              <strong>接口id：</strong>
+              {id}
+            </div>
+          </Col>
           <Col className="gutter-row" span={10}>
             <div style={style}>
               <strong>接口地址：</strong>
@@ -188,10 +184,16 @@ export default () => {
               {description}
             </div>
           </Col>
-          <Col className="gutter-row" span={10}>
+          <Col className="gutter-row" span={100}>
             <div style={style}>
               <strong>请求示例：</strong>
               {requestExample}
+            </div>
+          </Col>
+          <Col className="gutter-row" span={20}>
+            <div style={style}>
+              <strong>请求头：</strong>
+              {requestHeader}
             </div>
           </Col>
         </Row>

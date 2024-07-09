@@ -114,7 +114,7 @@ const Welcome: React.FC = () => {
               color: token.colorTextHeading,
             }}
           >
-            欢迎使用 Ant Design Pro
+            欢迎使用野果API开放平台
           </div>
           <p
             style={{
@@ -126,8 +126,11 @@ const Welcome: React.FC = () => {
               width: '65%',
             }}
           >
-            Ant Design Pro 是一个整合了 umi，Ant Design 和 ProComponents
-            的脚手架方案。致力于在设计规范和基础组件的基础上，继续向上构建，提炼出典型模板/业务组件/配套设计资源，进一步提升企业级中后台产品设计研发过程中的『用户』和『设计者』的体验。
+            欢迎来到野果API开放平台，这是一个专为开发者设计的平台，我们提供一系列强大的API接口，让您能够轻松地访问和使用我们的数据。
+            我们的API接口涵盖了各种类型的数据，无论您是想开发一个新的应用，还是想进行数据快速获取，我们的API都能为您提供强大的支持。
+            为了让您能够快速上手，我们还提供了一套完整的SDK，让您能够轻松地将我们的API接入到您的应用中。
+            我们的开放平台致力于提供高质量、实时的数据，以满足您的各种需求。我们的API接口设计简洁易用，文档详尽，让您能够快速上手。
+            加入我们的羊腿API开放平台，让我们一起创造更多的可能性！
           </p>
           <div
             style={{
@@ -139,20 +142,20 @@ const Welcome: React.FC = () => {
             <InfoCard
               index={1}
               href="https://umijs.org/docs/introduce/introduce"
-              title="了解 umi"
-              desc="umi 是一个可扩展的企业级前端应用框架,umi 以路由为基础的，同时支持配置式路由和约定式路由，保证路由的功能完备，并以此进行功能扩展。"
+              title="文档支持"
+              desc="我们的官方文档支持，为您提供全面的技术指导和帮助，确保您轻松解决问题并顺利使用我们的产品和服务。"
             />
             <InfoCard
               index={2}
-              title="了解 ant design"
+              title="SDK快速开始"
               href="https://ant.design"
-              desc="antd 是基于 Ant Design 设计体系的 React UI 组件库，主要用于研发企业级中后台产品。"
+              desc="提供客户端SDK，方便您快速集成到你的项目中。"
             />
             <InfoCard
               index={3}
-              title="了解 Pro Components"
+              title="在线调试"
               href="https://procomponents.ant.design"
-              desc="ProComponents 是一个基于 Ant Design 做了更高抽象的模板组件，以 一个组件就是一个页面为开发理念，为中后台开发带来更好的体验。"
+              desc="通过我们的在线调试工具快速访问接口，提高开发效率。帮助您轻松解决问题，确保您的应用程序顺利运行。"
             />
           </div>
         </div>

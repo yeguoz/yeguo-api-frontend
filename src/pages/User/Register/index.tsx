@@ -43,8 +43,7 @@ const useStyles = createStyles(({ token }) => {
       flexDirection: 'column',
       height: '100vh',
       overflow: 'auto',
-      backgroundImage:
-        "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
+      backgroundImage: "url('/assets/74.jpg')",
       backgroundSize: '100% 100%',
     },
   };
@@ -115,7 +114,7 @@ const Register: React.FC = () => {
     <div className={styles.container}>
       <Helmet>
         <title>
-          {'注册'}- {Settings.title}
+          {'注册'}-{Settings.title}
         </title>
       </Helmet>
 
@@ -135,9 +134,9 @@ const Register: React.FC = () => {
             minWidth: 280,
             maxWidth: '75vw',
           }}
-          logo={<img alt="logo" src="/logo.svg" />}
-          title="野果-api开放平台"
-          subTitle={'野果-api 接口开放平台致力于提供稳定、安全、高效的接口调用服务'}
+          logo={<img alt="logo" src="/logo.png" />}
+          title="野果API开放平台"
+          subTitle={'野果API 接口开放平台致力于提供稳定、安全、高效的接口调用服务'}
           initialValues={{
             autoLogin: true,
           }}
