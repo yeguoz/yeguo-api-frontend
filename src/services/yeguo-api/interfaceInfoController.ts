@@ -50,13 +50,12 @@ export async function interfaceInfoQuery(
 /** 在线接口调用 POST /api/interfaceInfo/dynamicQuery */
 export async function onlineInvoking(
   body: any,
-  interfaceInfoId: number,
   accessKey: string,
   signature: string,
   options?: { [key: string]: any },
 ) {
   return request<API.ResponseData>(
-    `/api/interfaceInfo/onlineInvoking?interfaceInfoId=${interfaceInfoId}&accessKey=${accessKey}&signature=${signature}`,
+    `/api/interfaceInfo/onlineInvoking?accessKey=${accessKey}&signature=${signature}`,
     {
       method: 'POST',
       data: body,

@@ -79,12 +79,7 @@ export default () => {
       method: 'POST',
     }
    */
-    const result = await onlineInvoking(
-      { irp: transformedData, method, url },
-      id as number,
-      ak!,
-      signature,
-    );
+    const result = await onlineInvoking({ irp: transformedData, method, url }, ak!, signature);
     // result.data包含status=400
     if (result.data.indexOf('status=400') !== -1) {
       setInvokingResult(null);

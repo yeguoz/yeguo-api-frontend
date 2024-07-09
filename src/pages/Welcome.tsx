@@ -111,6 +111,7 @@ const Welcome: React.FC = () => {
           <div
             style={{
               fontSize: '20px',
+              fontWeight: 'bold',
               color: token.colorTextHeading,
             }}
           >

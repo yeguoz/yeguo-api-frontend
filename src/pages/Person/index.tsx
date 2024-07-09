@@ -30,7 +30,7 @@ export default () => {
     'https://cdn.jsdelivr.net/gh/ye-guo/Images/images/api2.jpg',
     'https://cdn.jsdelivr.net/gh/ye-guo/Images/images/miku0.jpg',
   ]);
-
+  // 修改个人信息内容后 回调设置values，点击更新信息一同更改
   const handleValueChange = (uniqueKey: string, newValue: string) => {
     // 处理InfoItem值变化
     setModified(true);

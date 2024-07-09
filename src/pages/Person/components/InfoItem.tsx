@@ -56,11 +56,13 @@ export default ({
   return (
     <div style={{ display: 'flex', alignItems: 'center', fontSize: '1.05rem' }}>
       <span style={{ fontWeight: 'bold', marginRight: '0.5rem' }}>{name}:</span>
+      {/* flag 用来控制现实值或者是显示输入框 */}
       {flag === 0 ? (
         <span>{inputValue ? inputValue : '未设置'}</span>
       ) : (
         <input ref={inputRef} type="text" defaultValue={inputValue} onBlur={handleBlur} />
       )}
+      {/* 右边复制或编辑图标 */}
       {type === undefined ? null : (
         <span
           onClick={type === 'editor' ? handleEdit : handleCopy}
@@ -79,6 +81,7 @@ export default ({
             position: 'relative',
           }}
         >
+          {/* 隐藏小提示 */}
           <span
             ref={spanRef}
             style={{
@@ -98,6 +101,7 @@ export default ({
           >
             {type === 'editor' ? '编辑' : '复制'}
           </span>
+          {/* 小图标 */}
           {type === 'editor' ? (
             <img src={edit} alt="edit" style={{ height: '1.5rem' }} />
           ) : (
