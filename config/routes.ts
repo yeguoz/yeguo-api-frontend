@@ -32,6 +32,7 @@ export default [
       },
     ],
   },
+  { name: '我的订单', icon: 'User', path: '/order', component: './Order' },
   { name: '个人主页', icon: 'User', path: '/person', component: './Person' },
   { path: '/', redirect: '/welcome' },
   { path: '*', layout: false, component: './404' },
