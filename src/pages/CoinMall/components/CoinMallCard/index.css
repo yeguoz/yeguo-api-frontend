@@ -1,0 +1,40 @@
+.card {
+  width: 15rem;
+  height: 18rem;
+  border: 0.1rem solid #ccc;
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.card .top {
+  position: relative;
+  padding: 1rem 1rem 0;
+  border-bottom: 0.1rem solid #ccc;
+}
+
+.Info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.smallIcon {
+  height: 1.5rem;
+}
+
+.price {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  color: #d23918;
+  font-size: 1.2rem;
+}
+
+.card .bottom {
+  text-align: center;
+}
+
+.btmImg {
+  height: '11rem';
+}

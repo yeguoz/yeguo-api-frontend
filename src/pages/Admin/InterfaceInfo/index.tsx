@@ -5,12 +5,11 @@ import {
   interfaceInfoUpdate,
 } from '@/services/yeguo-api/interfaceInfoController';
 import { PlusOutlined } from '@ant-design/icons';
-import type { ActionType } from '@ant-design/pro-components';
-import { ProTable, WaterMark } from '@ant-design/pro-components';
+import { ActionType, ProTable, WaterMark } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Button, message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
-import { interfaceInfoColumns } from '../definition';
+import InterfaceInfoColumns from './InterfaceInfoColumns';
 
 export const waitTimePromise = async (time: number = 100) => {
   return new Promise((resolve) => {
@@ -55,7 +54,7 @@ export default () => {
         }
       >
         <ProTable<API.InterfaceInfoVO>
-          columns={interfaceInfoColumns}
+          columns={InterfaceInfoColumns}
           actionRef={actionRef}
           cardBordered
           dataSource={tableData}

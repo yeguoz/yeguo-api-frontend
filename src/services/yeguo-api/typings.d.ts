@@ -8,7 +8,9 @@ declare namespace API {
     message?: string;
     description?: string;
   };
-  // 用户信息 ======================================
+
+  // 用户 ======================================
+
   type UserVO = {
     id?: number;
     username?: string;
@@ -62,7 +64,7 @@ declare namespace API {
     userRole?: number;
   };
 
-  // 接口信息 ========================================
+  // 接口 ======================================
 
   type InterfaceInfoVO = {
     id?: number;
@@ -128,5 +130,16 @@ declare namespace API {
     responseFormat?: string;
     invokingCount?: number;
     requiredGoldCoins?: number;
+  };
+
+  // 订单 ======================================
+
+  type OrderVO = {
+    orderId?: string;
+    userId?: number;
+    payType?: number;
+    money?: number;
+    payStatus?: number;
+    createTime?: Date;
   };
 }

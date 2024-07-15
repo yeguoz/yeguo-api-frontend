@@ -1,19 +1,18 @@
 import Container from '@/components/Container';
-import { userQuery, userUpdate } from '@/services/yeguo-api/userController';
-import { ProTable, WaterMark } from '@ant-design/pro-components';
+import { getAllOrderInfos } from '@/services/yeguo-api/orderInfoController';
+import { ActionType, ProTable, WaterMark } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { message } from 'antd';
-import { useEffect, useState } from 'react';
-import UserColumns from './UserColumns';
+import { useEffect, useRef, useState } from 'react';
+import OrderColumns from './OrderColumns';
 
 export default () => {
   const { initialState } = useModel('@@initialState');
+  const actionRef = useRef<ActionType>();
   const [tableData, setTableData] = useState([]);
-  const [paramsState, setParamsState] = useState({});
 
-  const userQueryList = async (params: API.UserQueryParams) => {
-    setParamsState(params);
-    const result = await userQuery(params);
+  const queryOrderInfoList = async () => {
+    const result = await getAllOrderInfos();
     if (!result.data) {
       message.warning('查询数据为空');
       return;
@@ -24,7 +23,7 @@ export default () => {
 
   // 在组件挂载后调用一次数据查询
   useEffect(() => {
-    userQueryList({});
+    queryOrderInfoList();
   }, []);
 
   return (
@@ -36,44 +35,34 @@ export default () => {
             : initialState?.currentUser?.userAccount
         }
       >
-        <ProTable<API.UserVO>
-          columns={UserColumns}
+        <ProTable<API.OrderVO>
+          columns={OrderColumns}
+          actionRef={actionRef}
           cardBordered
           dataSource={tableData}
           // 请求失败时触发
           onRequestError={(error) => {
             message.error(error.message);
           }}
-          // 重置时触发
-          onReset={async () => {
-            // @ts-ignore
-            const result = await userQuery({});
-            if (!result.data) {
-              message.warning('查询数据为空');
-              return;
-            }
-            setTableData(result.data);
-            message.success('查询所有用户成功');
-          }}
           // // 提交时触发
-          onSubmit={(params) => userQueryList(params)}
+          // onSubmit={(params) => userQueryList(params)}
           toolbar={{
-            title: '用户列表',
-            tooltip: '提供用户信息',
+            title: '订单列表',
+            tooltip: '展示订单信息',
           }}
           // 编辑配置
           editable={{
             type: 'multiple',
             //  修改后刷新展示数据
-            onSave: async (_, row) => {
-              const result = await userUpdate(row);
-              if (result.data === null) {
-                message.error(result.description);
-                return;
-              }
-              userQueryList(paramsState);
-              message.success('修改成功');
-            },
+            // onSave: async (_, row) => {
+            //   const result = await userUpdate(row);
+            //   if (result.data === null) {
+            //     message.error(result.description);
+            //     return;
+            //   }
+            //   userQueryList(paramsState);
+            //   message.success('修改成功');
+            // },
             // 保留保存和取消
             actionRender: (row, config, defaultDom) => [defaultDom.save, defaultDom.cancel],
           }}

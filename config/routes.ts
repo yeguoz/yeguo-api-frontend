@@ -16,6 +16,7 @@ export default [
     routes: [
       { path: '/admin/interfaceInfo', name: '接口管理页', component: './Admin/InterfaceInfo' },
       { path: '/admin/user', name: '用户管理页', component: './Admin/User' },
+      { path: '/admin/orderinfo', name: '订单管理页', component: './Admin/OrderInfo' },
     ],
   },
   {
@@ -32,7 +33,8 @@ export default [
       },
     ],
   },
-  { name: '我的订单', icon: 'User', path: '/order', component: './Order' },
+  { name: '果币商城', icon: 'PayCircle', path: '/coinmall', component: './CoinMall' },
+  { name: '我的订单', icon: 'UnorderedList', path: '/orderinfo', component: './OrderInfo' },
   { name: '个人主页', icon: 'User', path: '/person', component: './Person' },
   { path: '/', redirect: '/welcome' },
   { path: '*', layout: false, component: './404' },
