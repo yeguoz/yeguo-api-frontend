@@ -1,6 +1,6 @@
 import Container from '@/components/Container';
 import { cancelOrder, getUserAllOrderInfos } from '@/services/yeguo-api/orderInfoController';
-import { ProColumns, ProTable, WaterMark } from '@ant-design/pro-components';
+import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { message } from 'antd';
 import { useEffect, useState } from 'react';
@@ -18,6 +18,8 @@ const handleCancelOrder = async (orderId: string) => {
     window.location.reload();
   }, 1000);
 };
+
+const handlePay = async () => {};
 
 const OrderColumns: ProColumns<API.OrderVO>[] = [
   {
@@ -87,7 +89,12 @@ const OrderColumns: ProColumns<API.OrderVO>[] = [
     valueType: 'option',
     render: (text, record, _, action) => [
       record.payStatus === 0 ? (
-        <a key="pay" onClick={async () => {}}>
+        <a
+          key="pay"
+          onClick={() => {
+            handlePay();
+          }}
+        >
           去支付
         </a>
       ) : (
@@ -148,69 +155,61 @@ export default () => {
 
   return (
     <Container>
-      <WaterMark
-        content={
-          initialState?.currentUser?.username
-            ? initialState?.currentUser?.username
-            : initialState?.currentUser?.userAccount
-        }
-      >
-        <ProTable<API.OrderVO>
-          columns={OrderColumns}
-          cardBordered
-          dataSource={tableData}
-          // 请求失败时触发
-          onRequestError={(error) => {
-            message.error(error.message);
-          }}
-          // // 提交时触发
-          // onSubmit={(params) => userQueryList(params)}
-          toolbar={{
-            title: '订单列表',
-            tooltip: '展示订单信息',
-          }}
-          // 编辑配置
-          editable={{
-            type: 'multiple',
-            //  修改后刷新展示数据
-            // onSave: async (_, row) => {
-            //   const result = await userUpdate(row);
-            //   if (result.data === null) {
-            //     message.error(result.description);
-            //     return;
-            //   }
-            //   userQueryList(paramsState);
-            //   message.success('修改成功');
-            // },
-            // 保留保存和取消
-            actionRender: (row, config, defaultDom) => [defaultDom.save, defaultDom.cancel],
-          }}
-          columnsState={{
-            persistenceKey: 'pro-table-singe-demos',
-            persistenceType: 'localStorage',
-          }}
-          rowKey="id"
-          // search配置
-          search={false}
-          form={{
-            // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
-            syncToUrl: (values: any, type: any) => {
-              if (type === 'get') {
-                return {
-                  ...values,
-                  created_at: [values.startTime, values.endTime],
-                };
-              }
-              return values;
-            },
-          }}
-          pagination={{
-            pageSize: 5,
-          }}
-          dateFormatter="string"
-          headerTitle="用户列表"
-        />
-      </WaterMark>
+      <ProTable<API.OrderVO>
+        columns={OrderColumns}
+        cardBordered
+        dataSource={tableData}
+        // 请求失败时触发
+        onRequestError={(error) => {
+          message.error(error.message);
+        }}
+        // // 提交时触发
+        // onSubmit={(params) => userQueryList(params)}
+        toolbar={{
+          title: '订单列表',
+          tooltip: '展示订单信息',
+        }}
+        // 编辑配置
+        editable={{
+          type: 'multiple',
+          //  修改后刷新展示数据
+          // onSave: async (_, row) => {
+          //   const result = await userUpdate(row);
+          //   if (result.data === null) {
+          //     message.error(result.description);
+          //     return;
+          //   }
+          //   userQueryList(paramsState);
+          //   message.success('修改成功');
+          // },
+          // 保留保存和取消
+          actionRender: (row, config, defaultDom) => [defaultDom.save, defaultDom.cancel],
+        }}
+        columnsState={{
+          persistenceKey: 'pro-table-singe-demos',
+          persistenceType: 'localStorage',
+        }}
+        rowKey="id"
+        // search配置
+        search={false}
+        form={{
+          // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
+          syncToUrl: (values: any, type: any) => {
+            if (type === 'get') {
+              return {
+                ...values,
+                created_at: [values.startTime, values.endTime],
+              };
+            }
+            return values;
+          },
+        }}
+        pagination={{
+          pageSize: 5,
+        }}
+        dateFormatter="string"
+        headerTitle="用户列表"
+      />
     </Container>
   );
 };

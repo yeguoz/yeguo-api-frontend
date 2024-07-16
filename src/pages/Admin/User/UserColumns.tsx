@@ -22,11 +22,6 @@ const UserColumns: ProColumns<API.UserVO>[] = [
     title: '头像',
     dataIndex: 'avatarUrl',
     valueType: 'image',
-    // render: (_, record) => (
-    //   <div>
-    //     <Image src={record.avatarUrl} height={50} />
-    //   </div>
-    // ),
     copyable: true,
     hideInSearch: true,
     ellipsis: true,
@@ -147,7 +142,7 @@ const UserColumns: ProColumns<API.UserVO>[] = [
             message.error('删除失败');
             return;
           }
-          message.success('删除成功,请手动刷新数据');
+          message.success('删除成功,请刷新页面');
         }}
       >
         删除
