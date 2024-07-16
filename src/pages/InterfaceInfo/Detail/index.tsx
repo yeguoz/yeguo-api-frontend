@@ -69,16 +69,6 @@ export default () => {
     const transformedData = JSON.parse(JSON.stringify(data));
     console.log(transformedData);
     console.log({ irp: transformedData, method, url });
-    /* 
-    { irp: transformedData, method, url } ===
-    {
-      [
-        {"id":1718608585533,"index":0,"name":"qq","value":"123213"},
-        {"id":1718608591521,"index":1,"name":"bb","value":"3esafdsaf"}
-      ],
-      method: 'POST',
-    }
-   */
     const result = await onlineInvoking({ irp: transformedData, method, url }, ak!, signature);
     // result.data包含status=400
     if (result.data.indexOf('status=400') !== -1) {
