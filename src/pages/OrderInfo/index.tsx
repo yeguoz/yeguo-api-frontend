@@ -1,9 +1,23 @@
 import Container from '@/components/Container';
-import { getUserAllOrderInfos } from '@/services/yeguo-api/orderInfoController';
+import { cancelOrder, getUserAllOrderInfos } from '@/services/yeguo-api/orderInfoController';
 import { ProColumns, ProTable, WaterMark } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { message } from 'antd';
 import { useEffect, useState } from 'react';
+
+const handleCancelOrder = async (orderId: string) => {
+  // 调用接口，设置状态为已失效
+  const result = await cancelOrder(orderId);
+  // 1 -1
+  if (result.data === -1) {
+    message.error('取消订单失败--' + result.message);
+    return;
+  }
+  message.success('取消订单成功');
+  setTimeout(() => {
+    window.location.reload();
+  }, 1000);
+};
 
 const OrderColumns: ProColumns<API.OrderVO>[] = [
   {
@@ -72,12 +86,43 @@ const OrderColumns: ProColumns<API.OrderVO>[] = [
     title: '操作',
     valueType: 'option',
     render: (text, record, _, action) => [
-      <a key="pay" onClick={async () => {}}>
-        去支付
-      </a>,
-      <a key="cancel" onClick={() => {}}>
-        取消订单
-      </a>,
+      record.payStatus === 0 ? (
+        <a key="pay" onClick={async () => {}}>
+          去支付
+        </a>
+      ) : (
+        <a
+          style={{
+            pointerEvents: 'none',
+            color: 'gray',
+            textDecoration: 'none',
+            cursor: 'default',
+          }}
+        >
+          去支付
+        </a>
+      ),
+      record.payStatus === 0 ? (
+        <a
+          key="cancel"
+          onClick={() => {
+            if (record.payStatus === 0) handleCancelOrder(record.orderId!);
+          }}
+        >
+          取消订单
+        </a>
+      ) : (
+        <a
+          style={{
+            pointerEvents: 'none',
+            color: 'gray',
+            textDecoration: 'none',
+            cursor: 'default',
+          }}
+        >
+          取消订单
+        </a>
+      ),
     ],
   },
 ];

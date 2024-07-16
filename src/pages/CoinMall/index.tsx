@@ -31,7 +31,7 @@ export default () => {
     }
   };
 
-  const handlerBuy = () => {
+  const handleBuy = () => {
     if (payment <= 0) return;
     // todo 发起订单，跳转支付页面（我已经支付（跳转支付成功页面），取消支付（跳转到订单列表））
     // 后端需要生成订单，成功后跳转支付页面
@@ -115,7 +115,7 @@ export default () => {
           >
             ￥<span>{payment}</span>
           </span>
-          <Button type="primary" onClick={handlerBuy}>
+          <Button type="primary" onClick={handleBuy}>
             确认购买
           </Button>
         </div>
