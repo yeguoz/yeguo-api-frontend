@@ -7,13 +7,23 @@
   transition: all 0.3s ease;
 }
 
+.card:hover {
+  box-shadow: 0 0.125rem 0.5rem rgba(0,0,0,0.2);
+  transform: scale(1.01);
+}
+
+.active {
+  background-color: #f0f8ff;
+  box-shadow: 0 0.125rem 0.5rem rgba(0,0,0,0.2);
+}
+
 .card .top {
   position: relative;
   padding: 1rem 1rem 0;
   border-bottom: 0.1rem solid #ccc;
 }
 
-.Info {
+.info {
   display: flex;
   align-items: center;
   margin-bottom: 1rem;
@@ -36,5 +46,5 @@
 }
 
 .btmImg {
-  height: '11rem';
+  height: 11rem;
 }

@@ -10,14 +10,14 @@
   background-color: #FFF;
   border-radius: 0.4rem;
   cursor: pointer;
-  box-shadow: 0 0.5px 2px rgba(0,0,0,0.5);
+  box-shadow: 0 0.031rem 0.125rem rgba(0,0,0,0.5);
   outline: 0.0625rem solid #deecf9;
   transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .card:hover {
   background-color: #f0f8ff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 0.125rem 0.5rem rgba(0,0,0,0.2);
   transform: scale(1.05);
 }
 
