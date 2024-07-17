@@ -1,18 +1,13 @@
 import Container from '@/components/Container';
 import { cancelOrderInfo, getUserAllOrderInfos } from '@/services/yeguo-api/orderInfoController';
-import { ProColumns, ProTable, recordKeyToString } from '@ant-design/pro-components';
+import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { useModel, useNavigate } from '@umijs/max';
 import { message } from 'antd';
 import { useEffect, useState } from 'react';
 
-
-
-
-
-
 export default () => {
   const navigate = useNavigate();
-  const handlePay = async (orderId:string,userId:number,payType:number,money:number) => {
+  const handlePay = async (orderId: string, userId: number, payType: number, money: number) => {
     navigate(`/${orderId}/pay`, {
       replace: false,
       state: {
@@ -22,6 +17,18 @@ export default () => {
         money,
       },
     });
+  };
+  const handleCancelOrderInfo = async (orderId: string) => {
+    // 调用接口，设置状态为已失效
+    const result = await cancelOrderInfo(orderId);
+    if (!result.data) {
+      message.error('取消订单失败--' + result.message);
+      return;
+    }
+    message.success('取消订单成功');
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
   const OrderColumns: ProColumns<API.OrderInfoVO>[] = [
     {
@@ -94,7 +101,7 @@ export default () => {
           <a
             key="pay"
             onClick={() => {
-              handlePay(record.orderId!,record.userId!,record.payType,record.money!);
+              handlePay(record.orderId!, record.userId!, record.payType!, record.money!);
             }}
           >
             去支付
@@ -137,21 +144,6 @@ export default () => {
   ];
   const { initialState } = useModel('@@initialState');
   const [tableData, setTableData] = useState([]);
-
-  const handleCancelOrderInfo = async (orderId: string) => {
-    // 调用接口，设置状态为已失效
-    const result = await cancelOrderInfo(orderId);
-    if (!result.data) {
-      message.error('取消订单失败--' + result.message);
-      return;
-    }
-    message.success('取消订单成功');
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
-  };
-  
-
 
   const queryOrders = async (userId: number) => {
     const result = await getUserAllOrderInfos(userId);

@@ -13,7 +13,7 @@ export default ({
 }) => {
   return (
     <div
-      className={isSelected?`${styles.btn} ${styles.active}`:`${styles.btn}`}
+      className={isSelected ? `${styles.btn} ${styles.active}` : `${styles.btn}`}
       onClick={() => {
         handelClick();
       }}

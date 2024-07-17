@@ -10,14 +10,14 @@ const CoinMallCard = ({
   CNY: number;
   goldCoin: number;
   isSelected: boolean;
-  onClick: (cardPriceRef: any, goldCoin: number,commodityContent: string) => void;
+  onClick: (cardPriceRef: any, goldCoin: number, commodityContent: string) => void;
 }) => {
   const cardPriceRef = useRef<HTMLSpanElement>(null);
   const commodityContent = `增加${goldCoin}果币`;
   return (
     <div
       className={`${styles.card} ${isSelected ? styles.active : ''}`}
-      onClick={() => onClick(cardPriceRef,goldCoin,commodityContent)}
+      onClick={() => onClick(cardPriceRef, goldCoin, commodityContent)}
     >
       <div className={styles.top}>
         <div className={styles.info}>

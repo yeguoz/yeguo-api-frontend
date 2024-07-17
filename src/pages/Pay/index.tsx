@@ -3,7 +3,7 @@ import { ProCard } from '@ant-design/pro-components';
 import { useLocation } from '@umijs/max';
 
 export default () => {
-  const { userId,commodityContent , money, orderInfoId, payType } =
+  const { userId, commodityContent, money, orderInfoId, payType } =
     (useLocation().state as API.payState) || {};
   return (
     <Container>

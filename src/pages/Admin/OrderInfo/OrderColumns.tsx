@@ -1,6 +1,6 @@
 import { ProColumns } from '@ant-design/pro-components';
 
-const OrderColumns: ProColumns<API.OrderVO>[] = [
+const OrderColumns: ProColumns<API.OrderInfoVO>[] = [
   {
     title: '订单编号',
     dataIndex: 'orderId',

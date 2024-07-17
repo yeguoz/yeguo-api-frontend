@@ -22,11 +22,11 @@ export default () => {
   const selectedCardPriceRef = useRef<HTMLSpanElement>();
   const [money, setMoney] = useState<number>(0); // 支付金额
   const [payType, setPayType] = useState<number>(0); // 0微信 1支付宝
-  const [commodityContent, setCommodityContent] = useState<string>(''); 
+  const [commodityContent, setCommodityContent] = useState<string>('');
   const navigate = useNavigate();
 
   const handleCardClick = (index: number, ref: any, goldCoin: number, commodityContent: string) => {
-    setCommodityContent(commodityContent)
+    setCommodityContent(commodityContent);
     // 选中高亮
     setSelectedCard(index);
     selectedCardPriceRef.current = ref.current;
