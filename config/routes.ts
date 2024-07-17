@@ -33,7 +33,7 @@ export default [
       },
     ],
   },
-  { name: '支付页', path: '/pay', component: './Pay', hideInMenu: false },
+  { name: '支付页', path: '/:orderId/pay', component: './Pay', hideInMenu: false },
   { name: '果币商城', icon: 'PayCircle', path: '/coinmall', component: './CoinMall' },
   { name: '我的订单', icon: 'UnorderedList', path: '/orderinfo', component: './OrderInfo' },
   { name: '个人主页', icon: 'User', path: '/person', component: './Person' },

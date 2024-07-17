@@ -134,7 +134,7 @@ declare namespace API {
 
   // 订单 ======================================
 
-  type OrderVO = {
+  type OrderInfoVO = {
     orderId?: string;
     userId?: number;
     payType?: number;
@@ -142,4 +142,19 @@ declare namespace API {
     payStatus?: number;
     createTime?: Date;
   };
+
+  type CreateOrderInfoRequest = {
+    userId: number;
+    payType: number;
+    money: number;
+    commodityContent: string;
+  };
+
+  type payState = {
+    userId: number;
+    commodityContent: string;
+    money: number;
+    payType: number;
+    orderInfoId: string;
+  }
 }

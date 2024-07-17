@@ -196,12 +196,6 @@ export default () => {
           </Col>
           <Col className="gutter-row" span={15}>
             <InfoItem
-              name={'性别'}
-              value={currentUser?.gender ? (currentUser?.gender === 1 ? '男' : '女') : '未知'}
-            />
-          </Col>
-          <Col className="gutter-row" span={15}>
-            <InfoItem
               name={'手机'}
               value={values['phone']}
               type={'editor'}
@@ -210,7 +204,7 @@ export default () => {
             />
           </Col>
           <Col className="gutter-row" span={15}>
-            <InfoItem name={'金币'} value={currentUser?.goldCoin} />
+            <InfoItem name={'果币'} value={currentUser?.goldCoin} />
           </Col>
           <Col className="gutter-row" span={15}>
             <InfoItem

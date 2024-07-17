@@ -10,14 +10,14 @@ const CoinMallCard = ({
   CNY: number;
   goldCoin: number;
   isSelected: boolean;
-  onClick: (cardPriceRef: any) => void;
+  onClick: (cardPriceRef: any, goldCoin: number,commodityContent: string) => void;
 }) => {
   const cardPriceRef = useRef<HTMLSpanElement>(null);
-
+  const commodityContent = `增加${goldCoin}果币`;
   return (
     <div
       className={`${styles.card} ${isSelected ? styles.active : ''}`}
-      onClick={() => onClick(cardPriceRef)}
+      onClick={() => onClick(cardPriceRef,goldCoin,commodityContent)}
     >
       <div className={styles.top}>
         <div className={styles.info}>
@@ -27,7 +27,7 @@ const CoinMallCard = ({
             ￥<span ref={cardPriceRef}>{CNY}</span>
           </span>
         </div>
-        <p>增加{goldCoin}果币</p>
+        <p>{commodityContent}</p>
       </div>
       <div className={styles.bottom}>
         <img src="/assets/moneyC.png" alt="" className={styles.btmImg} />

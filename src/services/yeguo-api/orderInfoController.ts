@@ -16,10 +16,19 @@ export async function getAllOrderInfos(options?: { [key: string]: any }) {
   });
 }
 
-/** 取消订单 GET /api/order/register */
-export async function cancelOrder(orderId: string, options?: { [key: string]: any }) {
+/** 取消订单  */
+export async function cancelOrderInfo(orderId: string, options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/orderInfo/cancel/${orderId}`, {
     method: 'PUT',
+    ...(options || {}),
+  });
+}
+
+/** 创建订单  */
+export async function CreateOrderInfo(createOrderInfoRequest: API.CreateOrderInfoRequest, options?: { [key: string]: any }) {
+  return request<API.ResponseData>(`/api/orderInfo`, {
+    method: 'POST',
+    data:createOrderInfoRequest,
     ...(options || {}),
   });
 }

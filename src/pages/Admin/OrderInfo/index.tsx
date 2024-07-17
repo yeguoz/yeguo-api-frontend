@@ -26,7 +26,7 @@ export default () => {
 
   return (
     <Container>
-      <ProTable<API.OrderVO>
+      <ProTable<API.OrderInfoVO>
         columns={OrderColumns}
         actionRef={actionRef}
         cardBordered
@@ -80,7 +80,7 @@ export default () => {
           },
         }}
         pagination={{
-          pageSize: 5,
+          pageSize: 10,
         }}
         dateFormatter="string"
         headerTitle="用户列表"

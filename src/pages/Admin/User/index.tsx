@@ -91,7 +91,7 @@ export default () => {
           },
         }}
         pagination={{
-          pageSize: 5,
+          pageSize: 10,
         }}
         dateFormatter="string"
         headerTitle="用户列表"

@@ -1,9 +1,11 @@
 import Container from '@/components/Container';
+import { CreateOrderInfo } from '@/services/yeguo-api/orderInfoController';
 import { ProCard } from '@ant-design/pro-components';
-import { useModel } from '@umijs/max';
-import { Button, Col, Row } from 'antd';
+import { useModel, useNavigate } from '@umijs/max';
+import { Button, Col, Row, message } from 'antd';
 import { useRef, useState } from 'react';
 import CoinMallCard from './components/CoinMallCard';
+import PayButton from './components/PayButton';
 
 export default () => {
   const { initialState } = useModel('@@initialState');
@@ -18,24 +20,55 @@ export default () => {
 
   const [selectedCard, setSelectedCard] = useState<number>();
   const selectedCardPriceRef = useRef<HTMLSpanElement>();
-  const [payment, setPayment] = useState<number>(0);
+  const [money, setMoney] = useState<number>(0); // 支付金额
+  const [payType, setPayType] = useState<number>(0); // 0微信 1支付宝
+  const [commodityContent, setCommodityContent] = useState<string>(''); 
+  const navigate = useNavigate();
 
-  const handleCardClick = (index: number, ref: any) => {
+  const handleCardClick = (index: number, ref: any, goldCoin: number, commodityContent: string) => {
+    setCommodityContent(commodityContent)
     // 选中高亮
     setSelectedCard(index);
     selectedCardPriceRef.current = ref.current;
     if (selectedCardPriceRef.current) {
       const priceStr = selectedCardPriceRef.current.textContent;
       const moneyNum = parseFloat(priceStr!);
-      setPayment(moneyNum);
+      setMoney(moneyNum);
     }
   };
 
-  const handleBuy = () => {
-    if (payment <= 0) return;
+  const handleBuy = async () => {
+    if (money <= 0) return;
     // todo 发起订单，跳转支付页面（我已经支付（跳转支付成功页面），取消支付（跳转到订单列表））
     // 后端需要生成订单，成功后跳转支付页面
-    console.log('购买');
+    // 用户id userId 支付金额 money 支付方式payType 传给后端
+    const reqParams = {
+      userId: initialState?.currentUser?.id as number,
+      payType,
+      money,
+      commodityContent,
+    };
+    const result = await CreateOrderInfo(reqParams);
+    if (!result.data) {
+      message.error('生成订单失败==' + result.message);
+      return;
+    }
+    message.success('生成订单成功');
+    // 跳转到支付页面
+    navigate(`/${result.data}/pay`, {
+      replace: false,
+      state: {
+        orderInfoId: result.data,
+        userId: initialState?.currentUser?.id as number,
+        commodityContent,
+        money,
+        payType,
+      },
+    });
+  };
+
+  const handleClick = (mode: number) => {
+    setPayType(mode);
   };
   return (
     <Container>
@@ -92,7 +125,9 @@ export default () => {
                 CNY={item.CNY}
                 goldCoin={item.goldCoin}
                 isSelected={selectedCard === index}
-                onClick={(cardPriceRef) => handleCardClick(index, cardPriceRef)}
+                onClick={(cardPriceRef, goldCoin, commodityContent) =>
+                  handleCardClick(index, cardPriceRef, goldCoin, commodityContent)
+                }
               />
             </Col>
           ))}
@@ -101,6 +136,33 @@ export default () => {
           本商品为虚拟内容，用于平台接口调用，购买后不支持
           <span style={{ color: '#d23918' }}>退换</span>，购买后24小时内审核完成。
         </p>
+      </ProCard>
+      <ProCard
+        title={<strong>支付方式</strong>}
+        bordered
+        headerBordered
+        gutter={5}
+        headStyle={{ backgroundColor: '#f3f2f1', borderRadius: '0.5rem' }}
+        style={{ marginTop: '1rem' }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
+          <PayButton
+            text="微信支付"
+            img="/assets/vxpay.png"
+            isSelected={payType === 0}
+            handelClick={() => {
+              handleClick(0);
+            }}
+          />
+          <PayButton
+            text="支付宝支付"
+            img="/assets/alipay.png"
+            isSelected={payType === 1}
+            handelClick={() => {
+              handleClick(1);
+            }}
+          />
+        </div>
       </ProCard>
       <ProCard bordered>
         <div style={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
@@ -113,7 +175,7 @@ export default () => {
               fontSize: '1.5rem',
             }}
           >
-            ￥<span>{payment}</span>
+            ￥<span>{money}</span>
           </span>
           <Button type="primary" onClick={handleBuy}>
             确认购买

@@ -53,7 +53,7 @@ export default () => {
     requestHeader,
     responseHeader,
     createTime,
-  } = useLocation().state as API.InterfaceInfoVO;
+  } = useLocation().state as API.InterfaceInfoVO || {};
 
   // 生成签名
   const currentUser = initialState?.currentUser;
