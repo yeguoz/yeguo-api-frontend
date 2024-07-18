@@ -1,3 +1,4 @@
+import { userDelete } from '@/services/yeguo-api/userController';
 import { ProColumns } from '@ant-design/pro-components';
 import { message } from 'antd';
 
@@ -111,7 +112,7 @@ const UserColumns: ProColumns<API.UserVO>[] = [
   {
     title: '创建时间',
     dataIndex: 'createTime',
-    valueType: 'date',
+    valueType: 'dateTime',
     hideInSearch: true,
     ellipsis: true,
   },
@@ -130,7 +131,6 @@ const UserColumns: ProColumns<API.UserVO>[] = [
       >
         编辑
       </a>,
-      // todo 删除后刷新展示数据
       <a
         key="delete"
         onClick={async () => {
@@ -142,7 +142,10 @@ const UserColumns: ProColumns<API.UserVO>[] = [
             message.error('删除失败');
             return;
           }
-          message.success('删除成功,请刷新页面');
+          message.success('删除成功');
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         }}
       >
         删除

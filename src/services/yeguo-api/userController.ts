@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
-/** 用户注册 POST /api/user/register */
+/** 用户注册 */
 export async function userRegister(body: API.UserRegisterParams, options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/user/register`, {
     method: 'POST',
@@ -14,7 +14,7 @@ export async function userRegister(body: API.UserRegisterParams, options?: { [ke
   });
 }
 
-/** 用户登录 POST /api/user/login */
+/** 用户登录 */
 export async function userLogin(body: API.UserLoginParams, options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/user/login`, {
     method: 'POST',
@@ -26,7 +26,7 @@ export async function userLogin(body: API.UserLoginParams, options?: { [key: str
   });
 }
 
-/** 当前用户 POST /api/user/current */
+/** 当前用户 */
 export async function userCurrent(options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/user/current`, {
     method: 'GET',
@@ -34,7 +34,7 @@ export async function userCurrent(options?: { [key: string]: any }) {
   });
 }
 
-/** 注销 POST /api/user/logout */
+/** 注销 */
 export async function userlogout(options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/user/logout`, {
     method: 'POST',
@@ -45,8 +45,11 @@ export async function userlogout(options?: { [key: string]: any }) {
   });
 }
 
-/** 查询所有用户 GET /api/user/dynamicQuery */
-export async function userQuery(params: API.UserQueryParams, options?: { [key: string]: any }) {
+/** 动态查询用户 */
+export async function userDynamicQuery(
+  params: API.UserQueryParams,
+  options?: { [key: string]: any },
+) {
   return request<API.ResponseData>(`/api/user/dynamicQuery`, {
     method: 'GET',
     params,
@@ -54,7 +57,7 @@ export async function userQuery(params: API.UserQueryParams, options?: { [key: s
   });
 }
 
-/** 按照id删除用户 DELETE /api/user/selectAll */
+/** 按照id删除用户 */
 export async function userDelete(id: number, options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/user/${id}`, {
     method: 'DELETE',
@@ -62,7 +65,7 @@ export async function userDelete(id: number, options?: { [key: string]: any }) {
   });
 }
 
-/** 按照id修改用户 PUT /api/user */
+/** 按照id修改用户 */
 export async function userUpdate(body: API.UserVO, options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/user/update`, {
     method: 'PUT',

@@ -128,7 +128,6 @@ const Login: React.FC = () => {
       message.error(defaultLoginFailureMessage);
     }
   };
-  // const { status, type: loginType } = userLoginState;
 
   return (
     <div className={styles.container}>

@@ -8,10 +8,14 @@ export async function getUserAllOrderInfos(userId: number, options?: { [key: str
   });
 }
 
-/** 查询用户自己所有订单 GET */
-export async function getAllOrderInfos(options?: { [key: string]: any }) {
-  return request<API.ResponseData>(`/api/orderInfo/all`, {
+/** 动态查询订单 GET /api/orderInfo/dynamicQuery */
+export async function orderInfoDynamicQuery(
+  params: API.OrderInfoQueryParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResponseData>(`/api/orderInfo/dynamicQuery`, {
     method: 'GET',
+    params,
     ...(options || {}),
   });
 }
@@ -25,10 +29,21 @@ export async function cancelOrderInfo(orderId: string, options?: { [key: string]
 }
 
 /** 创建订单  */
-export async function CreateOrderInfo(createOrderInfoRequest: API.CreateOrderInfoRequest, options?: { [key: string]: any }) {
+export async function CreateOrderInfo(
+  createOrderInfoRequest: API.CreateOrderInfoRequest,
+  options?: { [key: string]: any },
+) {
   return request<API.ResponseData>(`/api/orderInfo`, {
     method: 'POST',
-    data:createOrderInfoRequest,
+    data: createOrderInfoRequest,
+    ...(options || {}),
+  });
+}
+
+/** 删除订单  */
+export async function deleteOrderInfo(orderId: string, options?: { [key: string]: any }) {
+  return request<API.ResponseData>(`/api/orderInfo/${orderId}`, {
+    method: 'DELETE',
     ...(options || {}),
   });
 }

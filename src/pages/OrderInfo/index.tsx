@@ -1,13 +1,36 @@
 import Container from '@/components/Container';
-import { cancelOrderInfo, getUserAllOrderInfos } from '@/services/yeguo-api/orderInfoController';
+import {
+  cancelOrderInfo,
+  deleteOrderInfo,
+  getUserAllOrderInfos,
+} from '@/services/yeguo-api/orderInfoController';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { useModel, useNavigate } from '@umijs/max';
 import { message } from 'antd';
 import { useEffect, useState } from 'react';
+import formatDate from '../utils/formatDateUtil';
+
+export const handleDeleteOrderInfo = async (orderId: string) => {
+  const result = await deleteOrderInfo(orderId);
+  if (!result.data) {
+    message.error(result.message);
+    return;
+  }
+  message.success(result.message);
+  setTimeout(() => {
+    window.location.reload();
+  }, 1000);
+};
 
 export default () => {
   const navigate = useNavigate();
-  const handlePay = async (orderId: string, userId: number, payType: number, money: number) => {
+  const handlePay = async (
+    orderId: string,
+    userId: number,
+    payType: number,
+    money: number,
+    commodityContent: string,
+  ) => {
     navigate(`/${orderId}/pay`, {
       replace: false,
       state: {
@@ -15,31 +38,36 @@ export default () => {
         userId,
         payType,
         money,
+        commodityContent,
       },
     });
   };
+
   const handleCancelOrderInfo = async (orderId: string) => {
     // 调用接口，设置状态为已失效
     const result = await cancelOrderInfo(orderId);
     if (!result.data) {
-      message.error('取消订单失败--' + result.message);
+      message.error(result.message);
       return;
     }
-    message.success('取消订单成功');
+    if (result.data === 2) {
+      message.info('订单已失效');
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      return;
+    }
+    message.success(result.message);
     setTimeout(() => {
       window.location.reload();
     }, 1000);
   };
+
   const OrderColumns: ProColumns<API.OrderInfoVO>[] = [
     {
       title: '订单编号',
       dataIndex: 'orderId',
       valueType: 'text',
-      ellipsis: true,
-    },
-    {
-      title: '用户id',
-      dataIndex: 'userId',
       ellipsis: true,
     },
     {
@@ -61,6 +89,11 @@ export default () => {
     {
       title: '支付金额',
       dataIndex: 'money',
+      ellipsis: true,
+    },
+    {
+      title: '商品内容',
+      dataIndex: 'commodityContent',
       ellipsis: true,
     },
     {
@@ -90,8 +123,21 @@ export default () => {
     {
       title: '创建时间',
       dataIndex: 'createTime',
-      valueType: 'date',
+      valueType: 'dateTime',
       ellipsis: true,
+    },
+    {
+      title: '完成时间',
+      dataIndex: 'updateTime',
+      valueType: 'dateTime',
+      render: (text, record, _, action) => [
+        record.payStatus === 3 ? (
+          <span key="time">{formatDate(record.updateTime)}</span>
+        ) : (
+          <span></span>
+        ),
+      ],
+      hideInSearch: true,
     },
     {
       title: '操作',
@@ -101,7 +147,13 @@ export default () => {
           <a
             key="pay"
             onClick={() => {
-              handlePay(record.orderId!, record.userId!, record.payType!, record.money!);
+              handlePay(
+                record.orderId!,
+                record.userId!,
+                record.payType!,
+                record.money!,
+                record.commodityContent!,
+              );
             }}
           >
             去支付
@@ -124,6 +176,7 @@ export default () => {
             onClick={() => {
               if (record.payStatus === 0) handleCancelOrderInfo(record.orderId!);
             }}
+            style={{ color: '#ea5514' }}
           >
             取消订单
           </a>
@@ -139,6 +192,29 @@ export default () => {
             取消订单
           </a>
         ),
+        record.payStatus !== 2 && record.payStatus !== 0 ? (
+          <a
+            key="cancel"
+            onClick={() => {
+              if (record.payStatus === 1 || record.payStatus === 3)
+                handleDeleteOrderInfo(record.orderId!);
+            }}
+            style={{ color: '#e60012' }}
+          >
+            删除订单
+          </a>
+        ) : (
+          <a
+            style={{
+              pointerEvents: 'none',
+              color: 'gray',
+              textDecoration: 'none',
+              cursor: 'default',
+            }}
+          >
+            删除订单
+          </a>
+        ),
       ],
     },
   ];
@@ -148,11 +224,9 @@ export default () => {
   const queryOrders = async (userId: number) => {
     const result = await getUserAllOrderInfos(userId);
     if (!result.data) {
-      message.warning('查询数据为空');
       return;
     }
     setTableData(result.data);
-    message.success('查询数据成功');
   };
   // 在组件挂载后调用一次数据查询
   useEffect(() => {

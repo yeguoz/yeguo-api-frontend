@@ -53,7 +53,7 @@ export default () => {
       message.error('生成订单失败==' + result.message);
       return;
     }
-    message.success('生成订单成功');
+    message.success(result.message);
     // 跳转到支付页面
     navigate(`/${result.data}/pay`, {
       replace: false,

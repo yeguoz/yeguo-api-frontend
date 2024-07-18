@@ -1,6 +1,6 @@
 import Container from '@/components/Container';
 import {
-  interfaceInfoQuery,
+  interfaceInfoDynamicQuery,
   interfaceInfoRegister,
   interfaceInfoUpdate,
 } from '@/services/yeguo-api/interfaceInfoController';
@@ -29,13 +29,13 @@ export default () => {
 
   const interfaceInfoQueryList = async (params: API.UserQueryParams) => {
     setParamsState(params);
-    const result = await interfaceInfoQuery(params);
+    const result = await interfaceInfoDynamicQuery(params);
     if (!result.data) {
-      message.warning('查询数据为空');
+      message.warning(result.message);
       return;
     }
     setTableData(result.data);
-    message.success('查询数据成功');
+    message.success(result.message);
   };
 
   useEffect(() => {
@@ -56,7 +56,7 @@ export default () => {
         // 重置时触发
         onReset={async () => {
           // @ts-ignore
-          const result = await interfaceInfoQuery({});
+          const result = await interfaceInfoDynamicQuery({});
           if (!result.data) {
             message.warning('查询数据为空');
             return;

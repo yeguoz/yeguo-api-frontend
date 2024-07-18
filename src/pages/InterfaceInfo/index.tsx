@@ -1,5 +1,5 @@
 import Container from '@/components/Container';
-import { interfaceInfoQuery } from '@/services/yeguo-api/interfaceInfoController';
+import { interfaceInfoDynamicQuery } from '@/services/yeguo-api/interfaceInfoController';
 import { useNavigate } from '@umijs/max';
 import { Col, Row, message } from 'antd';
 import React, { useEffect, useState } from 'react';
@@ -10,9 +10,9 @@ const InfoCard: React.FC = () => {
   const navigate = useNavigate();
 
   const interfaceInfoQueryList = async (params: API.UserQueryParams) => {
-    const result = await interfaceInfoQuery(params);
+    const result = await interfaceInfoDynamicQuery(params);
     if (!result.data) {
-      message.warning('查询数据为空');
+      message.warning(result.message);
       return;
     }
     setData(result.data);

@@ -1,5 +1,5 @@
 import Container from '@/components/Container';
-import { getAllOrderInfos } from '@/services/yeguo-api/orderInfoController';
+import { orderInfoDynamicQuery } from '@/services/yeguo-api/orderInfoController';
 import { ActionType, ProTable } from '@ant-design/pro-components';
 import { message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
@@ -9,19 +9,20 @@ export default () => {
   const actionRef = useRef<ActionType>();
   const [tableData, setTableData] = useState([]);
 
-  const queryOrderInfoList = async () => {
-    const result = await getAllOrderInfos();
+  const queryOrderInfoList = async (params: API.OrderInfoQueryParams) => {
+    const result = await orderInfoDynamicQuery(params);
     if (!result.data) {
-      message.warning('查询数据为空');
+      message.warning(result.message);
       return;
     }
     setTableData(result.data);
-    message.success('查询数据成功');
+    message.success(result.message);
   };
 
   // 在组件挂载后调用一次数据查询
   useEffect(() => {
-    queryOrderInfoList();
+    // @ts-ignore
+    queryOrderInfoList({});
   }, []);
 
   return (
@@ -35,27 +36,10 @@ export default () => {
         onRequestError={(error) => {
           message.error(error.message);
         }}
-        // // 提交时触发
-        // onSubmit={(params) => userQueryList(params)}
+        onSubmit={(params: any) => queryOrderInfoList(params)}
         toolbar={{
           title: '订单列表',
           tooltip: '展示订单信息',
-        }}
-        // 编辑配置
-        editable={{
-          type: 'multiple',
-          //  修改后刷新展示数据
-          // onSave: async (_, row) => {
-          //   const result = await userUpdate(row);
-          //   if (result.data === null) {
-          //     message.error(result.description);
-          //     return;
-          //   }
-          //   userQueryList(paramsState);
-          //   message.success('修改成功');
-          // },
-          // 保留保存和取消
-          actionRender: (row, config, defaultDom) => [defaultDom.save, defaultDom.cancel],
         }}
         columnsState={{
           persistenceKey: 'pro-table-singe-demos',
@@ -83,7 +67,7 @@ export default () => {
           pageSize: 10,
         }}
         dateFormatter="string"
-        headerTitle="用户列表"
+        headerTitle="订单列表"
       />
     </Container>
   );

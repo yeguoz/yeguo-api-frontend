@@ -1,3 +1,4 @@
+import { interfaceInfoDelete } from '@/services/yeguo-api/interfaceInfoController';
 import { ProColumns } from '@ant-design/pro-components';
 import { message } from 'antd';
 
@@ -15,14 +16,12 @@ const InterfaceInfoColumns: ProColumns<API.InterfaceInfoVO>[] = [
     dataIndex: 'userId',
     valueType: 'text',
     editable: false,
-    ellipsis: true,
   },
   {
     title: '接口名',
     width: 80,
     dataIndex: 'name',
     valueType: 'text',
-    ellipsis: true,
   },
   {
     title: '接口头像',
@@ -38,11 +37,10 @@ const InterfaceInfoColumns: ProColumns<API.InterfaceInfoVO>[] = [
     width: 80,
     dataIndex: 'description',
     valueType: 'text',
-    ellipsis: true,
   },
   {
     title: '请求方法',
-    width: 80,
+    width: 70,
     dataIndex: 'method',
     valueType: 'text',
     copyable: false,
@@ -54,7 +52,6 @@ const InterfaceInfoColumns: ProColumns<API.InterfaceInfoVO>[] = [
     dataIndex: 'url',
     valueType: 'text',
     copyable: false,
-    ellipsis: true,
   },
   {
     title: '请求参数',
@@ -104,14 +101,12 @@ const InterfaceInfoColumns: ProColumns<API.InterfaceInfoVO>[] = [
     width: 50,
     dataIndex: 'invokingCount',
     valueType: 'text',
-    ellipsis: true,
   },
   {
     title: '果币/次',
     width: 30,
     dataIndex: 'requiredGoldCoins',
     valueType: 'text',
-    ellipsis: true,
   },
   {
     title: '接口状态',
@@ -122,7 +117,6 @@ const InterfaceInfoColumns: ProColumns<API.InterfaceInfoVO>[] = [
       1: { text: '关闭', status: 'Error' },
     },
     hideInSearch: true,
-    ellipsis: true,
     hideInForm: true,
   },
   {
@@ -145,7 +139,7 @@ const InterfaceInfoColumns: ProColumns<API.InterfaceInfoVO>[] = [
   {
     title: '创建时间',
     dataIndex: 'createTime',
-    valueType: 'date',
+    valueType: 'dateTime',
     hideInSearch: true,
     editable: false,
     ellipsis: true,
@@ -176,7 +170,10 @@ const InterfaceInfoColumns: ProColumns<API.InterfaceInfoVO>[] = [
             message.error('删除失败');
             return;
           }
-          message.success('删除成功,请手动刷新数据');
+          message.success('删除成功');
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         }}
       >
         删除

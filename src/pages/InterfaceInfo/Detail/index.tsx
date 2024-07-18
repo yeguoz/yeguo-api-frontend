@@ -1,5 +1,5 @@
 import Container from '@/components/Container';
-import generateSignature from '@/pages/utils/generateSignature';
+import generateSignature from '@/pages/utils/generateSignatureUtil';
 import { onlineInvoking } from '@/services/yeguo-api/interfaceInfoController';
 import { ProCard } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';

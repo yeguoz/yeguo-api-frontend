@@ -140,7 +140,9 @@ declare namespace API {
     payType?: number;
     money?: number;
     payStatus?: number;
-    createTime?: Date;
+    commodityContent?: string;
+    createTime?: DdateTime;
+    updateTime?: DateTime;
   };
 
   type CreateOrderInfoRequest = {
@@ -150,11 +152,19 @@ declare namespace API {
     commodityContent: string;
   };
 
-  type payState = {
+  type OrderInfoQueryParams = {
+    orderId: string;
+    userId: number;
+    payType: number;
+    money: number;
+    payStatus: number;
+  };
+
+  type PayState = {
     userId: number;
     commodityContent: string;
     money: number;
     payType: number;
     orderInfoId: string;
-  }
+  };
 }

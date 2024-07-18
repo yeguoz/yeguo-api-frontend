@@ -5,7 +5,7 @@ import { ProCard } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Button, Col, Row, message } from 'antd';
 import { useState } from 'react';
-import generateSignature from '../utils/generateSignature';
+import generateSignature from '../utils/generateSignatureUtil';
 import InfoItem from './components/InfoItem';
 
 export default () => {

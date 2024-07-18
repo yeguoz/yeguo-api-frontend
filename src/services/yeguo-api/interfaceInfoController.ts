@@ -36,7 +36,7 @@ export async function interfaceInfoUpdate(
 }
 
 /** 动态接口查询 GET /api/interfaceInfo/dynamicQuery */
-export async function interfaceInfoQuery(
+export async function interfaceInfoDynamicQuery(
   params: API.InterfaceInfoQueryParams,
   options?: { [key: string]: any },
 ) {

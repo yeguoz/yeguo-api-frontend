@@ -1,5 +1,5 @@
 import Container from '@/components/Container';
-import { userQuery, userUpdate } from '@/services/yeguo-api/userController';
+import { userDynamicQuery, userUpdate } from '@/services/yeguo-api/userController';
 import { ProTable } from '@ant-design/pro-components';
 import { message } from 'antd';
 import { useEffect, useState } from 'react';
@@ -11,13 +11,13 @@ export default () => {
 
   const userQueryList = async (params: API.UserQueryParams) => {
     setParamsState(params);
-    const result = await userQuery(params);
+    const result = await userDynamicQuery(params);
     if (!result.data) {
-      message.warning('查询数据为空');
+      message.warning(result.message);
       return;
     }
     setTableData(result.data);
-    message.success('查询数据成功');
+    message.success(result.message);
   };
 
   // 在组件挂载后调用一次数据查询
@@ -38,7 +38,7 @@ export default () => {
         // 重置时触发
         onReset={async () => {
           // @ts-ignore
-          const result = await userQuery({});
+          const result = await userDynamicQuery({});
           if (!result.data) {
             message.warning('查询数据为空');
             return;
@@ -46,7 +46,7 @@ export default () => {
           setTableData(result.data);
           message.success('查询所有用户成功');
         }}
-        // // 提交时触发
+        // 提交时触发
         onSubmit={(params) => userQueryList(params)}
         toolbar={{
           title: '用户列表',

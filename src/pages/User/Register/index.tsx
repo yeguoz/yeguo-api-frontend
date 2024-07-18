@@ -101,7 +101,6 @@ const Register: React.FC = () => {
         return;
       }
       // 失败直接抛出异常
-      // @ts-ignore
       throw new Error(result.description);
     } catch (error: any) {
       const defaultLoginFailureMessage = '注册失败，请重试！';
