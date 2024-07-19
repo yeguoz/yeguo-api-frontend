@@ -3,8 +3,13 @@ import { cancelOrderInfo } from '@/services/yeguo-api/orderInfoController';
 import { ProCard } from '@ant-design/pro-components';
 import { useLocation, useNavigate } from '@umijs/max';
 import { Button, Col, Row, message } from 'antd';
+import { useState } from 'react';
 
 export default () => {
+  const [buttonIsLoading, setButtonIsLoading] = useState({
+    btn1: false,
+    btn2: false,
+  });
   const { userId, commodityContent, money, orderInfoId, payType } =
     (useLocation().state as API.PayState) || {};
   // const [countdown, setCountdown] = useState(300); // 初始化为5分钟，即300秒
@@ -23,20 +28,36 @@ export default () => {
 
   // }, [countdown]);
   const navigate = useNavigate();
-  const handleCancel = async () => {
+  const handleCancel = async (btn: string) => {
+    setButtonIsLoading((prevState) => ({
+      ...prevState,
+      [btn]: true,
+    }));
     const result = await cancelOrderInfo(orderInfoId);
     if (!result.data) {
+      setButtonIsLoading((prevState) => ({
+        ...prevState,
+        [btn]: false,
+      }));
       message.error(result.message);
-      navigate(-1);
+      navigate('/orderinfo');
       return;
     }
     if (result.data === 2) {
+      setButtonIsLoading((prevState) => ({
+        ...prevState,
+        [btn]: false,
+      }));
       message.info('订单已失效');
-      navigate(-1);
+      navigate('/orderinfo');
       return;
     }
+    setButtonIsLoading((prevState) => ({
+      ...prevState,
+      [btn]: false,
+    }));
     message.success(result.message);
-    navigate(-1);
+    navigate('/orderinfo');
   };
 
   return (
@@ -49,12 +70,12 @@ export default () => {
       >
         <Row gutter={[16, 24]}>
           <Col className="gutter-row" span={10}>
-            <strong>用户Id：</strong>
-            {userId}
-          </Col>
-          <Col className="gutter-row" span={10}>
             <strong>订单号：</strong>
             {orderInfoId}
+          </Col>
+          <Col className="gutter-row" span={10}>
+            <strong>用户Id：</strong>
+            {userId}
           </Col>
           <Col className="gutter-row" span={10}>
             <strong>商品内容：</strong>
@@ -66,35 +87,37 @@ export default () => {
           </Col>
           <Col className="gutter-row" span={10}>
             <strong>支付方式：</strong>
-            {payType === 0 ? (
-              <span
-                style={{
-                  display: 'inline-block',
-                  padding: '0.2rem',
-                  textAlign: 'center',
-                  backgroundColor: 'rgba(246, 255, 237, 0.3)',
-                  border: '0.03125rem solid skyblue',
-                  borderRadius: '0.5rem',
-                  color: '#8faa0d',
-                }}
-              >
-                微信支付
-              </span>
-            ) : (
-              <span
-                style={{
-                  display: 'inline-block',
-                  padding: '0.3rem',
-                  textAlign: 'center',
-                  backgroundColor: 'rgba(22, 119, 255, 0.8)',
-                  border: '0.03125rem solid #8faa0d',
-                  borderRadius: '0.5rem',
-                  color: '#fff',
-                }}
-              >
-                支付宝支付
-              </span>
-            )}
+            {payType ? (
+              payType === 0 ? (
+                <span
+                  style={{
+                    display: 'inline-block',
+                    padding: '0.2rem',
+                    textAlign: 'center',
+                    backgroundColor: 'rgba(246, 255, 237, 0.3)',
+                    border: '0.03125rem solid skyblue',
+                    borderRadius: '0.5rem',
+                    color: '#8faa0d',
+                  }}
+                >
+                  微信支付
+                </span>
+              ) : (
+                <span
+                  style={{
+                    display: 'inline-block',
+                    padding: '0.3rem',
+                    textAlign: 'center',
+                    backgroundColor: 'rgba(22, 119, 255, 0.8)',
+                    border: '0.03125rem solid #8faa0d',
+                    borderRadius: '0.5rem',
+                    color: '#fff',
+                  }}
+                >
+                  支付宝支付
+                </span>
+              )
+            ) : null}
           </Col>
         </Row>
       </ProCard>
@@ -104,16 +127,41 @@ export default () => {
         headerBordered
         headStyle={{ backgroundColor: '#f3f2f1', borderRadius: '0.5rem' }}
       >
-        <div>{300}</div>
-        <Button type="primary">我已经支付</Button>
-        <Button
-          type="primary"
-          onClick={() => {
-            handleCancel();
-          }}
-        >
-          取消支付
-        </Button>
+        {orderInfoId ? (
+          <>
+            <div style={{ textAlign: 'center', fontSize: '1.5rem' }}>
+              <div>
+                <span>￥</span>
+                <span style={{ color: '#d23918' }}>{money}</span>
+              </div>
+              <img
+                src={`/assets/payqr/vx_${money}.png`}
+                alt="支付二维码"
+                style={{ width: '20rem' }}
+              />
+              <p>
+                请使用微信扫描二维码进行支付，支付成功后请点击
+                <span style={{ color: '#d23918' }}>“我已经支付”</span>按钮
+              </p>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+              <Button type="primary">我已经支付</Button>
+              <Button
+                type="primary"
+                loading={buttonIsLoading.btn2}
+                onClick={() => {
+                  handleCancel('btn2');
+                }}
+              >
+                取消支付
+              </Button>
+            </div>
+          </>
+        ) : (
+          <div style={{ fontSize: '1.5rem', color: '#d23918', textAlign: 'center' }}>
+            该订单不存在!
+          </div>
+        )}
       </ProCard>
     </Container>
   );

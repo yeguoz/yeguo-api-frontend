@@ -1,17 +1,27 @@
-import Search from 'antd/es/input/Search'
-import React from 'react'
+import Search from 'antd/es/input/Search';
 
-export default function DebugRequest({method,invoking,url}:{method:string,invoking:any,url:string}) {
+export default function DebugRequest({
+  method,
+  invoking,
+  url,
+  isLoading,
+}: {
+  method: string;
+  invoking: any;
+  url: string;
+  isLoading: boolean;
+}) {
   return (
-    <div style={{textAlign:'center'}}>
-     <Search
-      size={"large"}
-      addonBefore={method}
-      style={{ width: 500,height:50 }}
-      enterButton="发送请求"
-      onSearch={invoking}
-      value={url}
-    />
+    <div style={{ textAlign: 'center' }}>
+      <Search
+        size={'large'}
+        addonBefore={method}
+        style={{ width: 500, height: 50 }}
+        enterButton="发送请求"
+        onSearch={invoking}
+        value={url}
+        loading={isLoading}
+      />
     </div>
-  )
+  );
 }

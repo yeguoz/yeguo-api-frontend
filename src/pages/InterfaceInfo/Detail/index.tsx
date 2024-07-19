@@ -33,6 +33,7 @@ const JSONStrToObjArr = (paramsStr: string) => {
 export default () => {
   const { initialState } = useModel('@@initialState');
   const [invokingResult, setInvokingResult] = useState(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { data } = useModel('dataModel');
   const {
     id,
@@ -69,13 +70,16 @@ export default () => {
     const transformedData = JSON.parse(JSON.stringify(data));
     console.log(transformedData);
     console.log({ irp: transformedData, method, url });
+    setIsLoading(true);
     const result = await onlineInvoking({ irp: transformedData, method, url }, ak!, signature);
     // result.data包含status=400
     if (result.data.indexOf('status=400') !== -1) {
+      setIsLoading(false);
       setInvokingResult(null);
       message.error('请正确设置请求参数！' + 'status=400');
       return;
     }
+    setIsLoading(false);
     setInvokingResult(result.data);
   };
 
@@ -201,7 +205,12 @@ export default () => {
           <CodeBlock language="javascript" value={responseExample} />
         </ProCard.TabPane>
         <ProCard.TabPane key="tab2" tab="在线调试" icon={<img src={bug} height={20}></img>}>
-          <DebugRequest method={method || ''} url={url || ''} invoking={Invoking} />
+          <DebugRequest
+            method={method || ''}
+            url={url || ''}
+            invoking={Invoking}
+            isLoading={isLoading}
+          />
           <TipUtil text="请求参数设置：" />
           <RequestParamsList />
           <TipUtil text="返回结果：" />

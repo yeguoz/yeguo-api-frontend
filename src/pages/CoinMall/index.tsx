@@ -23,6 +23,8 @@ export default () => {
   const [money, setMoney] = useState<number>(0); // 支付金额
   const [payType, setPayType] = useState<number>(0); // 0微信 1支付宝
   const [commodityContent, setCommodityContent] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false); // 加载状态
+
   const navigate = useNavigate();
 
   const handleCardClick = (index: number, ref: any, goldCoin: number, commodityContent: string) => {
@@ -38,21 +40,24 @@ export default () => {
   };
 
   const handleBuy = async () => {
-    if (money <= 0) return;
-    // todo 发起订单，跳转支付页面（我已经支付（跳转支付成功页面），取消支付（跳转到订单列表））
-    // 后端需要生成订单，成功后跳转支付页面
-    // 用户id userId 支付金额 money 支付方式payType 传给后端
+    if (money <= 0) {
+      message.error('请选择购买商品');
+      return;
+    }
     const reqParams = {
       userId: initialState?.currentUser?.id as number,
       payType,
       money,
       commodityContent,
     };
+    setIsLoading(true);
     const result = await CreateOrderInfo(reqParams);
     if (!result.data) {
+      setIsLoading(false);
       message.error('生成订单失败==' + result.message);
       return;
     }
+    setIsLoading(true);
     message.success(result.message);
     // 跳转到支付页面
     navigate(`/${result.data}/pay`, {
@@ -177,7 +182,7 @@ export default () => {
           >
             ￥<span>{money}</span>
           </span>
-          <Button type="primary" onClick={handleBuy}>
+          <Button type="primary" loading={isLoading} onClick={handleBuy}>
             确认购买
           </Button>
         </div>
