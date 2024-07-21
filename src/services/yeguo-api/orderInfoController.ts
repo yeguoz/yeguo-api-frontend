@@ -1,14 +1,19 @@
 import { request } from '@umijs/max';
 
-/** 查询用户自己所有订单 GET */
-export async function getUserAllOrderInfos(userId: number, options?: { [key: string]: any }) {
-  return request<API.ResponseData>(`/api/orderInfo/${userId}/all`, {
+/** 用户页动态查询订单  */
+export async function getUserOrderInfos(
+  userId: number,
+  params: API.UserOrderInfoQueryParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResponseData>(`/api/orderInfo/${userId}/dynamicQuery`, {
     method: 'GET',
+    params,
     ...(options || {}),
   });
 }
 
-/** 动态查询订单 GET /api/orderInfo/dynamicQuery */
+/** 管理页动态查询订单  */
 export async function orderInfoDynamicQuery(
   params: API.OrderInfoQueryParams,
   options?: { [key: string]: any },

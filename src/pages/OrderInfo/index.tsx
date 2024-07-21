@@ -2,7 +2,7 @@ import Container from '@/components/Container';
 import {
   cancelOrderInfo,
   deleteOrderInfo,
-  getUserAllOrderInfos,
+  getUserOrderInfos,
 } from '@/services/yeguo-api/orderInfoController';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { useModel, useNavigate } from '@umijs/max';
@@ -99,6 +99,7 @@ export default () => {
       title: '商品内容',
       dataIndex: 'commodityContent',
       ellipsis: true,
+      hideInSearch: true,
     },
     {
       title: '支付状态',
@@ -128,11 +129,13 @@ export default () => {
       title: '创建时间',
       dataIndex: 'createTime',
       valueType: 'dateTime',
+      hideInSearch: true,
     },
     {
       title: '过期时间',
       dataIndex: 'expireTime',
       valueType: 'dateTime',
+      hideInSearch: true,
     },
     {
       title: '完成时间',
@@ -228,6 +231,16 @@ export default () => {
     },
   ];
 
+  const queryOrderInfoList = async (params: API.UserOrderInfoQueryParams) => {
+    const result = await getUserOrderInfos(initialState?.currentUser?.id as number, params);
+    if (!result.data) {
+      message.warning(result.message);
+      return;
+    }
+    setTableData(result.data);
+    message.success(result.message);
+  };
+
   const handleExpireOrderInfo = async (data: API.OrderInfoVO[]) => {
     const nonpaymentArr = data.filter((orderInfo: API.OrderInfoVO) => orderInfo.payStatus === 0);
 
@@ -239,15 +252,13 @@ export default () => {
       }
     }
 
-    const result = await getUserAllOrderInfos(initialState?.currentUser?.id as number);
-    console.log('更新后data:', result.data);
+    const result = await getUserOrderInfos(initialState?.currentUser?.id as number, {});
     setTableData(result.data);
   };
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await getUserAllOrderInfos(initialState?.currentUser?.id as number);
-      console.log('原data:', result.data);
+      const result = await getUserOrderInfos(initialState?.currentUser?.id as number, {});
       await handleExpireOrderInfo(result.data);
     };
 
@@ -264,6 +275,7 @@ export default () => {
           message.error(error.message);
         }}
         options={{ reload: false }}
+        onSubmit={(params: any) => queryOrderInfoList(params)}
         toolbar={{
           title: '订单列表',
           tooltip: '展示订单信息',
@@ -277,7 +289,10 @@ export default () => {
           persistenceType: 'localStorage',
         }}
         rowKey="id"
-        search={false}
+        search={{
+          labelWidth: 'auto',
+          showHiddenNum: true,
+        }}
         form={{
           syncToUrl: (values: any, type: any) => {
             if (type === 'get') {

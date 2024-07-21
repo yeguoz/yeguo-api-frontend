@@ -153,13 +153,24 @@ declare namespace API {
     commodityContent: string;
   };
 
-  type OrderInfoQueryParams = {
-    orderId: string;
-    userId: number;
-    payType: number;
-    money: number;
-    payStatus: number;
-  };
+  type UserOrderInfoQueryParams =
+    | {
+        orderId: string;
+        payType: number;
+        money: number;
+        payStatus: number;
+      }
+    | {};
+
+  type OrderInfoQueryParams =
+    | {
+        orderId: string;
+        userId: number;
+        payType: number;
+        money: number;
+        payStatus: number;
+      }
+    | {};
 
   type PayState = {
     userId: number;
