@@ -31,6 +31,7 @@ export default () => {
         columns={UserColumns}
         cardBordered
         dataSource={tableData}
+        options={{ reload: false }}
         // 请求失败时触发
         onRequestError={(error) => {
           message.error(error.message);

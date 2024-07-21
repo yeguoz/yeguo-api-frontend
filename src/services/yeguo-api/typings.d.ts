@@ -143,6 +143,7 @@ declare namespace API {
     commodityContent?: string;
     createTime?: DdateTime;
     updateTime?: DateTime;
+    expireTime: Date;
   };
 
   type CreateOrderInfoRequest = {
@@ -165,6 +166,7 @@ declare namespace API {
     commodityContent: string;
     money: number;
     payType: number;
-    orderInfoId: string;
+    orderId: string;
+    expireTime: Date;
   };
 }

@@ -42,8 +42,8 @@ const Footer: React.FC = () => {
       ]}
       copyright={
         new Date().getFullYear() === 2024
-          ? `${new Date().getFullYear()} 野果工作室出品`
-          : `2024-${new Date().getFullYear()} 野果工作室出品`
+          ? `${new Date().getFullYear()} 野果出品`
+          : `2024-${new Date().getFullYear()} 野果出品`
       }
     />
   );
