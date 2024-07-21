@@ -3,37 +3,25 @@ import { cancelOrderInfo } from '@/services/yeguo-api/orderInfoController';
 import { ProCard } from '@ant-design/pro-components';
 import { useLocation, useNavigate } from '@umijs/max';
 import { Button, Col, Row, message } from 'antd';
-import { useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 export default () => {
   const [buttonIsLoading, setButtonIsLoading] = useState({
     btn1: false,
     btn2: false,
   });
-  const { userId, commodityContent, money, orderInfoId, payType } =
+  // 从订单列表跳转带过来变量
+  const { orderId, userId, commodityContent, money, payType, expireTime } =
     (useLocation().state as API.PayState) || {};
-  // const [countdown, setCountdown] = useState(300); // 初始化为5分钟，即300秒
-  // useEffect(() => {
-  //   // 设置倒计时
-  //   const timer = setInterval(() => {
-  //     if (countdown <= 0) {
-  //       // 倒计时结束，可以清除定时器或者执行其他逻辑
-  //       clearInterval(timer);
-  //       // 可以在这里添加倒计时结束后的操作，比如隐藏二维码等
-  //       console.log('倒计时结束');
-  //       return;
-  //     }
-  //     setCountdown(countdown - 1 );
-  //   }, 1000);
-
-  // }, [countdown]);
+  const [isExpired, setIsExpired] = useState<boolean>(false);
+  const [countdown, setCountdown] = useState<number>();
   const navigate = useNavigate();
   const handleCancel = async (btn: string) => {
     setButtonIsLoading((prevState) => ({
       ...prevState,
       [btn]: true,
     }));
-    const result = await cancelOrderInfo(orderInfoId);
+    const result = await cancelOrderInfo(orderId);
     if (!result.data) {
       setButtonIsLoading((prevState) => ({
         ...prevState,
@@ -60,6 +48,26 @@ export default () => {
     navigate('/orderinfo');
   };
 
+  useLayoutEffect(() => {
+    const expireT = new Date(expireTime).getTime();
+
+    const interval = setInterval(async () => {
+      const now = new Date().getTime();
+
+      const timeLeft = expireT - now;
+
+      if (timeLeft > 0) {
+        setCountdown(Math.ceil(timeLeft / 1000));
+      } else {
+        clearInterval(interval);
+        await cancelOrderInfo(orderId);
+        setIsExpired(true);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Container>
       <ProCard
@@ -71,7 +79,7 @@ export default () => {
         <Row gutter={[16, 24]}>
           <Col className="gutter-row" span={10}>
             <strong>订单号：</strong>
-            {orderInfoId}
+            {orderId}
           </Col>
           <Col className="gutter-row" span={10}>
             <strong>用户Id：</strong>
@@ -87,7 +95,7 @@ export default () => {
           </Col>
           <Col className="gutter-row" span={10}>
             <strong>支付方式：</strong>
-            {payType ? (
+            {payType === 0 || payType === 1 ? (
               payType === 0 ? (
                 <span
                   style={{
@@ -127,7 +135,7 @@ export default () => {
         headerBordered
         headStyle={{ backgroundColor: '#f3f2f1', borderRadius: '0.5rem' }}
       >
-        {orderInfoId ? (
+        {!isExpired ? (
           <>
             <div style={{ textAlign: 'center', fontSize: '1.5rem' }}>
               <div>
@@ -139,10 +147,13 @@ export default () => {
                 alt="支付二维码"
                 style={{ width: '20rem' }}
               />
-              <p>
-                请使用微信扫描二维码进行支付，支付成功后请点击
-                <span style={{ color: '#d23918' }}>“我已经支付”</span>按钮
-              </p>
+              <div style={{ fontSize: '1rem' }}>
+                <p>
+                  请使用微信扫描二维码进行支付，支付成功后请点击
+                  <span style={{ color: '#d23918' }}>“我已经支付”</span>按钮
+                </p>
+                <p>该订单{countdown}秒后失效，请尽快支付</p>
+              </div>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
               <Button type="primary">我已经支付</Button>
@@ -159,7 +170,7 @@ export default () => {
           </>
         ) : (
           <div style={{ fontSize: '1.5rem', color: '#d23918', textAlign: 'center' }}>
-            该订单不存在!
+            该订单不存在或已失效或已完成！
           </div>
         )}
       </ProCard>

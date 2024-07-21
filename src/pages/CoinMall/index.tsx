@@ -20,9 +20,9 @@ export default () => {
 
   const [selectedCard, setSelectedCard] = useState<number>();
   const selectedCardPriceRef = useRef<HTMLSpanElement>();
+  const [commodityContent, setCommodityContent] = useState<string>(''); // 商品内容
   const [money, setMoney] = useState<number>(0); // 支付金额
   const [payType, setPayType] = useState<number>(0); // 0微信 1支付宝
-  const [commodityContent, setCommodityContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false); // 加载状态
 
   const navigate = useNavigate();
@@ -44,15 +44,17 @@ export default () => {
       message.error('请选择购买商品');
       return;
     }
-    const reqParams = {
+    setIsLoading(true);
+    // 创建订单
+    const result = await CreateOrderInfo({
       userId: initialState?.currentUser?.id as number,
       payType,
       money,
       commodityContent,
-    };
-    setIsLoading(true);
-    const result = await CreateOrderInfo(reqParams);
-    if (!result.data) {
+    });
+    // 返回OrderInfoVO对象
+    const orderInfoVO: API.OrderInfoVO = result.data;
+    if (!orderInfoVO) {
       setIsLoading(false);
       message.error('生成订单失败==' + result.message);
       return;
@@ -60,14 +62,15 @@ export default () => {
     setIsLoading(true);
     message.success(result.message);
     // 跳转到支付页面
-    navigate(`/${result.data}/pay`, {
+    navigate(`/${orderInfoVO.orderId}/pay`, {
       replace: false,
       state: {
-        orderInfoId: result.data,
+        orderId: orderInfoVO.orderId,
         userId: initialState?.currentUser?.id as number,
         commodityContent,
         money,
         payType,
+        expireTime: orderInfoVO.expireTime,
       },
     });
   };

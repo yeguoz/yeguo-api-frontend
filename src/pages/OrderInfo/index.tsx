@@ -23,28 +23,32 @@ export const handleDeleteOrderInfo = async (orderId: string) => {
 };
 
 export default () => {
+  const { initialState } = useModel('@@initialState');
+  const [tableData, setTableData] = useState([]);
   const navigate = useNavigate();
+
   const handlePay = async (
     orderId: string,
     userId: number,
     payType: number,
     money: number,
     commodityContent: string,
+    expireTime: Date,
   ) => {
     navigate(`/${orderId}/pay`, {
       replace: false,
       state: {
-        orderInfoId: orderId,
+        orderId,
         userId,
-        payType,
-        money,
         commodityContent,
+        money,
+        payType,
+        expireTime,
       },
     });
   };
 
   const handleCancelOrderInfo = async (orderId: string) => {
-    // 调用接口，设置状态为已失效
     const result = await cancelOrderInfo(orderId);
     if (!result.data) {
       message.error(result.message);
@@ -124,7 +128,11 @@ export default () => {
       title: '创建时间',
       dataIndex: 'createTime',
       valueType: 'dateTime',
-      ellipsis: true,
+    },
+    {
+      title: '过期时间',
+      dataIndex: 'expireTime',
+      valueType: 'dateTime',
     },
     {
       title: '完成时间',
@@ -153,10 +161,11 @@ export default () => {
                 record.payType!,
                 record.money!,
                 record.commodityContent!,
+                record.expireTime!,
               );
             }}
           >
-            去支付
+            付款
           </a>
         ) : (
           <a
@@ -167,7 +176,7 @@ export default () => {
               cursor: 'default',
             }}
           >
-            去支付
+            付款
           </a>
         ),
         record.payStatus === 0 ? (
@@ -218,19 +227,31 @@ export default () => {
       ],
     },
   ];
-  const { initialState } = useModel('@@initialState');
-  const [tableData, setTableData] = useState([]);
 
-  const queryOrders = async (userId: number) => {
-    const result = await getUserAllOrderInfos(userId);
-    if (!result.data) {
-      return;
+  const handleExpireOrderInfo = async (data: API.OrderInfoVO[]) => {
+    const nonpaymentArr = data.filter((orderInfo: API.OrderInfoVO) => orderInfo.payStatus === 0);
+
+    for (const element of nonpaymentArr) {
+      const now = new Date();
+      const expireTime = new Date(element.expireTime);
+      if (now > expireTime) {
+        await cancelOrderInfo(element.orderId as string);
+      }
     }
+
+    const result = await getUserAllOrderInfos(initialState?.currentUser?.id as number);
+    console.log('更新后data:', result.data);
     setTableData(result.data);
   };
-  // 在组件挂载后调用一次数据查询
+
   useEffect(() => {
-    queryOrders(initialState?.currentUser?.id as number);
+    const fetchData = async () => {
+      const result = await getUserAllOrderInfos(initialState?.currentUser?.id as number);
+      console.log('原data:', result.data);
+      await handleExpireOrderInfo(result.data);
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -239,30 +260,16 @@ export default () => {
         columns={OrderColumns}
         cardBordered
         dataSource={tableData}
-        // 请求失败时触发
         onRequestError={(error) => {
           message.error(error.message);
         }}
-        // // 提交时触发
-        // onSubmit={(params) => userQueryList(params)}
+        options={{ reload: false }}
         toolbar={{
           title: '订单列表',
           tooltip: '展示订单信息',
         }}
-        // 编辑配置
         editable={{
           type: 'multiple',
-          //  修改后刷新展示数据
-          // onSave: async (_, row) => {
-          //   const result = await userUpdate(row);
-          //   if (result.data === null) {
-          //     message.error(result.description);
-          //     return;
-          //   }
-          //   userQueryList(paramsState);
-          //   message.success('修改成功');
-          // },
-          // 保留保存和取消
           actionRender: (row, config, defaultDom) => [defaultDom.save, defaultDom.cancel],
         }}
         columnsState={{
@@ -270,10 +277,8 @@ export default () => {
           persistenceType: 'localStorage',
         }}
         rowKey="id"
-        // search配置
         search={false}
         form={{
-          // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
           syncToUrl: (values: any, type: any) => {
             if (type === 'get') {
               return {
