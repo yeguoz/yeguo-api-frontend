@@ -6,21 +6,27 @@ import { Button, Col, Row, message } from 'antd';
 import { useLayoutEffect, useState } from 'react';
 
 export default () => {
+  // button 加载状态
   const [buttonIsLoading, setButtonIsLoading] = useState({
     btn1: false,
     btn2: false,
   });
-  // 从订单列表跳转带过来变量
+  // 从订单列表和商城跳转带过来变量
   const { orderId, userId, commodityContent, money, payType, expireTime } =
     (useLocation().state as API.PayState) || {};
   const [isExpired, setIsExpired] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number>();
   const navigate = useNavigate();
-  const handleCancel = async (btn: string) => {
+
+  const setButtonLoading = (btnKey: string, isLoading: boolean) => {
     setButtonIsLoading((prevState) => ({
       ...prevState,
-      [btn]: true,
+      [btnKey]: isLoading,
     }));
+  };
+  const handleCancel = async (btn: string) => {
+    setButtonLoading(btn, true);
+
     const result = await cancelOrderInfo(orderId);
     if (!result.data) {
       setButtonIsLoading((prevState) => ({
@@ -31,29 +37,40 @@ export default () => {
       navigate('/orderinfo');
       return;
     }
+    // 已经失效的订单
     if (result.data === 2) {
-      setButtonIsLoading((prevState) => ({
-        ...prevState,
-        [btn]: false,
-      }));
+      setButtonLoading(btn, false);
+
       message.info('订单已失效');
       navigate('/orderinfo');
       return;
     }
-    setButtonIsLoading((prevState) => ({
-      ...prevState,
-      [btn]: false,
-    }));
+    setButtonLoading(btn, false);
+
     message.success(result.message);
     navigate('/orderinfo');
   };
+  // 点击成功支付按钮，发送邮件给管理员，审核
+  const handlePay = (btn: string) => {
+    setButtonLoading(btn, true);
+  };
 
   useLayoutEffect(() => {
+    // 从浏览器地址输入路径不会传递数据，设置为过期无效
+    if (!orderId && !userId && !commodityContent && !money && !payType && !expireTime) {
+      setIsExpired(true);
+      return;
+    }
+    // 过期后订单页面因未刷新未更新订单状态，付款后判断是否过期更改订单状态
     const expireT = new Date(expireTime).getTime();
-
+    const now = new Date().getTime();
+    if (expireT - now <= 0) {
+      cancelOrderInfo(orderId).then(() => setIsExpired(true));
+      return;
+    }
+    // 倒计时定时器
     const interval = setInterval(async () => {
       const now = new Date().getTime();
-
       const timeLeft = expireT - now;
 
       if (timeLeft > 0) {
@@ -142,21 +159,41 @@ export default () => {
                 <span>￥</span>
                 <span style={{ color: '#d23918' }}>{money}</span>
               </div>
-              <img
-                src={`/assets/payqr/vx_${money}.png`}
-                alt="支付二维码"
-                style={{ width: '20rem' }}
-              />
+              {payType === 0 ? (
+                <img
+                  src={`/assets/payqr/vx_${money}.png`}
+                  alt="支付二维码"
+                  style={{ width: '20rem' }}
+                />
+              ) : (
+                <img
+                  src={`/assets/payqr/alipay_${money}.png`}
+                  alt="支付二维码"
+                  style={{ width: '20rem' }}
+                />
+              )}
               <div style={{ fontSize: '1rem' }}>
                 <p>
-                  请使用微信扫描二维码进行支付，支付成功后请点击
-                  <span style={{ color: '#d23918' }}>“我已经支付”</span>按钮
+                  请使用<span style={{ color: '#d23918' }}>微信/支付宝</span>
+                  扫描二维码进行支付，支付成功后请点击
+                  <span style={{ fontSize: '1.5rem', color: '#d23918' }}>“我已经支付”</span>按钮
                 </p>
-                <p>该订单{countdown}秒后失效，请尽快支付</p>
+                <p style={{ fontSize: '1.5rem', color: '#d23918' }}>务必备注好订单号！</p>
+                <p>
+                  该订单<span style={{ color: '#d23918' }}>{countdown}</span>秒后失效，请尽快支付
+                </p>
               </div>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-              <Button type="primary">我已经支付</Button>
+              <Button
+                type="primary"
+                loading={buttonIsLoading.btn1}
+                onClick={() => {
+                  handlePay('btn1');
+                }}
+              >
+                我已经支付
+              </Button>
               <Button
                 type="primary"
                 loading={buttonIsLoading.btn2}

@@ -261,7 +261,6 @@ export default () => {
       const result = await getUserOrderInfos(initialState?.currentUser?.id as number, {});
       await handleExpireOrderInfo(result.data);
     };
-
     fetchData();
   }, []);
 
