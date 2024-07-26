@@ -25,9 +25,13 @@ export async function orderInfoDynamicQuery(
   });
 }
 
-/** 取消订单  */
-export async function cancelOrderInfo(orderId: string, options?: { [key: string]: any }) {
-  return request<API.ResponseData>(`/api/orderInfo/cancel/${orderId}`, {
+/** 取消订单 支付状态（0 未支付 1 已失效 2 正在审核 3 已完成） updateOrderInfoStatus 传递订单号和状态 */
+export async function updateOrderInfoStatus(
+  orderId: string,
+  payStatus: number,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResponseData>(`/api/orderInfo/${orderId}/${payStatus}`, {
     method: 'PUT',
     ...(options || {}),
   });
@@ -49,6 +53,18 @@ export async function CreateOrderInfo(
 export async function deleteOrderInfo(orderId: string, options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/orderInfo/${orderId}`, {
     method: 'DELETE',
+    ...(options || {}),
+  });
+}
+
+/** 通知邮件 */
+export async function sendNotificationMail(
+  body: API.OrderInfoNotificationRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResponseData>(`/api/orderInfo/notifyMail`, {
+    method: 'POST',
+    data: body,
     ...(options || {}),
   });
 }

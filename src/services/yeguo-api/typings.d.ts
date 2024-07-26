@@ -155,10 +155,10 @@ declare namespace API {
 
   type UserOrderInfoQueryParams =
     | {
-        orderId: string;
-        payType: number;
-        money: number;
-        payStatus: number;
+        orderId?: string;
+        payType?: number;
+        money?: number;
+        payStatus?: number;
       }
     | {};
 
@@ -178,6 +178,15 @@ declare namespace API {
     money: number;
     payType: number;
     orderId: string;
+    expireTime: Date;
+  };
+
+  type OrderInfoNotificationRequest = {
+    orderId: string;
+    userId: number;
+    commodityContent: string;
+    money: number;
+    payType: number;
     expireTime: Date;
   };
 }

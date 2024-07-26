@@ -1,8 +1,8 @@
 import Container from '@/components/Container';
 import {
-  cancelOrderInfo,
   deleteOrderInfo,
   getUserOrderInfos,
+  updateOrderInfoStatus,
 } from '@/services/yeguo-api/orderInfoController';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { useModel, useNavigate } from '@umijs/max';
@@ -49,16 +49,9 @@ export default () => {
   };
 
   const handleCancelOrderInfo = async (orderId: string) => {
-    const result = await cancelOrderInfo(orderId);
+    const result = await updateOrderInfoStatus(orderId, 1);
     if (!result.data) {
       message.error(result.message);
-      return;
-    }
-    if (result.data === 2) {
-      message.info('订单已失效');
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
       return;
     }
     message.success(result.message);
@@ -248,7 +241,7 @@ export default () => {
       const now = new Date();
       const expireTime = new Date(element.expireTime);
       if (now > expireTime) {
-        await cancelOrderInfo(element.orderId as string);
+        await updateOrderInfoStatus(element.orderId as string, 1);
       }
     }
 

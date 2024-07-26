@@ -1,5 +1,9 @@
 import Container from '@/components/Container';
-import { cancelOrderInfo } from '@/services/yeguo-api/orderInfoController';
+import {
+  getUserOrderInfos,
+  sendNotificationMail,
+  updateOrderInfoStatus,
+} from '@/services/yeguo-api/orderInfoController';
 import { ProCard } from '@ant-design/pro-components';
 import { useLocation, useNavigate } from '@umijs/max';
 import { Button, Col, Row, message } from 'antd';
@@ -24,35 +28,39 @@ export default () => {
       [btnKey]: isLoading,
     }));
   };
+
   const handleCancel = async (btn: string) => {
     setButtonLoading(btn, true);
-
-    const result = await cancelOrderInfo(orderId);
+    const result = await updateOrderInfoStatus(orderId, 1);
+    setButtonLoading(btn, false);
     if (!result.data) {
-      setButtonIsLoading((prevState) => ({
-        ...prevState,
-        [btn]: false,
-      }));
       message.error(result.message);
       navigate('/orderinfo');
       return;
     }
-    // 已经失效的订单
-    if (result.data === 2) {
-      setButtonLoading(btn, false);
-
-      message.info('订单已失效');
-      navigate('/orderinfo');
-      return;
-    }
-    setButtonLoading(btn, false);
-
     message.success(result.message);
     navigate('/orderinfo');
   };
   // 点击成功支付按钮，发送邮件给管理员，审核
-  const handlePay = (btn: string) => {
+  const handlePay = async (btn: string) => {
     setButtonLoading(btn, true);
+    const result = await sendNotificationMail({
+      orderId,
+      userId,
+      commodityContent,
+      money,
+      payType,
+      expireTime,
+    });
+    // 修改订单状态
+    const payStatusR = await updateOrderInfoStatus(orderId, 2);
+    setButtonLoading(btn, false);
+    if (!result.data || !payStatusR.data) {
+      message.error(result.message);
+      return;
+    }
+    message.success(result.message);
+    navigate('/orderinfo');
   };
 
   useLayoutEffect(() => {
@@ -61,11 +69,17 @@ export default () => {
       setIsExpired(true);
       return;
     }
+    getUserOrderInfos(userId, { orderId }).then((res) => {
+      const data: API.OrderInfoVO[] = res.data;
+      if (data[0].payStatus !== 0) {
+        setIsExpired(true);
+      }
+    });
     // 过期后订单页面因未刷新未更新订单状态，付款后判断是否过期更改订单状态
     const expireT = new Date(expireTime).getTime();
     const now = new Date().getTime();
     if (expireT - now <= 0) {
-      cancelOrderInfo(orderId).then(() => setIsExpired(true));
+      updateOrderInfoStatus(orderId, 1).then(() => setIsExpired(true));
       return;
     }
     // 倒计时定时器
@@ -77,7 +91,7 @@ export default () => {
         setCountdown(Math.ceil(timeLeft / 1000));
       } else {
         clearInterval(interval);
-        await cancelOrderInfo(orderId);
+        await updateOrderInfoStatus(orderId, 1);
         setIsExpired(true);
       }
     }, 1000);
@@ -207,7 +221,7 @@ export default () => {
           </>
         ) : (
           <div style={{ fontSize: '1.5rem', color: '#d23918', textAlign: 'center' }}>
-            该订单不存在或已失效或已完成！
+            该订单不存在或已结束！
           </div>
         )}
       </ProCard>
