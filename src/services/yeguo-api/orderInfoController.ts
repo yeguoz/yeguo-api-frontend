@@ -68,3 +68,10 @@ export async function sendNotificationMail(
     ...(options || {}),
   });
 }
+
+export async function recharge(userId: number, goldCoin: number, options?: { [key: string]: any }) {
+  return request<API.ResponseData>(`/api/user/recharge/${userId}/${goldCoin}`, {
+    method: 'PUT',
+    ...(options || {}),
+  });
+}

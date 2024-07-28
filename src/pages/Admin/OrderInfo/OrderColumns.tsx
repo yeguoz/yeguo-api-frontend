@@ -1,6 +1,8 @@
 import { handleDeleteOrderInfo } from '@/pages/OrderInfo';
 import formatDate from '@/pages/utils/formatDateUtil';
+import { recharge, updateOrderInfoStatus } from '@/services/yeguo-api/orderInfoController';
 import { ProColumns } from '@ant-design/pro-components';
+import { message } from 'antd';
 
 const OrderColumns: ProColumns<API.OrderInfoVO>[] = [
   {
@@ -93,7 +95,31 @@ const OrderColumns: ProColumns<API.OrderInfoVO>[] = [
     valueType: 'option',
     render: (text, record, _, action) => [
       record.payStatus === 2 ? (
-        <a key="pay" onClick={async () => {}}>
+        <a
+          key="pay"
+          onClick={async () => {
+            // 调用接口设置支付状态已完成，给当前用户加上金币
+            const extractNumber = (str: string) => {
+              const matches = str.match(/\d+/);
+              if (matches) {
+                return parseInt(matches[0], 10);
+              }
+              return null; // 或者其他你认为合适的默认值或处理方式
+            };
+            const goldCoin = extractNumber(record.commodityContent!);
+            // 给用户加上硬币,record.userId goldCoin
+            const result = await updateOrderInfoStatus(record.orderId!, 3);
+            const rechargeRst = await recharge(record.userId!, goldCoin!);
+            if (!result.data || !rechargeRst.data) {
+              message.error(result.message);
+              return;
+            }
+            message.success(result.message + '--' + rechargeRst.message);
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          }}
+        >
           通过
         </a>
       ) : (
@@ -109,7 +135,20 @@ const OrderColumns: ProColumns<API.OrderInfoVO>[] = [
         </a>
       ),
       record.payStatus === 2 ? (
-        <a key="cancel" onClick={() => {}}>
+        <a
+          key="cancel"
+          onClick={async () => {
+            const result = await updateOrderInfoStatus(record.orderId!, 1);
+            if (!result.data) {
+              message.error(result.message);
+              return;
+            }
+            message.success(result.message);
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          }}
+        >
           未通过
         </a>
       ) : (
