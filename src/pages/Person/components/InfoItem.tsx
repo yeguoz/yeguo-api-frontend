@@ -58,7 +58,7 @@ export default ({
       <span style={{ fontWeight: 'bold', marginRight: '0.5rem' }}>{name}:</span>
       {/* flag 用来控制现实值或者是显示输入框 */}
       {flag === 0 ? (
-        <span>{inputValue ? inputValue : '未设置'}</span>
+        <span style={{ overflow: 'hidden' }}>{inputValue ? inputValue : '未设置'}</span>
       ) : (
         <input ref={inputRef} type="text" defaultValue={inputValue} onBlur={handleBlur} />
       )}

@@ -16,7 +16,7 @@ export default function DebugRequest({
       <Search
         size={'large'}
         addonBefore={method}
-        style={{ width: 500, height: 50 }}
+        style={{ width: '60%' }}
         enterButton="发送请求"
         onSearch={invoking}
         value={url}
