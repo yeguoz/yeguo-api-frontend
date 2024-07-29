@@ -12,6 +12,7 @@ import MyTabs from '../components/MyTabs';
 import { default as ListInfo, default as ParamList } from '../components/ParamList';
 import RequestParamsList from '../components/RequestParamsList';
 import TipUtil from '../components/TipUtil';
+import UploadFile from '../components/UploadFile';
 import { codeCol, codeList, requestParamsCol, responseParamsCol } from './definition';
 import bug from '/public/assets/bug.svg';
 import code from '/public/assets/code.svg';
@@ -32,8 +33,10 @@ const JSONStrToObjArr = (paramsStr: string) => {
 
 export default () => {
   const { initialState } = useModel('@@initialState');
-  const [invokingResult, setInvokingResult] = useState(null);
+  const [invokingResult, setInvokingResult] = useState<null | string>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSvgOrJpg, setIsSvgOrJpg] = useState<boolean>(false);
+  const [file, setFile] = useState<File | null>(null);
   const { data } = useModel('dataModel');
   const {
     id,
@@ -71,16 +74,48 @@ export default () => {
     console.log(transformedData);
     console.log({ irp: transformedData, method, url });
     setIsLoading(true);
-    const result = await onlineInvoking({ irp: transformedData, method, url }, ak!, signature);
-    // result.data包含status=400
-    if (result.data.indexOf('status=400') !== -1) {
+    if (file) {
+      const result = await onlineInvoking(
+        { irp: transformedData, method, url },
+        ak!,
+        signature,
+        file,
+      );
+      // result.data包含status=400,未正确设置参数
+      if (result.data && result.data.indexOf('status=400') !== -1) {
+        setIsLoading(false);
+        setInvokingResult(null);
+        message.error('请正确设置请求参数！' + 'status=400');
+        return;
+      }
+      console.log(result);
       setIsLoading(false);
-      setInvokingResult(null);
-      message.error('请正确设置请求参数！' + 'status=400');
-      return;
+      setInvokingResult(result.data);
+    } else if (!file) {
+      const result = await onlineInvoking({ irp: transformedData, method, url }, ak!, signature);
+
+      // result.data包含status=400,未正确设置参数
+      if (result.data && result.data.indexOf('status=400') !== -1) {
+        setIsLoading(false);
+        setInvokingResult(null);
+        message.error('请正确设置请求参数！' + 'status=400');
+        return;
+      }
+      console.log(result);
+      // 如果返回的是svg，则将svg转换为dataUri
+      const svgPattern = /<svg[^>]*>[\s\S]*?<\/svg>/i;
+      if (svgPattern.test(result.data)) {
+        const encodedSvg = btoa(result.data);
+        const dataUri = `data:image/svg+xml;base64,${encodedSvg}`;
+        setIsSvgOrJpg(true);
+        setInvokingResult(dataUri);
+        setIsLoading(false);
+        return;
+      }
+      // 普通JSON数据返回
+      setIsLoading(false);
+      setInvokingResult(result.data);
     }
-    setIsLoading(false);
-    setInvokingResult(result.data);
   };
 
   return (
@@ -179,12 +214,6 @@ export default () => {
               {requestExample}
             </div>
           </Col>
-          <Col className="gutter-row" span={20}>
-            <div style={style}>
-              <strong>请求头：</strong>
-              {requestHeader}
-            </div>
-          </Col>
         </Row>
       </ProCard>
 
@@ -213,8 +242,18 @@ export default () => {
           />
           <TipUtil text="请求参数设置：" />
           <RequestParamsList />
+          <TipUtil text="上传文件：" />
+          <UploadFile
+            getFile={(file: File) => {
+              setFile(file);
+            }}
+          />
           <TipUtil text="返回结果：" />
-          <CodeBlock language="javascript" value={invokingResult} />
+          {isSvgOrJpg ? (
+            <img src={invokingResult!} style={{ height: '12rem' }}></img>
+          ) : (
+            <CodeBlock language="javascript" value={invokingResult} />
+          )}
         </ProCard.TabPane>
         <ProCard.TabPane key="tab3" tab="错误码参照" icon={<img src={errorcode} height={20}></img>}>
           <TipUtil text="错误码参照" />
