@@ -47,18 +47,28 @@ export async function interfaceInfoDynamicQuery(
   });
 }
 
-/** 在线接口调用 POST /api/interfaceInfo/dynamicQuery */
+/** 在线接口调用 */
 export async function onlineInvoking(
   body: any,
   accessKey: string,
   signature: string,
+  file?: File,
   options?: { [key: string]: any },
 ) {
+  const formData = new FormData();
+  formData.append(
+    'invokingRequest',
+    new Blob([JSON.stringify(body)], { type: 'application/json' }),
+  );
+  if (file) {
+    formData.append('file', file);
+  }
+
   return request<API.ResponseData>(
     `/api/interfaceInfo/onlineInvoking?accessKey=${accessKey}&signature=${signature}`,
     {
       method: 'POST',
-      data: body,
+      data: formData,
       ...(options || {}),
     },
   );
