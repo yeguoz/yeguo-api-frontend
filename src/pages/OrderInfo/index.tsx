@@ -1,4 +1,5 @@
 import Container from '@/components/Container';
+import OperationButton from '@/components/OperationButton';
 import {
   deleteOrderInfo,
   getUserOrderInfos,
@@ -10,23 +11,14 @@ import { message } from 'antd';
 import { useEffect, useState } from 'react';
 import formatDate from '../utils/formatDateUtil';
 
-export const handleDeleteOrderInfo = async (orderId: string) => {
-  const result = await deleteOrderInfo(orderId);
-  if (!result.data) {
-    message.error(result.message);
-    return;
-  }
-  message.success(result.message);
-  setTimeout(() => {
-    window.location.reload();
-  }, 1000);
-};
-
 export default () => {
   const { initialState } = useModel('@@initialState');
   const [tableData, setTableData] = useState([]);
   const navigate = useNavigate();
+  // button 加载状态
+  const [isLoading, setIsLoading] = useState(false);
 
+  // 支付处理
   const handlePay = async (
     orderId: string,
     userId: number,
@@ -48,8 +40,28 @@ export default () => {
     });
   };
 
+  // 取消处理
   const handleCancelOrderInfo = async (orderId: string) => {
+    setIsLoading(true);
+    // 设置无效状态
     const result = await updateOrderInfoStatus(orderId, 1);
+    setIsLoading(false);
+    if (!result.data) {
+      message.error(result.message);
+      return;
+    }
+    message.success(result.message);
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  };
+
+  // 删除处理
+  const handleDeleteOrderInfo = async (orderId: string) => {
+    setIsLoading(true);
+    const result = await deleteOrderInfo(orderId);
+    setIsLoading(false);
+
     if (!result.data) {
       message.error(result.message);
       return;
@@ -148,7 +160,7 @@ export default () => {
       valueType: 'option',
       render: (text, record, _, action) => [
         record.payStatus === 0 ? (
-          <a
+          <OperationButton
             key="pay"
             onClick={() => {
               handlePay(
@@ -162,9 +174,10 @@ export default () => {
             }}
           >
             付款
-          </a>
+          </OperationButton>
         ) : (
-          <a
+          <OperationButton
+            key="pay"
             style={{
               pointerEvents: 'none',
               color: 'gray',
@@ -173,10 +186,10 @@ export default () => {
             }}
           >
             付款
-          </a>
+          </OperationButton>
         ),
         record.payStatus === 0 ? (
-          <a
+          <OperationButton
             key="cancel"
             onClick={() => {
               if (record.payStatus === 0) handleCancelOrderInfo(record.orderId!);
@@ -184,9 +197,10 @@ export default () => {
             style={{ color: '#ea5514' }}
           >
             取消订单
-          </a>
+          </OperationButton>
         ) : (
-          <a
+          <OperationButton
+            key="cancel"
             style={{
               pointerEvents: 'none',
               color: 'gray',
@@ -195,11 +209,11 @@ export default () => {
             }}
           >
             取消订单
-          </a>
+          </OperationButton>
         ),
         record.payStatus !== 2 && record.payStatus !== 0 ? (
-          <a
-            key="cancel"
+          <OperationButton
+            key="delete"
             onClick={() => {
               if (record.payStatus === 1 || record.payStatus === 3)
                 handleDeleteOrderInfo(record.orderId!);
@@ -207,9 +221,10 @@ export default () => {
             style={{ color: '#e60012' }}
           >
             删除订单
-          </a>
+          </OperationButton>
         ) : (
-          <a
+          <OperationButton
+            key="delete"
             style={{
               pointerEvents: 'none',
               color: 'gray',
@@ -218,14 +233,16 @@ export default () => {
             }}
           >
             删除订单
-          </a>
+          </OperationButton>
         ),
       ],
     },
   ];
 
-  const queryOrderInfoList = async (params: API.UserOrderInfoQueryParams) => {
+  const dynamicQueryOrderInfos = async (params: API.UserOrderInfoQueryParams) => {
+    setIsLoading(true);
     const result = await getUserOrderInfos(initialState?.currentUser?.id as number, params);
+    setIsLoading(false);
     if (!result.data) {
       message.warning(result.message);
       return;
@@ -267,7 +284,11 @@ export default () => {
           message.error(error.message);
         }}
         options={{ reload: false }}
-        onSubmit={(params: any) => queryOrderInfoList(params)}
+        onSubmit={(params: any) => dynamicQueryOrderInfos(params)}
+        onReset={async () => {
+          await dynamicQueryOrderInfos({});
+        }}
+        loading={isLoading}
         toolbar={{
           title: '订单列表',
           tooltip: '展示订单信息',

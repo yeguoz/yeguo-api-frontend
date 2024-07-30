@@ -12,6 +12,8 @@ export default () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
   const [modified, setModified] = useState(false);
+
+  // 页面信息状态
   const [values, setValues] = useState<{ [key: string]: any }>({
     username: currentUser?.username,
     email: currentUser?.email,
@@ -30,10 +32,26 @@ export default () => {
     'https://cdn.jsdelivr.net/gh/ye-guo/Images/images/api2.jpg',
     'https://cdn.jsdelivr.net/gh/ye-guo/Images/images/miku0.jpg',
   ]);
+
+  // button 加载状态
+  const [isLoading, setIsLoading] = useState({
+    updateInfo: false,
+    updateKey: false,
+    generateSignature: false,
+  });
+
+  const setLoading = (btnKey: string, isLoading: boolean) => {
+    setIsLoading((prevState) => ({
+      ...prevState,
+      [btnKey]: isLoading,
+    }));
+  };
+
   // 修改个人信息内容后 回调设置values，点击更新信息一同更改
   const handleValueChange = (uniqueKey: string, newValue: string) => {
-    // 处理InfoItem值变化
+    // 处理InfoItem值变化，修改后才可以更新
     setModified(true);
+    // 更新信息状态值
     setValues((prevValues) => ({ ...prevValues, [uniqueKey]: newValue }));
   };
 
@@ -49,7 +67,9 @@ export default () => {
       phone: values.phone,
       avatarUrl: avatarUrl,
     };
+    setLoading('updateInfo', true);
     const result = await userPersonInfoUpdate(userUpdateParams);
+    setLoading('updateInfo', false);
     if (!result.data) {
       message.error(`更新信息失败:${result.description}`);
       setTimeout(() => {
@@ -62,7 +82,9 @@ export default () => {
   };
 
   const updateKeys = async () => {
+    setLoading('updateKey', true);
     const result = await userPersonKeysUpdate(currentUser?.id as number);
+    setLoading('updateKey', false);
     if (!result.data) {
       message.error(`更新密钥失败:${result.description}`);
       return;
@@ -85,7 +107,9 @@ export default () => {
   };
 
   const handleGenerateSignature = () => {
+    setLoading('generateSignature', true);
     const sign = generateSignature(values.accessKey, values.secretKey);
+    setLoading('generateSignature', false);
     message.success('签名为：' + sign);
   };
 
@@ -98,7 +122,7 @@ export default () => {
         gutter={16}
         headStyle={{ backgroundColor: '#f3f2f1', borderRadius: '0.5rem' }}
         extra={
-          <Button type="primary" onClick={updateInfo}>
+          <Button type="primary" onClick={updateInfo} loading={isLoading.updateInfo}>
             更新信息
           </Button>
         }
@@ -223,10 +247,15 @@ export default () => {
         headStyle={{ backgroundColor: '#f3f2f1', borderRadius: '0.5rem' }}
         extra={
           <>
-            <Button type="primary" onClick={updateKeys}>
+            <Button type="primary" onClick={updateKeys} loading={isLoading.updateKey}>
               更新密钥
             </Button>
-            <Button type="primary" onClick={handleGenerateSignature} style={{ marginLeft: '1rem' }}>
+            <Button
+              type="primary"
+              onClick={handleGenerateSignature}
+              loading={isLoading.generateSignature}
+              style={{ marginLeft: '1rem' }}
+            >
               生成签名
             </Button>
           </>

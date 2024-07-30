@@ -1,14 +1,14 @@
 import Container from '@/components/Container';
+import OperationButton from '@/components/OperationButton';
 import {
   interfaceInfoDynamicQuery,
   interfaceInfoRegister,
   interfaceInfoUpdate,
 } from '@/services/yeguo-api/interfaceInfoController';
 import { PlusOutlined } from '@ant-design/icons';
-import { ActionType, ProTable } from '@ant-design/pro-components';
+import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import { Button, message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
-import InterfaceInfoColumns from './InterfaceInfoColumns';
 
 export const waitTimePromise = async (time: number = 100) => {
   return new Promise((resolve) => {
@@ -26,10 +26,195 @@ export default () => {
   const actionRef = useRef<ActionType>();
   const [tableData, setTableData] = useState([]);
   const [paramsState, setParamsState] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  const InterfaceInfoColumns: ProColumns<API.InterfaceInfoVO>[] = [
+    {
+      title: 'id',
+      width: 30,
+      dataIndex: 'id',
+      valueType: 'text',
+      editable: false,
+      ellipsis: true,
+    },
+    {
+      title: '发布人id',
+      dataIndex: 'userId',
+      valueType: 'text',
+      editable: false,
+    },
+    {
+      title: '接口名',
+      width: 80,
+      dataIndex: 'name',
+      valueType: 'text',
+    },
+    {
+      title: '接口头像',
+      width: 80,
+      dataIndex: 'avatarUrl',
+      valueType: 'image',
+      copyable: true,
+      hideInSearch: true,
+      ellipsis: true,
+    },
+    {
+      title: '接口详细',
+      width: 80,
+      dataIndex: 'description',
+      valueType: 'text',
+    },
+    {
+      title: '请求方法',
+      width: 70,
+      dataIndex: 'method',
+      valueType: 'text',
+      copyable: false,
+      ellipsis: true,
+    },
+    {
+      title: '请求地址',
+      width: 80,
+      dataIndex: 'url',
+      valueType: 'text',
+      copyable: false,
+    },
+    {
+      title: '请求参数',
+      width: 80,
+      dataIndex: 'requestParams',
+      valueType: 'text',
+      copyable: false,
+      hideInSearch: true,
+      ellipsis: true,
+    },
+    {
+      title: '响应参数',
+      width: 80,
+      dataIndex: 'responseParams',
+      valueType: 'text',
+      copyable: false,
+      hideInSearch: true,
+      ellipsis: true,
+    },
+    {
+      title: '响应格式',
+      width: 80,
+      dataIndex: 'responseFormat',
+      valueType: 'text',
+      ellipsis: true,
+    },
+    {
+      title: '请求示例',
+      width: 80,
+      dataIndex: 'requestExample',
+      valueType: 'text',
+      copyable: false,
+      hideInSearch: true,
+      ellipsis: true,
+    },
+    {
+      title: '响应示例',
+      width: 80,
+      dataIndex: 'responseExample',
+      valueType: 'text',
+      copyable: false,
+      hideInSearch: true,
+      ellipsis: true,
+    },
+    {
+      title: '总调用次数',
+      width: 50,
+      dataIndex: 'invokingCount',
+      valueType: 'text',
+    },
+    {
+      title: '果币/次',
+      width: 30,
+      dataIndex: 'requiredGoldCoins',
+      valueType: 'text',
+    },
+    {
+      title: '接口状态',
+      dataIndex: 'interfaceStatus',
+      copyable: false,
+      valueEnum: {
+        0: { text: '正常', status: 'Success' },
+        1: { text: '关闭', status: 'Error' },
+      },
+      hideInSearch: true,
+      hideInForm: true,
+    },
+    {
+      title: '请求头',
+      dataIndex: 'requestHeader',
+      valueType: 'jsonCode',
+      copyable: false,
+      hideInSearch: true,
+      ellipsis: true,
+      hideInForm: true,
+    },
+    {
+      title: '响应头',
+      dataIndex: 'responseHeader',
+      valueType: 'jsonCode',
+      copyable: false,
+      hideInSearch: true,
+      ellipsis: true,
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      valueType: 'dateTime',
+      hideInSearch: true,
+      editable: false,
+      ellipsis: true,
+    },
+    {
+      title: '操作',
+      valueType: 'option',
+      render: (text, record, _, action) => [
+        <OperationButton
+          key="editable"
+          onClick={() => {
+            // @ts-ignore
+            action?.startEditable?.(record.id);
+          }}
+        >
+          编辑
+        </OperationButton>,
+        // todo 删除后刷新展示数据
+        <OperationButton
+          key="delete"
+          onClick={async () => {
+            setIsLoading(true);
+            // @ts-ignore
+            const result = await interfaceInfoDelete(record.id);
+            setIsLoading(false);
+
+            // 1成功 -1失败
+            if (result.data < 1) {
+              message.error('删除失败');
+              return;
+            }
+            message.success('删除成功');
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          }}
+          style={{ color: '#ea5514' }}
+        >
+          删除
+        </OperationButton>,
+      ],
+    },
+  ];
 
   const interfaceInfoQueryList = async (params: API.UserQueryParams) => {
     setParamsState(params);
+    setIsLoading(true);
     const result = await interfaceInfoDynamicQuery(params);
+    setIsLoading(false);
     if (!result.data) {
       message.warning(result.message);
       return;
@@ -53,16 +238,19 @@ export default () => {
         onRequestError={(error) => {
           message.error(error.message);
         }}
+        loading={isLoading}
         // 重置时触发
         onReset={async () => {
           // @ts-ignore
+          setIsLoading(true);
           const result = await interfaceInfoDynamicQuery({});
+          setIsLoading(false);
           if (!result.data) {
             message.warning('查询数据为空');
             return;
           }
           setTableData(result.data);
-          message.success('查询所有用户成功');
+          message.success('成功');
         }}
         // 提交时触发
         onSubmit={(params) => interfaceInfoQueryList(params)}
@@ -74,14 +262,17 @@ export default () => {
           type: 'multiple',
           // todo 修改后刷新展示数据
           onSave: async (_, row) => {
+            setIsLoading(true);
             // @ts-ignore
             const result = await interfaceInfoUpdate(row);
+            setIsLoading(false);
             if (result.data === null) {
               message.error(result.description);
               return;
             }
+            // 查询数据
             interfaceInfoQueryList(paramsState);
-            message.success('修改成功');
+            message.success('成功');
           },
           // 保留保存和取消
           actionRender: (row, config, defaultDom) => [defaultDom.save, defaultDom.cancel],

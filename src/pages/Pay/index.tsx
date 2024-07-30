@@ -10,29 +10,31 @@ import { Button, Col, Row, message } from 'antd';
 import { useLayoutEffect, useState } from 'react';
 
 export default () => {
-  // button 加载状态
-  const [buttonIsLoading, setButtonIsLoading] = useState({
-    btn1: false,
-    btn2: false,
-  });
   // 从订单列表和商城跳转带过来变量
   const { orderId, userId, commodityContent, money, payType, expireTime } =
     (useLocation().state as API.PayState) || {};
+
   const [isExpired, setIsExpired] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number>();
   const navigate = useNavigate();
 
-  const setButtonLoading = (btnKey: string, isLoading: boolean) => {
-    setButtonIsLoading((prevState) => ({
+  // button 加载状态
+  const [isLoading, setIsLoading] = useState({
+    btn1: false,
+    btn2: false,
+  });
+
+  const setLoading = (btnKey: string, isLoading: boolean) => {
+    setIsLoading((prevState) => ({
       ...prevState,
       [btnKey]: isLoading,
     }));
   };
 
   const handleCancel = async (btn: string) => {
-    setButtonLoading(btn, true);
+    setLoading(btn, true);
     const result = await updateOrderInfoStatus(orderId, 1);
-    setButtonLoading(btn, false);
+    setLoading(btn, false);
     if (!result.data) {
       message.error(result.message);
       navigate('/orderinfo');
@@ -41,9 +43,10 @@ export default () => {
     message.success(result.message);
     navigate('/orderinfo');
   };
+
   // 点击成功支付按钮，发送邮件给管理员，审核
   const handlePay = async (btn: string) => {
-    setButtonLoading(btn, true);
+    setLoading(btn, true);
     const result = await sendNotificationMail({
       orderId,
       userId,
@@ -52,9 +55,10 @@ export default () => {
       payType,
       expireTime,
     });
+
     // 修改订单状态
     const payStatusR = await updateOrderInfoStatus(orderId, 2);
-    setButtonLoading(btn, false);
+    setLoading(btn, false);
     if (!result.data || !payStatusR.data) {
       message.error(result.message);
       return;
@@ -69,12 +73,14 @@ export default () => {
       setIsExpired(true);
       return;
     }
+
     getUserOrderInfos(userId, { orderId }).then((res) => {
       const data: API.OrderInfoVO[] = res.data;
       if (data[0].payStatus !== 0) {
         setIsExpired(true);
       }
     });
+
     // 过期后订单页面因未刷新未更新订单状态，付款后判断是否过期更改订单状态
     const expireT = new Date(expireTime).getTime();
     const now = new Date().getTime();
@@ -82,6 +88,7 @@ export default () => {
       updateOrderInfoStatus(orderId, 1).then(() => setIsExpired(true));
       return;
     }
+
     // 倒计时定时器
     const interval = setInterval(async () => {
       const now = new Date().getTime();
@@ -201,7 +208,7 @@ export default () => {
             <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
               <Button
                 type="primary"
-                loading={buttonIsLoading.btn1}
+                loading={isLoading.btn1}
                 onClick={() => {
                   handlePay('btn1');
                 }}
@@ -210,7 +217,7 @@ export default () => {
               </Button>
               <Button
                 type="primary"
-                loading={buttonIsLoading.btn2}
+                loading={isLoading.btn2}
                 onClick={() => {
                   handleCancel('btn2');
                 }}

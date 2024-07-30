@@ -1,0 +1,35 @@
+.loadingLink {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  color: #007bff;
+  padding: 0.3rem; /* 增加一些内边距以防止动画覆盖文本 */
+  transition: filter 0.3s ease; /* 添加过渡效果 */
+}
+
+.loadingLink:hover {
+  text-shadow: 0 0 10px rgba(113, 175, 229, 0.8); /* 悬浮时阴影效果 */
+}
+
+.loadingLink .loadingSpinner {
+  position: absolute;
+  top: 30%;
+  left: 30%;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 0.19rem solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: #007bff;
+  animation: spin 1s linear infinite;
+  transform: translate(-50%, -50%);
+  z-index: 1; /* 确保动画在文本之上 */
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
