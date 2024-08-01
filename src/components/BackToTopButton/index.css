@@ -1,0 +1,27 @@
+/* BackToTopButton.css */
+.scrollToTop {
+  position: fixed;
+  right: 6.25rem;
+  bottom: 6.25rem;
+  display: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: black;
+  font-size: 1.25rem;
+  line-height: 2.5rem;
+  text-align: center;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 0.3125rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: opacity 0.3s, background-color 0.3s; /* 添加背景颜色过渡效果 */
+}
+
+.scrollToTop.visible {
+  display: block; /* 当按钮可见时显示 */
+}
+
+.scrollToTop:hover {
+  background-color: #e3e5e7; /* 悬浮时的背景颜色 */
+}
