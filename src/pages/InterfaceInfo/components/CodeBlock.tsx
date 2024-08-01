@@ -3,7 +3,7 @@ import prettier from 'prettier/standalone';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
-const CodeBlock = ({ language, value }: { language: string; value: any }) => {
+const CodeBlock = ({ language, value }: { language?: string; value?: any }) => {
   let formattedCode;
   try {
     formattedCode = prettier.format(value, {

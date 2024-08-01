@@ -8,7 +8,6 @@ import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import CodeBlock from '../components/CodeBlock';
 import DebugRequest from '../components/DebugRequest';
-import MyTabs from '../components/MyTabs';
 import { default as ListInfo, default as ParamList } from '../components/ParamList';
 import RequestParamsList from '../components/RequestParamsList';
 import TipUtil from '../components/TipUtil';
@@ -261,7 +260,9 @@ export default () => {
           <ListInfo columns={codeCol} data={codeList} />
         </ProCard.TabPane>
         <ProCard.TabPane key="tab4" tab="示例代码" icon={<img src={code} height={20}></img>}>
-          <MyTabs />
+          <a href="https://apidocs.yeguo.icu" target="_blank" rel="noreferrer">
+            使用在线文档
+          </a>
         </ProCard.TabPane>
       </ProCard>
     </Container>
