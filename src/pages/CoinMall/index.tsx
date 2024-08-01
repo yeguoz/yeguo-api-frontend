@@ -1,4 +1,3 @@
-import Container from '@/components/Container';
 import { CreateOrderInfo } from '@/services/yeguo-api/orderInfoController';
 import { ProCard } from '@ant-design/pro-components';
 import { useModel, useNavigate } from '@umijs/max';
@@ -79,7 +78,7 @@ export default () => {
     setPayType(mode);
   };
   return (
-    <Container>
+    <>
       <ProCard
         title={<strong>我的钱包</strong>}
         tooltip="调用接口使用"
@@ -190,6 +189,6 @@ export default () => {
           </Button>
         </div>
       </ProCard>
-    </Container>
+    </>
   );
 };

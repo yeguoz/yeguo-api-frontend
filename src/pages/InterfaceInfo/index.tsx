@@ -1,4 +1,3 @@
-import Container from '@/components/Container';
 import { interfaceInfoDynamicQuery } from '@/services/yeguo-api/interfaceInfoController';
 import { useNavigate } from '@umijs/max';
 import { Col, Row, message } from 'antd';
@@ -24,45 +23,43 @@ const InfoCard: React.FC = () => {
   }, []);
 
   return (
-    <Container>
-      <Row>
-        {data.map((item: API.InterfaceInfoVO) => {
-          return (
-            <Col
-              key={item.id}
-              xs={{
-                flex: '100%',
+    <Row>
+      {data.map((item: API.InterfaceInfoVO) => {
+        return (
+          <Col
+            key={item.id}
+            xs={{
+              flex: '100%',
+            }}
+            sm={{
+              flex: '50%',
+            }}
+            md={{
+              flex: '40%',
+            }}
+            lg={{
+              flex: '20%',
+            }}
+            xl={{
+              flex: '5%',
+            }}
+          >
+            <InterfaceInfoCard
+              name={item.name}
+              description={item.description}
+              iconUrl={item.avatarUrl}
+              invokingCount={item.invokingCount}
+              onClick={() => {
+                navigate('detail', {
+                  replace: false,
+                  state: { ...item },
+                });
               }}
-              sm={{
-                flex: '50%',
-              }}
-              md={{
-                flex: '40%',
-              }}
-              lg={{
-                flex: '20%',
-              }}
-              xl={{
-                flex: '5%',
-              }}
-            >
-              <InterfaceInfoCard
-                name={item.name}
-                description={item.description}
-                iconUrl={item.avatarUrl}
-                invokingCount={item.invokingCount}
-                onClick={() => {
-                  navigate('detail', {
-                    replace: false,
-                    state: { ...item },
-                  });
-                }}
-              />
-            </Col>
-          );
-        })}
-      </Row>
-    </Container>
+            />
+          </Col>
+        );
+      })}
+    </Row>
   );
 };
 

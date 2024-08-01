@@ -11,7 +11,7 @@ export const Question = () => {
           height: 26,
         }}
         onClick={() => {
-          window.open('https://yeguo.icu');
+          window.open('https://apidocs.yeguo.icu');
         }}
       >
         <FileTextOutlined />

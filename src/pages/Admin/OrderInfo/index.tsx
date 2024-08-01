@@ -1,4 +1,3 @@
-import Container from '@/components/Container';
 import OperationButton from '@/components/OperationButton';
 import formatDate from '@/pages/utils/formatDateUtil';
 import {
@@ -242,62 +241,60 @@ export default () => {
   }, []);
 
   return (
-    <Container>
-      <ProTable<API.OrderInfoVO>
-        columns={OrderColumns}
-        actionRef={actionRef}
-        cardBordered
-        loading={isLoading}
-        dataSource={tableData}
-        options={{ reload: false }}
-        // 请求失败时触发
-        onRequestError={(error) => {
-          message.error(error.message);
-        }}
-        onSubmit={(params: any) => dynamicQueryOrderInfos(params)}
-        onReset={async () => {
-          setIsLoading(true);
-          const result = await orderInfoDynamicQuery({});
-          setIsLoading(false);
-          if (!result.data) {
-            message.warning('查询数据为空');
-            return;
+    <ProTable<API.OrderInfoVO>
+      columns={OrderColumns}
+      actionRef={actionRef}
+      cardBordered
+      loading={isLoading}
+      dataSource={tableData}
+      options={{ reload: false }}
+      // 请求失败时触发
+      onRequestError={(error) => {
+        message.error(error.message);
+      }}
+      onSubmit={(params: any) => dynamicQueryOrderInfos(params)}
+      onReset={async () => {
+        setIsLoading(true);
+        const result = await orderInfoDynamicQuery({});
+        setIsLoading(false);
+        if (!result.data) {
+          message.warning('查询数据为空');
+          return;
+        }
+        setTableData(result.data);
+        message.success('成功');
+      }}
+      toolbar={{
+        title: '订单列表',
+        tooltip: '展示订单信息',
+      }}
+      columnsState={{
+        persistenceKey: 'pro-table-singe-demos',
+        persistenceType: 'localStorage',
+      }}
+      rowKey="id"
+      // search配置
+      search={{
+        labelWidth: 'auto',
+        showHiddenNum: true,
+      }}
+      form={{
+        // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
+        syncToUrl: (values: any, type: any) => {
+          if (type === 'get') {
+            return {
+              ...values,
+              created_at: [values.startTime, values.endTime],
+            };
           }
-          setTableData(result.data);
-          message.success('成功');
-        }}
-        toolbar={{
-          title: '订单列表',
-          tooltip: '展示订单信息',
-        }}
-        columnsState={{
-          persistenceKey: 'pro-table-singe-demos',
-          persistenceType: 'localStorage',
-        }}
-        rowKey="id"
-        // search配置
-        search={{
-          labelWidth: 'auto',
-          showHiddenNum: true,
-        }}
-        form={{
-          // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
-          syncToUrl: (values: any, type: any) => {
-            if (type === 'get') {
-              return {
-                ...values,
-                created_at: [values.startTime, values.endTime],
-              };
-            }
-            return values;
-          },
-        }}
-        pagination={{
-          pageSize: 10,
-        }}
-        dateFormatter="string"
-        headerTitle="订单列表"
-      />
-    </Container>
+          return values;
+        },
+      }}
+      pagination={{
+        pageSize: 10,
+      }}
+      dateFormatter="string"
+      headerTitle="订单列表"
+    />
   );
 };

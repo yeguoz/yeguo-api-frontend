@@ -72,7 +72,7 @@ export default defineConfig({
    * @name layout 插件
    * @doc https://umijs.org/docs/max/layout-menu
    */
-  title: '野果API开放平台',
+  title: 'YGAPI开放平台',
   layout: {
     locale: true,
     ...defaultSettings,

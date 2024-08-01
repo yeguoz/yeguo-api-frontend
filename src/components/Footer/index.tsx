@@ -16,7 +16,7 @@ const Footer: React.FC = () => {
               <FileTextFilled /> 使用文档
             </>
           ),
-          href: 'https://pro.ant.design',
+          href: 'https://apidocs.yeguo.icu',
           blankTarget: true,
         },
         {

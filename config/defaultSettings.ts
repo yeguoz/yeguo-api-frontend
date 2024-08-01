@@ -7,7 +7,7 @@ const Settings: ProLayoutProps & {
   pwa?: boolean;
   logo?: string;
 } = {
-  title: '野果API开放平台',
+  title: 'YGAPI开放平台',
   iconfontUrl: 'https://cdn.jsdelivr.net/gh/ye-guo/Images/images/ygIcon512.png',
   navTheme: 'light',
   colorPrimary: '#a6559d',

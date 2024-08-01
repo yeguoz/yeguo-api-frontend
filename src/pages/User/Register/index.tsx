@@ -134,8 +134,8 @@ const Register: React.FC = () => {
             maxWidth: '75vw',
           }}
           logo={<img alt="logo" src="/logo.png" />}
-          title="野果API开放平台"
-          subTitle={'野果API 接口开放平台致力于提供稳定、安全、高效的接口调用服务'}
+          title="YGAPI开放平台"
+          subTitle={'YGAPI 接口开放平台致力于提供稳定、安全、高效的接口调用服务'}
           initialValues={{
             autoLogin: true,
           }}

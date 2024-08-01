@@ -1,4 +1,3 @@
-import Container from '@/components/Container';
 import OperationButton from '@/components/OperationButton';
 import {
   deleteOrderInfo,
@@ -275,54 +274,52 @@ export default () => {
   }, []);
 
   return (
-    <Container>
-      <ProTable<API.OrderInfoVO>
-        columns={OrderColumns}
-        cardBordered
-        dataSource={tableData}
-        onRequestError={(error) => {
-          message.error(error.message);
-        }}
-        options={{ reload: false }}
-        onSubmit={(params: any) => dynamicQueryOrderInfos(params)}
-        onReset={async () => {
-          await dynamicQueryOrderInfos({});
-        }}
-        loading={isLoading}
-        toolbar={{
-          title: '订单列表',
-          tooltip: '展示订单信息',
-        }}
-        editable={{
-          type: 'multiple',
-          actionRender: (row, config, defaultDom) => [defaultDom.save, defaultDom.cancel],
-        }}
-        columnsState={{
-          persistenceKey: 'pro-table-singe-demos',
-          persistenceType: 'localStorage',
-        }}
-        rowKey="id"
-        search={{
-          labelWidth: 'auto',
-          showHiddenNum: true,
-        }}
-        form={{
-          syncToUrl: (values: any, type: any) => {
-            if (type === 'get') {
-              return {
-                ...values,
-                created_at: [values.startTime, values.endTime],
-              };
-            }
-            return values;
-          },
-        }}
-        pagination={{
-          pageSize: 10,
-        }}
-        dateFormatter="string"
-        headerTitle="用户列表"
-      />
-    </Container>
+    <ProTable<API.OrderInfoVO>
+      columns={OrderColumns}
+      cardBordered
+      dataSource={tableData}
+      onRequestError={(error) => {
+        message.error(error.message);
+      }}
+      options={{ reload: false }}
+      onSubmit={(params: any) => dynamicQueryOrderInfos(params)}
+      onReset={async () => {
+        await dynamicQueryOrderInfos({});
+      }}
+      loading={isLoading}
+      toolbar={{
+        title: '订单列表',
+        tooltip: '展示订单信息',
+      }}
+      editable={{
+        type: 'multiple',
+        actionRender: (row, config, defaultDom) => [defaultDom.save, defaultDom.cancel],
+      }}
+      columnsState={{
+        persistenceKey: 'pro-table-singe-demos',
+        persistenceType: 'localStorage',
+      }}
+      rowKey="id"
+      search={{
+        labelWidth: 'auto',
+        showHiddenNum: true,
+      }}
+      form={{
+        syncToUrl: (values: any, type: any) => {
+          if (type === 'get') {
+            return {
+              ...values,
+              created_at: [values.startTime, values.endTime],
+            };
+          }
+          return values;
+        },
+      }}
+      pagination={{
+        pageSize: 10,
+      }}
+      dateFormatter="string"
+      headerTitle="用户列表"
+    />
   );
 };

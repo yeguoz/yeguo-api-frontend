@@ -1,4 +1,3 @@
-import Container from '@/components/Container';
 import { useModel } from '@umijs/max';
 import { Card, theme } from 'antd';
 import React from 'react';
@@ -87,81 +86,83 @@ const Welcome: React.FC = () => {
   const { token } = theme.useToken();
   const { initialState } = useModel('@@initialState');
   return (
-    <Container>
-      <Card
+    <Card
+      style={{
+        borderRadius: 8,
+      }}
+      bodyStyle={{
+        backgroundImage:
+          initialState?.settings?.navTheme === 'realDark'
+            ? 'background-image: linear-gradient(75deg, #1A1B1F 0%, #191C1F 100%)'
+            : 'background-image: linear-gradient(75deg, #FBFDFF 0%, #F5F7FF 100%)',
+      }}
+    >
+      <div
         style={{
-          borderRadius: 8,
-        }}
-        bodyStyle={{
+          backgroundPosition: '100% -30%',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: '274px auto',
           backgroundImage:
-            initialState?.settings?.navTheme === 'realDark'
-              ? 'background-image: linear-gradient(75deg, #1A1B1F 0%, #191C1F 100%)'
-              : 'background-image: linear-gradient(75deg, #FBFDFF 0%, #F5F7FF 100%)',
+            "url('https://gw.alipayobjects.com/mdn/rms_a9745b/afts/img/A*BuFmQqsB2iAAAAAAAAAAAAAAARQnAQ')",
         }}
       >
         <div
           style={{
-            backgroundPosition: '100% -30%',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: '274px auto',
-            backgroundImage:
-              "url('https://gw.alipayobjects.com/mdn/rms_a9745b/afts/img/A*BuFmQqsB2iAAAAAAAAAAAAAAARQnAQ')",
+            fontSize: '20px',
+            fontWeight: 'bold',
+            color: token.colorTextHeading,
           }}
         >
-          <div
-            style={{
-              fontSize: '20px',
-              fontWeight: 'bold',
-              color: token.colorTextHeading,
-            }}
-          >
-            欢迎使用野果API开放平台
-          </div>
-          <p
-            style={{
-              fontSize: '14px',
-              color: token.colorTextSecondary,
-              lineHeight: '22px',
-              marginTop: 16,
-              marginBottom: 32,
-              width: '65%',
-            }}
-          >
-            欢迎来到野果API开放平台，这是一个专为开发者设计的平台，我们提供一系列强大的API接口，让您能够轻松地访问和使用我们的数据。
-            我们的API接口涵盖了各种类型的数据，无论您是想开发一个新的应用，还是想进行数据快速获取，我们的API都能为您提供强大的支持。
-            为了让您能够快速上手，我们还提供了一套完整的SDK，让您能够轻松地将我们的API接入到您的应用中。
-            我们的开放平台致力于提供高质量、实时的数据，以满足您的各种需求。我们的API接口设计简洁易用，文档详尽，让您能够快速上手。
-            加入我们的羊腿API开放平台，让我们一起创造更多的可能性！
-          </p>
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: 16,
-            }}
-          >
-            <InfoCard
-              index={1}
-              href="https://umijs.org/docs/introduce/introduce"
-              title="文档支持"
-              desc="我们的官方文档支持，为您提供全面的技术指导和帮助，确保您轻松解决问题并顺利使用我们的产品和服务。"
-            />
-            <InfoCard
-              index={2}
-              title="SDK快速开始"
-              href="https://ant.design"
-              desc="提供客户端SDK，方便您快速集成到你的项目中。"
-            />
-            <InfoCard
-              index={3}
-              title="在线调试"
-              href="https://procomponents.ant.design"
-              desc="通过我们的在线调试工具快速访问接口，提高开发效率。帮助您轻松解决问题，确保您的应用程序顺利运行。"
-            />
-          </div>
+          🎉欢迎使用YGAPI开放平台🚀
         </div>
-      </Card>
-    </Container>
+        <p
+          style={{
+            fontSize: '16px',
+            color: token.colorTextSecondary,
+            lineHeight: '22px',
+            marginTop: 16,
+            marginBottom: 32,
+            width: '65%',
+          }}
+        >
+          <strong>
+            欢迎来到 <span style={{ color: '#fca92f' }}>YGAPI 开放平台</span>
+            🎉！这是一个专为开发者设计的平台，提供一系列强大的 API
+            接口，让您轻松访问和使用我们的数据。无论您是开发新应用，还是需要快速获取数据，我们的 API
+            都能为您提供强有力的支持。 为了帮助您快速上手，我们还提供了完整的 SDK，方便您将 API
+            集成到您的应用中。我们的开放平台致力于提供高质量、实时的数据，以满足您的各种需求。API
+            接口设计简洁易用，文档详尽，让您能够迅速上手。 加入
+            <span style={{ color: '#fca92f' }}>YGAPI 开放平台</span>，让我们共同创造更多可能性!
+          </strong>
+        </p>
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 16,
+          }}
+        >
+          <InfoCard
+            index={1}
+            href="https://apidocs.yeguo.icu"
+            title="文档支持"
+            desc="我们的官方文档支持，为您提供全面的技术指导和帮助，确保您轻松解决问题并顺利使用我们的产品和服务。"
+          />
+          <InfoCard
+            index={2}
+            title="SDK快速开始"
+            href="https://apidocs.yeguo.icu/guide/getting-started#-%E5%AE%89%E8%A3%85"
+            desc="提供客户端SDK，方便您快速集成到你的项目中。"
+          />
+          <InfoCard
+            index={3}
+            title="在线调试"
+            href="https://api.yeguo.icu/interfaceInfo"
+            desc="通过我们的在线调试工具快速访问接口，提高开发效率。帮助您轻松解决问题，确保您的应用程序顺利运行。"
+          />
+        </div>
+      </div>
+    </Card>
   );
 };
 

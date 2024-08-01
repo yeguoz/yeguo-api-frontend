@@ -1,4 +1,3 @@
-import Container from '@/components/Container';
 import OperationButton from '@/components/OperationButton';
 import {
   interfaceInfoDynamicQuery,
@@ -228,125 +227,123 @@ export default () => {
   }, []);
 
   return (
-    <Container>
-      <ProTable<API.InterfaceInfoVO>
-        columns={InterfaceInfoColumns}
-        actionRef={actionRef}
-        cardBordered
-        dataSource={tableData}
-        // 请求失败时触发
-        onRequestError={(error) => {
-          message.error(error.message);
-        }}
-        loading={isLoading}
-        // 重置时触发
-        onReset={async () => {
-          // @ts-ignore
+    <ProTable<API.InterfaceInfoVO>
+      columns={InterfaceInfoColumns}
+      actionRef={actionRef}
+      cardBordered
+      dataSource={tableData}
+      // 请求失败时触发
+      onRequestError={(error) => {
+        message.error(error.message);
+      }}
+      loading={isLoading}
+      // 重置时触发
+      onReset={async () => {
+        // @ts-ignore
+        setIsLoading(true);
+        const result = await interfaceInfoDynamicQuery({});
+        setIsLoading(false);
+        if (!result.data) {
+          message.warning('查询数据为空');
+          return;
+        }
+        setTableData(result.data);
+        message.success('成功');
+      }}
+      // 提交时触发
+      onSubmit={(params) => interfaceInfoQueryList(params)}
+      toolbar={{
+        title: '接口列表',
+        tooltip: '提供接口信息',
+      }}
+      editable={{
+        type: 'multiple',
+        // todo 修改后刷新展示数据
+        onSave: async (_, row) => {
           setIsLoading(true);
-          const result = await interfaceInfoDynamicQuery({});
+          // @ts-ignore
+          const result = await interfaceInfoUpdate(row);
           setIsLoading(false);
-          if (!result.data) {
-            message.warning('查询数据为空');
+          if (result.data === null) {
+            message.error(result.description);
             return;
           }
-          setTableData(result.data);
+          // 查询数据
+          interfaceInfoQueryList(paramsState);
           message.success('成功');
-        }}
-        // 提交时触发
-        onSubmit={(params) => interfaceInfoQueryList(params)}
-        toolbar={{
-          title: '接口列表',
-          tooltip: '提供接口信息',
-        }}
-        editable={{
-          type: 'multiple',
-          // todo 修改后刷新展示数据
-          onSave: async (_, row) => {
-            setIsLoading(true);
-            // @ts-ignore
-            const result = await interfaceInfoUpdate(row);
-            setIsLoading(false);
-            if (result.data === null) {
-              message.error(result.description);
-              return;
-            }
-            // 查询数据
-            interfaceInfoQueryList(paramsState);
-            message.success('成功');
-          },
-          // 保留保存和取消
-          actionRender: (row, config, defaultDom) => [defaultDom.save, defaultDom.cancel],
-        }}
-        columnsState={{
-          persistenceKey: 'pro-table-singe-demos',
-          persistenceType: 'localStorage',
-          defaultValue: {
-            option: { fixed: 'right', disable: true },
-          },
-          onChange(value) {
-            console.log('value: ', value);
-          },
-        }}
-        rowKey="id"
-        search={{
-          labelWidth: 'auto',
-          showHiddenNum: true,
-        }}
-        options={{
-          setting: {
-            listsHeight: 400,
-          },
-          reload: false,
-        }}
-        form={{
-          // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
-          syncToUrl: (values, type) => {
-            if (type === 'get') {
-              return {
-                ...values,
-                created_at: [values.startTime, values.endTime],
-              };
-            }
-            return values;
-          },
-        }}
-        pagination={{
-          pageSize: 10,
-          onChange: (page) => console.log(page),
-        }}
-        dateFormatter="string"
-        headerTitle="接口信息列表"
-        toolBarRender={() => [
-          <Button
-            key="button"
-            icon={<PlusOutlined />}
-            onClick={async () => {
-              const obj = {
-                name: '',
-                description: '',
-                method: '',
-                url: '',
-                requestParams: '',
-                requestHeader: '',
-                responseHeader: '',
-                responseFormat: '',
-                requestExample: '',
-                interfaceStatus: 0,
-                invokingCount: 0,
-                avatarUrl: '',
-                requiredGoldCoins: 0,
-              };
-              const result = await interfaceInfoRegister(obj);
-              actionRef.current?.addEditRecord?.({
-                id: result.data,
-              });
-            }}
-            type="primary"
-          >
-            新建
-          </Button>,
-        ]}
-      />
-    </Container>
+        },
+        // 保留保存和取消
+        actionRender: (row, config, defaultDom) => [defaultDom.save, defaultDom.cancel],
+      }}
+      columnsState={{
+        persistenceKey: 'pro-table-singe-demos',
+        persistenceType: 'localStorage',
+        defaultValue: {
+          option: { fixed: 'right', disable: true },
+        },
+        onChange(value) {
+          console.log('value: ', value);
+        },
+      }}
+      rowKey="id"
+      search={{
+        labelWidth: 'auto',
+        showHiddenNum: true,
+      }}
+      options={{
+        setting: {
+          listsHeight: 400,
+        },
+        reload: false,
+      }}
+      form={{
+        // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
+        syncToUrl: (values, type) => {
+          if (type === 'get') {
+            return {
+              ...values,
+              created_at: [values.startTime, values.endTime],
+            };
+          }
+          return values;
+        },
+      }}
+      pagination={{
+        pageSize: 10,
+        onChange: (page) => console.log(page),
+      }}
+      dateFormatter="string"
+      headerTitle="接口信息列表"
+      toolBarRender={() => [
+        <Button
+          key="button"
+          icon={<PlusOutlined />}
+          onClick={async () => {
+            const obj = {
+              name: '',
+              description: '',
+              method: '',
+              url: '',
+              requestParams: '',
+              requestHeader: '',
+              responseHeader: '',
+              responseFormat: '',
+              requestExample: '',
+              interfaceStatus: 0,
+              invokingCount: 0,
+              avatarUrl: '',
+              requiredGoldCoins: 0,
+            };
+            const result = await interfaceInfoRegister(obj);
+            actionRef.current?.addEditRecord?.({
+              id: result.data,
+            });
+          }}
+          type="primary"
+        >
+          新建
+        </Button>,
+      ]}
+    />
   );
 };

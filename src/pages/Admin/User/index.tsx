@@ -1,4 +1,3 @@
-import Container from '@/components/Container';
 import OperationButton from '@/components/OperationButton';
 import { userDelete, userDynamicQuery, userUpdate } from '@/services/yeguo-api/userController';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
@@ -185,84 +184,82 @@ export default () => {
   }, []);
 
   return (
-    <Container>
-      <ProTable<API.UserVO>
-        columns={UserColumns}
-        cardBordered
-        dataSource={tableData}
-        options={{ reload: false }}
-        // 请求失败时触发
-        onRequestError={(error) => {
-          message.error(error.message);
-        }}
-        loading={isLoading}
-        // 重置时触发
-        onReset={async () => {
+    <ProTable<API.UserVO>
+      columns={UserColumns}
+      cardBordered
+      dataSource={tableData}
+      options={{ reload: false }}
+      // 请求失败时触发
+      onRequestError={(error) => {
+        message.error(error.message);
+      }}
+      loading={isLoading}
+      // 重置时触发
+      onReset={async () => {
+        setIsLoading(true);
+        // @ts-ignore
+        const result = await userDynamicQuery({});
+        setIsLoading(false);
+
+        if (!result.data) {
+          message.warning('查询数据为空');
+          return;
+        }
+        setTableData(result.data);
+        message.success('查询成功');
+      }}
+      // 提交时触发
+      onSubmit={(params) => dynamicQueryUsers(params)}
+      toolbar={{
+        title: '用户列表',
+        tooltip: '提供用户信息',
+      }}
+      // 编辑配置
+      editable={{
+        type: 'multiple',
+        //  修改后刷新展示数据
+        onSave: async (_, row) => {
           setIsLoading(true);
-          // @ts-ignore
-          const result = await userDynamicQuery({});
+          const result = await userUpdate(row);
           setIsLoading(false);
 
-          if (!result.data) {
-            message.warning('查询数据为空');
+          if (result.data === null) {
+            message.error(result.description);
             return;
           }
-          setTableData(result.data);
-          message.success('查询成功');
-        }}
-        // 提交时触发
-        onSubmit={(params) => dynamicQueryUsers(params)}
-        toolbar={{
-          title: '用户列表',
-          tooltip: '提供用户信息',
-        }}
-        // 编辑配置
-        editable={{
-          type: 'multiple',
-          //  修改后刷新展示数据
-          onSave: async (_, row) => {
-            setIsLoading(true);
-            const result = await userUpdate(row);
-            setIsLoading(false);
-
-            if (result.data === null) {
-              message.error(result.description);
-              return;
-            }
-            dynamicQueryUsers(paramsState);
-            message.success('修改成功');
-          },
-          // 保留保存和取消
-          actionRender: (row, config, defaultDom) => [defaultDom.save, defaultDom.cancel],
-        }}
-        columnsState={{
-          persistenceKey: 'pro-table-singe-demos',
-          persistenceType: 'localStorage',
-        }}
-        rowKey="id"
-        // search配置
-        search={{
-          labelWidth: 'auto',
-          showHiddenNum: true,
-        }}
-        form={{
-          // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
-          syncToUrl: (values: any, type: any) => {
-            if (type === 'get') {
-              return {
-                ...values,
-                created_at: [values.startTime, values.endTime],
-              };
-            }
-            return values;
-          },
-        }}
-        pagination={{
-          pageSize: 10,
-        }}
-        dateFormatter="string"
-        headerTitle="用户列表"
-      />
-    </Container>
+          dynamicQueryUsers(paramsState);
+          message.success('修改成功');
+        },
+        // 保留保存和取消
+        actionRender: (row, config, defaultDom) => [defaultDom.save, defaultDom.cancel],
+      }}
+      columnsState={{
+        persistenceKey: 'pro-table-singe-demos',
+        persistenceType: 'localStorage',
+      }}
+      rowKey="id"
+      // search配置
+      search={{
+        labelWidth: 'auto',
+        showHiddenNum: true,
+      }}
+      form={{
+        // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
+        syncToUrl: (values: any, type: any) => {
+          if (type === 'get') {
+            return {
+              ...values,
+              created_at: [values.startTime, values.endTime],
+            };
+          }
+          return values;
+        },
+      }}
+      pagination={{
+        pageSize: 10,
+      }}
+      dateFormatter="string"
+      headerTitle="用户列表"
+    />
   );
 };

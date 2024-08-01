@@ -1,6 +1,5 @@
-import Container from '@/components/Container';
 import { userPersonInfoUpdate, userPersonKeysUpdate } from '@/services/yeguo-api/userController';
-import { PlusOutlined } from '@ant-design/icons';
+import { DownloadOutlined, PlusOutlined } from '@ant-design/icons';
 import { ProCard } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Button, Col, Row, message } from 'antd';
@@ -114,7 +113,7 @@ export default () => {
   };
 
   return (
-    <Container>
+    <>
       <ProCard
         title={<strong>个人信息</strong>}
         bordered
@@ -270,6 +269,25 @@ export default () => {
           </Col>
         </Row>
       </ProCard>
-    </Container>
+      <ProCard
+        title={<strong>引入SDK</strong>}
+        bordered
+        headerBordered
+        gutter={16}
+        headStyle={{ backgroundColor: '#f3f2f1', borderRadius: '0.5rem' }}
+        style={{ marginTop: '1rem' }}
+      >
+        <Button
+          type="primary"
+          icon={<DownloadOutlined />}
+          size={'large'}
+          onClick={() => {
+            window.open('https://apidocs.yeguo.icu/guide/getting-started#-%E5%AE%89%E8%A3%85');
+          }}
+        >
+          点击获取SDK
+        </Button>
+      </ProCard>
+    </>
   );
 };
