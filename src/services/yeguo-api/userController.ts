@@ -109,7 +109,7 @@ export async function userEmailVerifyCode(email: string, options?: { [key: strin
 }
 /** 邮箱注册 */
 export async function userEmailRegister(
-  body: API.UserEmailRegisterLoginParams,
+  body: API.VerifyCodeEmail,
   options?: { [key: string]: any },
 ) {
   return request<API.ResponseData>(`/api/user/emailRegister`, {
@@ -120,12 +120,30 @@ export async function userEmailRegister(
 }
 
 /** 邮箱登录 */
-export async function userEmailLogin(
-  body: API.UserEmailRegisterLoginParams,
-  options?: { [key: string]: any },
-) {
+export async function userEmailLogin(body: API.VerifyCodeEmail, options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/user/emailLogin`, {
     method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 忘记密码 验证邮箱 */
+export async function forgetPwdVerifyCode(
+  body: API.VerifyCodeEmail,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResponseData>(`/api/user/forgetPwd/verifyCode`, {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 忘记密码 提交验证 */
+export async function forgetPwd(body: API.ForgetPasswordParams, options?: { [key: string]: any }) {
+  return request<API.ResponseData>(`/api/user/forgetPwd`, {
+    method: 'PUT',
     data: body,
     ...(options || {}),
   });

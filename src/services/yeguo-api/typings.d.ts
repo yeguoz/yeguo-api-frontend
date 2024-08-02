@@ -47,7 +47,7 @@ declare namespace API {
     checkPassword?: string;
   };
 
-  type UserEmailRegisterLoginParams = {
+  type VerifyCodeEmail = {
     email?: string;
     verifyCode?: string;
   };
@@ -62,6 +62,13 @@ declare namespace API {
     goldCoin?: number;
     userStatus?: number;
     userRole?: number;
+  };
+
+  type ForgetPasswordParams = {
+    email?: string;
+    verifyCode?: string;
+    newPassword?: string;
+    checkNewPassword?: string;
   };
 
   // 接口 ======================================

@@ -5,6 +5,7 @@ export default [
     routes: [
       { name: '登录', path: '/user/login', component: './User/Login' },
       { name: '注册', path: '/user/register', component: './User/Register' },
+      { name: '忘记密码', path: '/user/forget', component: './User/Forget' },
     ],
   },
   { path: '/welcome', name: '欢迎', icon: 'smile', component: './Welcome' },
