@@ -61,7 +61,7 @@ const Register: React.FC = () => {
   const [type, setType] = useState<string>('platform_register');
   const { styles } = useStyles();
 
-  const EmailHandleSubmit = async (values: API.UserEmailRegisterLoginParams) => {
+  const EmailHandleSubmit = async (values: API.VerifyCodeEmail) => {
     try {
       // 邮箱注册  API.ResponseData
       const result = await userEmailRegister({ ...values });
@@ -140,7 +140,7 @@ const Register: React.FC = () => {
             autoLogin: true,
           }}
           onFinish={async (values) => {
-            // 若是邮箱注册
+            // 邮箱登录和平台登录请求体不同
             if (isEmailVerifyData(values)) {
               await EmailHandleSubmit(values);
               return;
@@ -296,13 +296,7 @@ const Register: React.FC = () => {
           >
             <Space split={<Divider type="vertical" />} size={105}>
               <Link to="/user/login">登录</Link>
-              <a
-                onClick={() => {
-                  alert('请联系管理员:aidjajd@163.com');
-                }}
-              >
-                忘记密码？
-              </a>
+              <Link to="/user/forget">忘记密码?</Link>
             </Space>
           </div>
         </LoginForm>

@@ -67,7 +67,7 @@ const waitTime = (time: number = 100) => {
   });
 };
 
-const Login: React.FC = () => {
+const Forget: React.FC = () => {
   // const [userLoginState, setUserLoginState] = useState<API.UserLoginParams>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -84,7 +84,7 @@ const Login: React.FC = () => {
     }
   };
 
-  const EmailHandleSubmit = async (values: API.UserEmailRegisterLoginParams) => {
+  const EmailHandleSubmit = async (values: API.VerifyCodeEmail) => {
     try {
       // 邮箱登录 API.ResponseData
       const result = await userEmailLogin({ ...values });
@@ -155,6 +155,7 @@ const Login: React.FC = () => {
           }}
           // actions={['其他登录方式 :', <ActionIcons key="icons" />]}
           onFinish={async (values) => {
+            // 邮箱登录和平台登录请求体不同
             if (isEmailVerifyData(values)) {
               await EmailHandleSubmit(values);
               return;
@@ -274,13 +275,7 @@ const Login: React.FC = () => {
           >
             <Space split={<Divider type="vertical" />} size={105}>
               <Link to="/user/register">注册</Link>
-              <a
-                onClick={() => {
-                  alert('请联系管理员:aidjajd@163.com');
-                }}
-              >
-                忘记密码？
-              </a>
+              <Link to="/user/forget">忘记密码?</Link>
             </Space>
           </div>
         </LoginForm>
@@ -289,4 +284,4 @@ const Login: React.FC = () => {
     </div>
   );
 };
-export default Login;
+export default Forget;
