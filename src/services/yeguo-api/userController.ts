@@ -10,7 +10,6 @@ export async function userRegister(body: API.UserRegisterParams, options?: { [ke
       'Content-Type': 'application/json',
     },
     data: body,
-    credentials: 'include',
     ...(options || {}),
   });
 }
@@ -23,7 +22,6 @@ export async function userLogin(body: API.UserLoginParams, options?: { [key: str
       'Content-Type': 'application/json',
     },
     data: body,
-    credentials: 'include',
     ...(options || {}),
   });
 }
@@ -32,7 +30,6 @@ export async function userLogin(body: API.UserLoginParams, options?: { [key: str
 export async function userCurrent(options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/user/current`, {
     method: 'GET',
-    credentials: 'include',
     ...(options || {}),
   });
 }
@@ -44,7 +41,6 @@ export async function userlogout(options?: { [key: string]: any }) {
     headers: {
       'Content-Type': 'application/json',
     },
-    credentials: 'include',
     ...(options || {}),
   });
 }
@@ -57,7 +53,6 @@ export async function userDynamicQuery(
   return request<API.ResponseData>(`/api/user/dynamicQuery`, {
     method: 'GET',
     params,
-    credentials: 'include',
     ...(options || {}),
   });
 }
@@ -66,7 +61,6 @@ export async function userDynamicQuery(
 export async function userDelete(id: number, options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/user/${id}`, {
     method: 'DELETE',
-    credentials: 'include',
     ...(options || {}),
   });
 }
@@ -76,7 +70,6 @@ export async function userUpdate(body: API.UserVO, options?: { [key: string]: an
   return request<API.ResponseData>(`/api/user/update`, {
     method: 'PUT',
     data: body,
-    credentials: 'include',
     ...(options || {}),
   });
 }
@@ -89,7 +82,6 @@ export async function userPersonInfoUpdate(
   return request<API.ResponseData>(`/api/user/personInfoUpdate`, {
     method: 'PUT',
     data: body,
-    credentials: 'include',
     ...(options || {}),
   });
 }
@@ -98,7 +90,6 @@ export async function userPersonInfoUpdate(
 export async function userPersonKeysUpdate(id: number, options?: { [key: string]: any }) {
   return request<API.ResponseData>(`/api/user/${id}`, {
     method: 'PUT',
-    credentials: 'include',
     ...(options || {}),
   });
 }
@@ -113,7 +104,6 @@ export async function userEmailVerifyCode(email: string, options?: { [key: strin
     data: {
       email,
     },
-    credentials: 'include',
     ...(options || {}),
   });
 }
@@ -125,7 +115,6 @@ export async function userEmailRegister(
   return request<API.ResponseData>(`/api/user/emailRegister`, {
     method: 'POST',
     data: body,
-    credentials: 'include',
     ...(options || {}),
   });
 }
@@ -135,7 +124,6 @@ export async function userEmailLogin(body: API.VerifyCodeEmail, options?: { [key
   return request<API.ResponseData>(`/api/user/emailLogin`, {
     method: 'POST',
     data: body,
-    credentials: 'include',
     ...(options || {}),
   });
 }
@@ -148,7 +136,6 @@ export async function forgetPwdVerifyCode(
   return request<API.ResponseData>(`/api/user/forgetPwd/verifyCode`, {
     method: 'POST',
     data: body,
-    credentials: 'include',
     ...(options || {}),
   });
 }
@@ -158,7 +145,6 @@ export async function forgetPwd(body: API.ForgetPasswordParams, options?: { [key
   return request<API.ResponseData>(`/api/user/forgetPwd`, {
     method: 'PUT',
     data: body,
-    credentials: 'include',
     ...(options || {}),
   });
 }
