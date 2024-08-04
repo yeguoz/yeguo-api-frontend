@@ -230,7 +230,7 @@ export default () => {
           {/* @ts-ignore */}
           <ParamList columns={responseParamsCol} data={respObjArr} />
           <TipUtil text="返回示例" />
-          <CodeBlock language="javascript" value={responseExample} />
+          <CodeBlock language="json" value={responseExample} />
         </ProCard.TabPane>
         <ProCard.TabPane key="tab2" tab="在线调试" icon={<img src={bug} height={20}></img>}>
           <DebugRequest
@@ -251,7 +251,7 @@ export default () => {
           {isSvgOrJpg ? (
             <img src={invokingResult!} style={{ height: '12rem' }}></img>
           ) : (
-            <CodeBlock language="javascript" value={invokingResult} />
+            <CodeBlock language="json" value={invokingResult} />
           )}
         </ProCard.TabPane>
         <ProCard.TabPane key="tab3" tab="错误码参照" icon={<img src={errorcode} height={20}></img>}>
