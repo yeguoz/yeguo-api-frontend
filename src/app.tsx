@@ -146,4 +146,5 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
 export const request: RequestConfig = {
   // 多环境设置
   baseURL: process.env.NODE_ENV === 'production' ? 'https://server.api.yeguo.icu' : '',
+  withCredentials: true,
 };
