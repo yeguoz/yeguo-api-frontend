@@ -4,18 +4,16 @@ import {
   forgetPwd,
   forgetPwdVerifyCode,
   userEmailLogin,
-  userEmailVerifyCode,
   userLogin,
 } from '@/services/yeguo-api/userController';
-import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
+import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormCaptcha, ProFormText } from '@ant-design/pro-components';
 import { Helmet, Link, history, useModel } from '@umijs/max';
-import { Divider, Space, Tabs, message } from 'antd';
+import { Tabs, message } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
-import isEmailVerifyData from '../common/isEmailverifyData';
 const useStyles = createStyles(({ token }) => {
   return {
     action: {
@@ -257,15 +255,9 @@ const Forget: React.FC = () => {
             </>
           )}
 
-          <div
-            style={{
-              marginBottom: 24,
-            }}
-          >
-            <Space split={<Divider type="vertical" />} size={125}>
-              <Link to="/user/login">登录</Link>
-              <Link to="/user/register">注册</Link>
-            </Space>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 24 }}>
+            <Link to="/user/login">登录</Link>
+            <Link to="/user/register">注册</Link>
           </div>
         </LoginForm>
       </div>

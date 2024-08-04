@@ -8,7 +8,7 @@ import {
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormCaptcha, ProFormText } from '@ant-design/pro-components';
 import { Helmet, Link, history, useModel } from '@umijs/max';
-import { Divider, Space, Tabs, message } from 'antd';
+import { Tabs, message } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
@@ -268,15 +268,9 @@ const Forget: React.FC = () => {
             </>
           )}
 
-          <div
-            style={{
-              marginBottom: 24,
-            }}
-          >
-            <Space split={<Divider type="vertical" />} size={105}>
-              <Link to="/user/register">注册</Link>
-              <Link to="/user/forget">忘记密码?</Link>
-            </Space>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 24 }}>
+            <Link to="/user/register">注册</Link>
+            <Link to="/user/forget">忘记密码?</Link>
           </div>
         </LoginForm>
       </div>
