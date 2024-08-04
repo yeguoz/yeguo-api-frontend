@@ -15,7 +15,6 @@ const InfoCard: React.FC = () => {
       return;
     }
     setData(result.data);
-    console.log(result.data);
   };
 
   useEffect(() => {

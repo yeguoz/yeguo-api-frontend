@@ -73,6 +73,7 @@ export default () => {
     console.log(transformedData);
     console.log({ irp: transformedData, method, url });
     setIsLoading(true);
+
     if (file) {
       const result = await onlineInvoking(
         { irp: transformedData, method, url },
@@ -80,6 +81,7 @@ export default () => {
         signature,
         file,
       );
+
       // result.data包含status=400,未正确设置参数
       if (result.data && result.data.indexOf('status=400') !== -1) {
         setIsLoading(false);
@@ -87,7 +89,7 @@ export default () => {
         message.error('请正确设置请求参数！' + 'status=400');
         return;
       }
-      console.log(result);
+
       setIsLoading(false);
       setInvokingResult(result.data);
     } else if (!file) {
@@ -100,7 +102,7 @@ export default () => {
         message.error('请正确设置请求参数！' + 'status=400');
         return;
       }
-      console.log(result);
+
       // 如果返回的是svg，则将svg转换为dataUri
       const svgPattern = /<svg[^>]*>[\s\S]*?<\/svg>/i;
       if (svgPattern.test(result.data)) {
@@ -230,7 +232,7 @@ export default () => {
           {/* @ts-ignore */}
           <ParamList columns={responseParamsCol} data={respObjArr} />
           <TipUtil text="返回示例" />
-          <CodeBlock language="json" value={responseExample} />
+          <CodeBlock value={responseExample} />
         </ProCard.TabPane>
         <ProCard.TabPane key="tab2" tab="在线调试" icon={<img src={bug} height={20}></img>}>
           <DebugRequest
@@ -251,7 +253,7 @@ export default () => {
           {isSvgOrJpg ? (
             <img src={invokingResult!} style={{ height: '12rem' }}></img>
           ) : (
-            <CodeBlock language="json" value={invokingResult} />
+            <CodeBlock value={invokingResult} />
           )}
         </ProCard.TabPane>
         <ProCard.TabPane key="tab3" tab="错误码参照" icon={<img src={errorcode} height={20}></img>}>
