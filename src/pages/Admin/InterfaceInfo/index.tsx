@@ -1,5 +1,6 @@
 import OperationButton from '@/components/OperationButton';
 import {
+  interfaceInfoDelete,
   interfaceInfoDynamicQuery,
   interfaceInfoRegister,
   interfaceInfoUpdate,
