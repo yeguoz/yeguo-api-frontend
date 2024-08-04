@@ -39,15 +39,12 @@ export default () => {
     {
       title: '用户id',
       dataIndex: 'userId',
-      width: 80,
-
       ellipsis: true,
     },
     {
       title: '支付方式',
       dataIndex: 'payType',
       valueType: 'select',
-      width: 80,
       valueEnum: {
         0: {
           text: '微信',
@@ -63,7 +60,6 @@ export default () => {
     {
       title: '支付金额',
       dataIndex: 'money',
-      width: 80,
       ellipsis: true,
     },
     {
@@ -243,6 +239,7 @@ export default () => {
   return (
     <ProTable<API.OrderInfoVO>
       columns={OrderColumns}
+      scroll={{ x: 'max-content' }}
       actionRef={actionRef}
       cardBordered
       loading={isLoading}

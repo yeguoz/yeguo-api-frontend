@@ -276,6 +276,7 @@ export default () => {
   return (
     <ProTable<API.OrderInfoVO>
       columns={OrderColumns}
+      scroll={{ x: 'max-content' }}
       cardBordered
       dataSource={tableData}
       onRequestError={(error) => {

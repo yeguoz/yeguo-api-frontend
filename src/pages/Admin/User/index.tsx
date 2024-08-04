@@ -123,7 +123,6 @@ export default () => {
       hideInSearch: true,
       ellipsis: true,
     },
-
     {
       title: '操作',
       valueType: 'option',
@@ -186,6 +185,7 @@ export default () => {
   return (
     <ProTable<API.UserVO>
       columns={UserColumns}
+      scroll={{ x: 'max-content' }}
       cardBordered
       dataSource={tableData}
       options={{ reload: false }}

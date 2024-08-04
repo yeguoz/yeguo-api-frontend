@@ -9,7 +9,7 @@ export default ({ getFile }: { getFile: (file: File) => void }) => {
   return (
     <Space direction="vertical" style={{ width: '100%', textAlign: 'center' }} size="large">
       <Upload beforeUpload={handleBeforeUpload} listType="picture" maxCount={1}>
-        <Button icon={<UploadOutlined />} style={{ width: '67vw' }}>
+        <Button icon={<UploadOutlined />} style={{ width: '52vw' }}>
           Upload
         </Button>
       </Upload>

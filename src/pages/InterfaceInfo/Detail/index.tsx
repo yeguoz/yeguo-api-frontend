@@ -18,7 +18,7 @@ import code from '/public/assets/code.svg';
 import doc from '/public/assets/document.svg';
 import errorcode from '/public/assets/errorcode.svg';
 
-const style: React.CSSProperties = { padding: '8px 4px' };
+const style: React.CSSProperties = { padding: '8px 4px', overflow: 'auto' };
 const JSONStrToObjArr = (paramsStr: string) => {
   let ObjArray;
   try {
@@ -26,7 +26,6 @@ const JSONStrToObjArr = (paramsStr: string) => {
     return ObjArray;
   } catch (e) {
     console.error('Parsing error:', e);
-    // message.error('解析错误:' + e);
   }
 };
 
@@ -122,7 +121,7 @@ export default () => {
   return (
     <Container>
       <ProCard title={<strong>{name}</strong>} bordered headerBordered gutter={16}>
-        <Row gutter={[16, 24]}>
+        <Row gutter={[10, 24]}>
           <Col className="gutter-row" span={10}>
             <div style={style}>
               <strong>接口id：</strong>
@@ -131,20 +130,8 @@ export default () => {
           </Col>
           <Col className="gutter-row" span={10}>
             <div style={style}>
-              <strong>接口地址：</strong>
-              {url}
-            </div>
-          </Col>
-          <Col className="gutter-row" span={10}>
-            <div style={style}>
               <strong>返回格式：</strong>
               {responseFormat}
-            </div>
-          </Col>
-          <Col className="gutter-row" span={10}>
-            <div style={style}>
-              <strong>消费果币：</strong>
-              {requiredGoldCoins}
             </div>
           </Col>
           <Col className="gutter-row" span={10}>
@@ -168,8 +155,8 @@ export default () => {
           </Col>
           <Col className="gutter-row" span={10}>
             <div style={style}>
-              <strong>调用总次数：</strong>
-              {invokingCount}
+              <strong>消费果币：</strong>
+              {requiredGoldCoins}
             </div>
           </Col>
           <Col className="gutter-row" span={10}>
@@ -205,14 +192,26 @@ export default () => {
           </Col>
           <Col className="gutter-row" span={10}>
             <div style={style}>
+              <strong>调用总次数：</strong>
+              {invokingCount}
+            </div>
+          </Col>
+          <Col className="gutter-row" span={10}>
+            <div style={style}>
               <strong>接口描述：</strong>
               {description}
+            </div>
+          </Col>
+          <Col className="gutter-row" span={10}>
+            <div style={style}>
+              <strong>接口地址：</strong>
+              {url}
             </div>
           </Col>
           <Col className="gutter-row" span={100}>
             <div style={style}>
               <strong>请求示例：</strong>
-              {requestExample}
+              <span>{requestExample}</span>
             </div>
           </Col>
         </Row>

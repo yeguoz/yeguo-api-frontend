@@ -1,4 +1,4 @@
-import { FileTextOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import '@umijs/max';
 export type SiderTheme = 'light' | 'dark';
 // 头像旁小问号
@@ -14,7 +14,7 @@ export const Question = () => {
           window.open('https://apidocs.yeguo.icu');
         }}
       >
-        <FileTextOutlined />
+        <QuestionCircleOutlined />
       </div>
     </>
   );

@@ -1,5 +1,5 @@
 import { userPersonInfoUpdate, userPersonKeysUpdate } from '@/services/yeguo-api/userController';
-import { DownloadOutlined, PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { ProCard } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Button, Col, Row, message } from 'antd';
@@ -11,7 +11,6 @@ export default () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
   const [modified, setModified] = useState(false);
-
   // 页面信息状态
   const [values, setValues] = useState<{ [key: string]: any }>({
     username: currentUser?.username,
@@ -249,14 +248,6 @@ export default () => {
             <Button type="primary" onClick={updateKeys} loading={isLoading.updateKey}>
               更新密钥
             </Button>
-            <Button
-              type="primary"
-              onClick={handleGenerateSignature}
-              loading={isLoading.generateSignature}
-              style={{ marginLeft: '1rem' }}
-            >
-              生成签名
-            </Button>
           </>
         }
       >
@@ -269,24 +260,48 @@ export default () => {
           </Col>
         </Row>
       </ProCard>
+
       <ProCard
-        title={<strong>引入SDK</strong>}
+        title={<strong>签名生成</strong>}
         bordered
         headerBordered
         gutter={16}
         headStyle={{ backgroundColor: '#f3f2f1', borderRadius: '0.5rem' }}
         style={{ marginTop: '1rem' }}
       >
-        <Button
-          type="primary"
-          icon={<DownloadOutlined />}
-          size={'large'}
-          onClick={() => {
-            window.open('https://apidocs.yeguo.icu/guide/getting-started#-%E5%AE%89%E8%A3%85');
-          }}
-        >
-          点击获取SDK
-        </Button>
+        <InfoItem
+          name={'signature'}
+          value={
+            <a
+              style={{ color: '#fca92f' }}
+              onClick={handleGenerateSignature}
+            >
+              点击获取签名
+            </a>
+          }
+        />
+      </ProCard>
+      <ProCard
+        title={<strong>引入SDK</strong>}
+        bordered
+        headerBordered
+        gutter={16}
+        headStyle={{ backgroundColor: '#f3f2f1', borderRadius: '0.5rem' }}
+        style={{ marginTop: '1rem', overflow: 'auto' }}
+      >
+        <InfoItem
+          name={'SDK'}
+          value={
+            <a
+              href="https://apidocs.yeguo.icu/guide/getting-started#-%E5%AE%89%E8%A3%85"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#fca92f' }}
+            >
+              点击获取SDK
+            </a>
+          }
+        />
       </ProCard>
     </>
   );
