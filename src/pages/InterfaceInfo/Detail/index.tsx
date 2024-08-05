@@ -1,4 +1,5 @@
 import Container from '@/components/Container';
+import Skip from '@/components/Skip';
 import generateSignature from '@/pages/utils/generateSignatureUtil';
 import { onlineInvoking } from '@/services/yeguo-api/interfaceInfoController';
 import { ProCard } from '@ant-design/pro-components';
@@ -261,8 +262,13 @@ export default () => {
           <ListInfo columns={codeCol} data={codeList} />
         </ProCard.TabPane>
         <ProCard.TabPane key="tab4" tab="示例代码" icon={<img src={code} height={20}></img>}>
-          <a href="https://apidocs.yeguo.icu" target="_blank" rel="noreferrer">
-            使用在线文档
+          <a
+            href="https://apidocs.yeguo.icu"
+            target="_blank"
+            rel="noreferrer"
+            style={{ color: '#fca92f' }}
+          >
+            使用在线文档 <Skip />
           </a>
         </ProCard.TabPane>
       </ProCard>

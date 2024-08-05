@@ -1,3 +1,4 @@
+import Skip from '@/components/Skip';
 import { useModel } from '@umijs/max';
 import { Card, theme } from 'antd';
 import React from 'react';
@@ -136,7 +137,8 @@ const Welcome: React.FC = () => {
               rel="noopener noreferrer"
               style={{ color: '#fca92f' }}
             >
-              SDK（点击获取）
+              SDK
+              <Skip />
             </a>
             ，方便您将 API
             集成到您的应用中。我们的开放平台致力于提供高质量、实时的数据，以满足您的各种需求。API

@@ -1,3 +1,4 @@
+import Skip from '@/components/Skip';
 import { userPersonInfoUpdate, userPersonKeysUpdate } from '@/services/yeguo-api/userController';
 import { PlusOutlined } from '@ant-design/icons';
 import { ProCard } from '@ant-design/pro-components';
@@ -272,10 +273,7 @@ export default () => {
         <InfoItem
           name={'signature'}
           value={
-            <a
-              style={{ color: '#fca92f' }}
-              onClick={handleGenerateSignature}
-            >
+            <a style={{ color: '#fca92f' }} onClick={handleGenerateSignature}>
               点击获取签名
             </a>
           }
@@ -298,7 +296,7 @@ export default () => {
               rel="noopener noreferrer"
               style={{ color: '#fca92f' }}
             >
-              点击获取SDK
+              点击获取SDK <Skip />
             </a>
           }
         />
