@@ -9,6 +9,7 @@ import { message } from 'antd';
 import defaultSettings from '../config/defaultSettings';
 import BackToTopButton from './components/BackToTopButton';
 import Container from './components/Container';
+import generateSignature from './pages/utils/generateSignature';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 const registerPath = '/user/register';
@@ -147,4 +148,35 @@ export const request: RequestConfig = {
   // 多环境设置
   baseURL: process.env.NODE_ENV === 'production' ? 'https://server.api.yeguo.icu' : '',
   withCredentials: true,
+  // 请求拦截器
+  requestInterceptors: [
+    (url, options) => {
+      if (url.includes('/api/interfaceInfo/onlineInvoking')) {
+        console.log('请求拦截器=================================');
+        console.log('URL===>', url);
+        console.log('Options===>', options);
+        const secretKey = options.headers?.['X-Secret-Key'];
+        // 构建签名串
+        const message = `${options.method}\n${options.pathname}\n${
+          'X-Access-Key:' + options.headers?.['X-Access-Key'] || ''
+        }\n${'X-Expiry-Timestamp:' + options.headers?.['X-Expiry-Timestamp'] || ''}\n${
+          'X-File-Name:' + options.headers?.['X-File-Name'] || ''
+        }\n${'X-File-Size:' + options.headers?.['X-File-Size'] || ''}\n${
+          'X-Nonce:' + options.headers?.['X-Nonce'] || ''
+        }`;
+        console.log('签名字符串：' + message);
+        // 生成数字签名
+        const signature = generateSignature(message, secretKey);
+        console.log('签名：' + signature);
+        // 将数字签名添加到请求头中
+        delete options.headers?.['X-Secret-Key'];
+        console.log('请求拦截器修改后的Headers===>', options.headers);
+        options.headers = {
+          ...options.headers,
+          'X-Signature': signature,
+        };
+      }
+      return { url, options };
+    },
+  ],
 };
