@@ -1,3 +1,4 @@
+import { generateNonce } from '@/pages/utils/generateNonce';
 import { request } from '@umijs/max';
 
 /** 接口注册 POST /api/interfaceInfo/register */
@@ -51,25 +52,37 @@ export async function interfaceInfoDynamicQuery(
 export async function onlineInvoking(
   body: any,
   accessKey: string,
-  signature: string,
+  secretKey: string,
   file?: File,
   options?: { [key: string]: any },
 ) {
+  let fileName = file?.name || '';
+  let fileSize = file?.size || 0;
   const formData = new FormData();
+
   formData.append(
     'invokingRequest',
     new Blob([JSON.stringify(body)], { type: 'application/json' }),
   );
+
   if (file) {
     formData.append('file', file);
   }
 
-  return request<API.ResponseData>(
-    `/api/interfaceInfo/onlineInvoking?accessKey=${accessKey}&signature=${signature}`,
-    {
-      method: 'POST',
-      data: formData,
-      ...(options || {}),
+  // 5 分钟后时间戳
+  const expiryTimestamp = Date.now() + 5 * 60 * 1000;
+  const nonce = generateNonce();
+  return request<API.ResponseData>(`/api/interfaceInfo/onlineInvoking`, {
+    method: 'POST',
+    headers: {
+      'X-Access-Key': accessKey,
+      'X-Secret-Key': secretKey,
+      'X-File-Name': fileName,
+      'X-File-Size': fileSize,
+      'X-Expiry-Timestamp': expiryTimestamp,
+      'X-Nonce': nonce,
     },
-  );
+    data: formData,
+    ...(options || {}),
+  });
 }
