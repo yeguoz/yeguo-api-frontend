@@ -1,6 +1,5 @@
 import Container from '@/components/Container';
 import Skip from '@/components/Skip';
-import generateSignature from '@/pages/utils/generateSignatureUtil';
 import { onlineInvoking } from '@/services/yeguo-api/interfaceInfoController';
 import { ProCard } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
@@ -58,10 +57,9 @@ export default () => {
     createTime,
   } = (useLocation().state as API.InterfaceInfoVO) || {};
 
-  // 生成签名
   const currentUser = initialState?.currentUser;
-  const signature = generateSignature(currentUser?.accessKey, currentUser?.secretKey);
   const ak = currentUser?.accessKey;
+  const sk = currentUser?.secretKey;
   // 请求参数+响应参数，转换为obj[]
   const reqObjArr = JSONStrToObjArr(requestParams || '');
   const respObjArr = JSONStrToObjArr(responseParams || '');
@@ -74,13 +72,13 @@ export default () => {
     console.log({ irp: transformedData, method, url });
     setIsLoading(true);
 
+    // 获取API接口的URI
+    const pathname = new URL(url!).pathname;
+
     if (file) {
-      const result = await onlineInvoking(
-        { irp: transformedData, method, url },
-        ak!,
-        signature,
-        file,
-      );
+      const result = await onlineInvoking({ irp: transformedData, method, url }, ak!, sk!, file, {
+        pathname,
+      });
 
       // result.data包含status=400,未正确设置参数
       if (result.data && result.data.indexOf('status=400') !== -1) {
@@ -93,7 +91,13 @@ export default () => {
       setIsLoading(false);
       setInvokingResult(result.data);
     } else if (!file) {
-      const result = await onlineInvoking({ irp: transformedData, method, url }, ak!, signature);
+      const result = await onlineInvoking(
+        { irp: transformedData, method, url },
+        ak!,
+        sk!,
+        undefined,
+        { pathname },
+      );
 
       // result.data包含status=400,未正确设置参数
       if (result.data && result.data.indexOf('status=400') !== -1) {
