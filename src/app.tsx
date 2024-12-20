@@ -157,14 +157,16 @@ export const request: RequestConfig = {
         console.log('Options===>', options);
         const secretKey = options.headers?.['X-Secret-Key'];
         // 构建签名串
-        const message = `${options.method}\n${options.pathname}\n${
+        const message = `${options.ApiMethod}\n${options.pathname}\n${
           'X-Access-Key:' + options.headers?.['X-Access-Key'] || ''
         }\n${'X-Expiry-Timestamp:' + options.headers?.['X-Expiry-Timestamp'] || ''}\n${
           'X-File-Name:' + options.headers?.['X-File-Name'] || ''
         }\n${'X-File-Size:' + options.headers?.['X-File-Size'] || ''}\n${
           'X-Nonce:' + options.headers?.['X-Nonce'] || ''
         }`;
-        console.log('签名字符串：' + message);
+        console.log('签名字符串：\n' + message);
+        console.log('密钥：' + secretKey);
+
         // 生成数字签名
         const signature = generateSignature(message, secretKey);
         console.log('签名：' + signature);
