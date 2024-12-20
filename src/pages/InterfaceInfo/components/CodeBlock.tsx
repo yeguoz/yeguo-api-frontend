@@ -10,8 +10,8 @@ const CodeBlock = ({ language = 'json', value }: { language?: string; value?: an
       parser: 'json',
       plugins: [parserJson],
     });
-  } catch (error) {
-    console.log('格式化失败', error);
+  } catch (error: any) {
+    console.log('格式化失败', error.message);
     formattedCode = value; // 如果格式化失败，显示原始代码
   }
 

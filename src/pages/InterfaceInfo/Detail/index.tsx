@@ -24,8 +24,8 @@ const JSONStrToObjArr = (paramsStr: string) => {
   try {
     ObjArray = JSON.parse(paramsStr);
     return ObjArray;
-  } catch (e) {
-    console.error('Parsing error:', e);
+  } catch (e: any) {
+    console.error('Parsing error:', e.message);
   }
 };
 
@@ -78,6 +78,7 @@ export default () => {
     if (file) {
       const result = await onlineInvoking({ irp: transformedData, method, url }, ak!, sk!, file, {
         pathname,
+        ApiMethod: method,
       });
 
       // result.data包含status=400,未正确设置参数
@@ -96,7 +97,7 @@ export default () => {
         ak!,
         sk!,
         undefined,
-        { pathname },
+        { pathname, ApiMethod: method },
       );
 
       // result.data包含status=400,未正确设置参数
