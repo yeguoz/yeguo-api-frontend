@@ -20,7 +20,7 @@ export default () => {
       title: '参数名称',
       dataIndex: 'name',
       width: '30%',
-      tooltip: { title: '在线调试可不传递accessKey和signature' },
+      tooltip: { title: '在线调试只需填入参数即可，不需要构建构建请求头' },
       formItemProps: {
         rules: [
           {
