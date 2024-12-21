@@ -11,6 +11,24 @@ interface Params {
   message?: string;
 }
 
+export const signatureStrExample = `GET
+/api/app/weibo/hot
+X-Access-Key:290F6AA4F0BFE8F584DE60D25E56706F
+X-Expiry-Timestamp:1734707922252
+X-Nonce:414f345k4g4l3o1s1k4z4f35z4jv6f`;
+
+export const codeExample = `const generateSignature = (message: string, secretKey: string) => {
+  // 拼接签名串，使用secretKey进行签名
+  // HMAC-SHA256 算法签名
+  const hash = CryptoJS.HmacSHA256(message, secretKey);
+  return hash.toString(CryptoJS.enc.Hex);
+};`;
+export const requestHeadersExample = `"X-Access-Key":"个人主页获取",
+"X-Expiry-Timestamp":"",
+"X-Nonce":"",
+"X-Signature":""
+`;
+
 export const codeList: Code[] = [
   {
     code: 200,
