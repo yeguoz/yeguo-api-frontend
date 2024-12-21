@@ -56,10 +56,7 @@ export async function onlineInvoking(
   file?: File,
   options?: { [key: string]: any },
 ) {
-  let fileName = file?.name || '';
-  let fileSize = file?.size || 0;
   const formData = new FormData();
-
   formData.append(
     'invokingRequest',
     new Blob([JSON.stringify(body)], { type: 'application/json' }),
@@ -70,16 +67,14 @@ export async function onlineInvoking(
   }
 
   // 5 分钟后时间戳
-  const expiryTimestamp = Date.now() + 5 * 60 * 1000;
+  const timestamp = Date.now();
   const nonce = generateNonce();
   return request<API.ResponseData>(`/api/interfaceInfo/onlineInvoking`, {
     method: 'POST',
     headers: {
       'X-Access-Key': accessKey,
       'X-Secret-Key': secretKey,
-      'X-File-Name': fileName,
-      'X-File-Size': fileSize,
-      'X-Expiry-Timestamp': expiryTimestamp,
+      'X-Timestamp': timestamp,
       'X-Nonce': nonce,
     },
     data: formData,
