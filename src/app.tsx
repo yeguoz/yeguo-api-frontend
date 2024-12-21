@@ -159,9 +159,7 @@ export const request: RequestConfig = {
         // 构建签名串
         const message = `${options.ApiMethod}\n${options.pathname}\n${
           'X-Access-Key:' + options.headers?.['X-Access-Key'] || ''
-        }\n${'X-Expiry-Timestamp:' + options.headers?.['X-Expiry-Timestamp'] || ''}\n${
-          'X-File-Name:' + options.headers?.['X-File-Name'] || ''
-        }\n${'X-File-Size:' + options.headers?.['X-File-Size'] || ''}\n${
+        }\n${'X-Timestamp:' + options.headers?.['X-Timestamp'] || ''}\n${
           'X-Nonce:' + options.headers?.['X-Nonce'] || ''
         }`;
         console.log('签名字符串：\n' + message);
