@@ -3,7 +3,7 @@ import Skip from '@/components/Skip';
 import { onlineInvoking } from '@/services/yeguo-api/interfaceInfoController';
 import { ProCard } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { Col, Row, message } from 'antd';
+import { Col, message, Row } from 'antd';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import CodeBlock from '../components/CodeBlock';
@@ -12,7 +12,15 @@ import { default as ListInfo, default as ParamList } from '../components/ParamLi
 import RequestParamsList from '../components/RequestParamsList';
 import TipUtil from '../components/TipUtil';
 import UploadFile from '../components/UploadFile';
-import { codeCol, codeList, requestParamsCol, responseParamsCol } from './definition';
+import {
+  codeCol,
+  codeExample,
+  codeList,
+  requestHeadersExample,
+  requestParamsCol,
+  responseParamsCol,
+  signatureStrExample,
+} from './definition';
 import bug from '/public/assets/bug.svg';
 import code from '/public/assets/code.svg';
 import doc from '/public/assets/document.svg';
@@ -214,10 +222,17 @@ export default () => {
               {url}
             </div>
           </Col>
-          <Col className="gutter-row" span={100}>
+          <Col className="gutter-row" span={10}>
             <div style={style}>
               <strong>请求示例：</strong>
               <span>{requestExample}</span>
+            </div>
+          </Col>{' '}
+          <Col className="gutter-row" span={10}>
+            <div style={style}>
+              <strong>请求头：</strong>
+              <span>{requestHeader}</span>
+              <span>(平台调用不需要手动设置)</span>
             </div>
           </Col>
         </Row>
@@ -266,7 +281,26 @@ export default () => {
           {/* @ts-ignore */}
           <ListInfo columns={codeCol} data={codeList} />
         </ProCard.TabPane>
-        <ProCard.TabPane key="tab4" tab="示例代码" icon={<img src={code} height={20}></img>}>
+        <ProCard.TabPane
+          key="tab4"
+          tab="签名算法参照"
+          icon={<img src={errorcode} height={20}></img>}
+        >
+          <TipUtil text="签名串参照" />
+          <CodeBlock value={signatureStrExample} />
+          <p>提示：必须严格按顺序拼接</p>
+          <TipUtil text="签名算法: HMAC-SHA256" />
+          <TipUtil text="X-Expiry-Timetamp: 过期时间" />
+          <TipUtil text="X-Nonce: 随机数" />
+
+          <TipUtil text="代码示例" />
+          <CodeBlock value={codeExample} />
+        </ProCard.TabPane>
+        <ProCard.TabPane key="tab5" tab="请求头参照" icon={<img src={errorcode} height={20}></img>}>
+          <TipUtil text="请求头参照" />
+          <CodeBlock value={requestHeadersExample} />
+        </ProCard.TabPane>
+        <ProCard.TabPane key="tab6" tab="示例代码" icon={<img src={code} height={20}></img>}>
           <a
             href="https://apidocs.yeguo.icu"
             target="_blank"
