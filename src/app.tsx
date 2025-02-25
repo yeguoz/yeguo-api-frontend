@@ -75,7 +75,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       const { location } = history;
       // 如果没有登录,并且不在登录页面和注册页面,则重定向到 login
       if (!initialState?.currentUser && !pathList.includes(location.pathname)) {
-        message.error('未登录');
         history.push(loginPath);
       }
     },
