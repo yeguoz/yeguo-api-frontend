@@ -1,7 +1,7 @@
 import { CreateOrderInfo } from '@/services/yeguo-api/orderInfoController';
 import { ProCard } from '@ant-design/pro-components';
 import { useModel, useNavigate } from '@umijs/max';
-import { Button, Col, Row, message } from 'antd';
+import { Button, Col, Row, Tooltip, message } from 'antd';
 import { useRef, useState } from 'react';
 import CoinMallCard from './components/CoinMallCard';
 import PayButton from './components/PayButton';
@@ -21,7 +21,7 @@ export default () => {
   const selectedCardPriceRef = useRef<HTMLSpanElement>();
   const [commodityContent, setCommodityContent] = useState<string>(''); // 商品内容
   const [money, setMoney] = useState<number>(0); // 支付金额
-  const [payType, setPayType] = useState<number>(0); // 0微信 1支付宝
+  const [payType, setPayType] = useState<number>(1); // 0微信 1支付宝
   const [isLoading, setIsLoading] = useState<boolean>(false); // 加载状态
 
   const navigate = useNavigate();
@@ -61,17 +61,7 @@ export default () => {
     setIsLoading(true);
     message.success(result.message);
     // 跳转到支付页面
-    navigate(`/${orderInfoVO.orderId}/pay`, {
-      replace: false,
-      state: {
-        orderId: orderInfoVO.orderId,
-        userId: initialState?.currentUser?.id as number,
-        commodityContent,
-        money,
-        payType,
-        expireTime: orderInfoVO.expireTime,
-      },
-    });
+    window.location.href = `https://pay.tianmuzf.top/Submit/Mcode_Pay.php?trade_no=${orderInfoVO.orderId}`;
   };
 
   const handleClick = (mode: number) => {
@@ -141,7 +131,9 @@ export default () => {
         </Row>
         <p style={{ textAlign: 'center', padding: '1rem 0 0' }}>
           本商品为虚拟内容，用于平台接口调用，购买后不支持
-          <span style={{ color: '#d23918' }}>退换</span>，购买后24小时内审核完成。
+          <span style={{ color: '#d23918' }}>退换</span>
+          ，如付款成功后10分钟后未到账，请联系站长微信：
+          <Tooltip title={<img src="/assets/vx.png" width={50} />}>a1419593965</Tooltip>。
         </p>
       </ProCard>
       <ProCard
@@ -153,14 +145,14 @@ export default () => {
         style={{ marginTop: '1rem' }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
-          <PayButton
+          {/* <PayButton
             text="微信支付"
             img="/assets/vxpay.png"
             isSelected={payType === 0}
             handelClick={() => {
               handleClick(0);
             }}
-          />
+          /> */}
           <PayButton
             text="支付宝支付"
             img="/assets/alipay.png"
