@@ -5,7 +5,7 @@ import {
   updateOrderInfoStatus,
 } from '@/services/yeguo-api/orderInfoController';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
-import { useModel, useNavigate } from '@umijs/max';
+import { useModel } from '@umijs/max';
 import { message } from 'antd';
 import { useEffect, useState } from 'react';
 import formatDate from '../utils/formatDateUtil';
@@ -13,30 +13,12 @@ import formatDate from '../utils/formatDateUtil';
 export default () => {
   const { initialState } = useModel('@@initialState');
   const [tableData, setTableData] = useState([]);
-  const navigate = useNavigate();
   // button 加载状态
   const [isLoading, setIsLoading] = useState(false);
 
   // 支付处理
-  const handlePay = async (
-    orderId: string,
-    userId: number,
-    payType: number,
-    money: number,
-    commodityContent: string,
-    expireTime: Date,
-  ) => {
-    navigate(`/${orderId}/pay`, {
-      replace: false,
-      state: {
-        orderId,
-        userId,
-        commodityContent,
-        money,
-        payType,
-        expireTime,
-      },
-    });
+  const handlePay = async (orderId: string) => {
+    window.location.href = `https://pay.tianmuzf.top/Submit/Mcode_Pay.php?trade_no=${orderId}`;
   };
 
   // 取消处理
@@ -162,14 +144,7 @@ export default () => {
           <OperationButton
             key="pay"
             onClick={() => {
-              handlePay(
-                record.orderId!,
-                record.userId!,
-                record.payType!,
-                record.money!,
-                record.commodityContent!,
-                record.expireTime!,
-              );
+              handlePay(record.orderId!);
             }}
           >
             付款
