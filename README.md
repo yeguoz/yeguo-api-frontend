@@ -136,7 +136,7 @@ yarn build
 
 ### 钱包充值
 
-![钱包充值](https://cdn.jsdelivr.net/gh/ye-guo/Images/images/image-20240806094434489.png) ![订单充值](https://cdn.jsdelivr.net/gh/ye-guo/Images/images/image-20240806094534609.png)
+![钱包充值](https://cdn.jsdelivr.net/gh/ye-guo/Images/images/image-20240806094434489.png) ![订单充值](https://cdn.jsdelivr.net/gh/ye-guo/Images/images/202502262220388.png)
 
 ### 我的订单
 
