@@ -1,5 +1,6 @@
 import { FileTextFilled, GithubOutlined, WechatOutlined } from '@ant-design/icons';
 import { DefaultFooter } from '@ant-design/pro-components';
+import { Tooltip } from 'antd';
 import React from 'react';
 
 const Footer: React.FC = () => {
@@ -33,7 +34,9 @@ const Footer: React.FC = () => {
           key: '微信联系',
           title: (
             <>
-              <WechatOutlined /> 联系作者
+              <Tooltip title={<img src="/assets/vx.png" width={100} />}>
+                <WechatOutlined /> 联系作者
+              </Tooltip>
             </>
           ),
           href: 'https://cdn.jsdelivr.net/gh/ye-guo/Images/images/myWeChat.jpg',
