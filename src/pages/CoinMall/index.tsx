@@ -133,7 +133,7 @@ export default () => {
           本商品为虚拟内容，用于平台接口调用，购买后不支持
           <span style={{ color: '#d23918' }}>退换</span>
           ，如付款成功后10分钟后未到账，请联系站长微信：
-          <Tooltip title={<img src="/assets/vx.png" width={50} />}>a1419593965</Tooltip>。
+          <Tooltip title={<img src="/assets/vx.png" width={100} />}>a1419593965</Tooltip>。
         </p>
       </ProCard>
       <ProCard
