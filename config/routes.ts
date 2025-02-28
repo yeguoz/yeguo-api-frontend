@@ -37,6 +37,7 @@ export default [
   { name: '果币商城', icon: 'PayCircle', path: '/coinmall', component: './CoinMall' },
   { name: '我的订单', icon: 'UnorderedList', path: '/orderinfo', component: './OrderInfo' },
   { name: '个人主页', icon: 'User', path: '/person', component: './Person' },
+  { name: 'result', path: '/result', component: './Result', hideInMenu: true },
   { path: '/', redirect: '/welcome' },
   { path: '*', layout: false, component: './404' },
 ];
