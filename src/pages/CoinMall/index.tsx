@@ -44,24 +44,39 @@ export default () => {
       return;
     }
     setIsLoading(true);
-    // 创建订单
-    const result = await CreateOrderInfo({
-      userId: initialState?.currentUser?.id as number,
-      payType,
-      money,
-      commodityContent,
-    });
-    // 返回OrderInfoVO对象
-    const orderInfoVO: API.OrderInfoVO = result.data;
-    if (!orderInfoVO) {
+
+    // 创建一个超时定时器，8秒后将设置为未加载状态
+    const timeoutId = setTimeout(() => {
       setIsLoading(false);
-      message.error('生成订单失败==' + result.message);
-      return;
+      message.error('请求超时，请稍后再试');
+    }, 8000);
+    try {
+      // 创建订单
+      const result = await CreateOrderInfo({
+        userId: initialState?.currentUser?.id as number,
+        payType,
+        money,
+        commodityContent,
+      });
+      // 返回OrderInfoVO对象
+      const orderInfoVO: API.OrderInfoVO = result.data;
+      if (!orderInfoVO) {
+        setIsLoading(false);
+        message.error('生成订单失败==' + result.message);
+        clearTimeout(timeoutId); // 清除超时定时器
+        return;
+      }
+      message.success(result.message);
+      setIsLoading(false);
+      // 跳转到支付页面
+      window.location.href = `https://pay.tianmuzf.top/Submit/Mcode_Pay.php?trade_no=${orderInfoVO.orderId}`;
+    } catch (error) {
+      setIsLoading(false);
+      message.error('请求失败，请稍后再试');
+      clearTimeout(timeoutId); // 清除超时定时器
     }
-    setIsLoading(true);
-    message.success(result.message);
-    // 跳转到支付页面
-    window.location.href = `https://pay.tianmuzf.top/Submit/Mcode_Pay.php?trade_no=${orderInfoVO.orderId}`;
+    // 如果请求成功，清除超时定时器
+    clearTimeout(timeoutId);
   };
 
   const handleClick = (mode: number) => {
