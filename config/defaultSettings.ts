@@ -8,7 +8,7 @@ const Settings: ProLayoutProps & {
   logo?: string;
 } = {
   title: 'YGAPI开放平台',
-  iconfontUrl: 'https://gw.yeguo.icu/static/ygIcon512.png',
+  iconfontUrl: 'https://gw.yeguo.icu/static/picture/ygIcon512.png',
   navTheme: 'light',
   colorPrimary: '#a6559d',
   layout: 'top',
