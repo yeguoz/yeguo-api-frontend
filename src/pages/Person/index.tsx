@@ -273,8 +273,13 @@ export default () => {
         <InfoItem
           name={'signature'}
           value={
-            <a style={{ color: '#fca92f' }} onClick={handleGenerateSignature}>
-              点击获取签名
+            <a
+              href="https://apidocs.yeguo.icu/guide/singature"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#fca92f' }}
+            >
+              签名生成请查看文档
             </a>
           }
         />
